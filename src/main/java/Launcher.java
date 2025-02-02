@@ -1,4 +1,4 @@
-import presentation.StudyShelfApplication;
+import presentation.View;
 
 /**
  *  The main entry point for the Airport Simulator application.
@@ -6,6 +6,6 @@ import presentation.StudyShelfApplication;
  */
 public class Launcher {
     public static void main(String[] args) {
-        StudyShelfApplication.launch(StudyShelfApplication.class);
+        View.launch(View.class);
     }
 }

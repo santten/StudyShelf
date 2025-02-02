@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Aladin&family=B612:ital,wght@0,400;0,700;1,400;1,700&family=Calistoga&display=swap');
+
+* {
+    -light: #f3fae7;
+    -error: #e42513;
+    -warning: #e47b13;
+    -secondary: #306c01;
+    -secondary-light: #568105;
+    -primary: #113f79;
+    -primary-light: #2c7794;
+    -dark: #000806;
+}
+
+.title {
+    -fx-text-fill: -error;
+    -fx-font-family: "Aladin";
+    -fx-font-size: 36;
+    -fx-padding: 0, 24px;
+}
+
+.buttonM {
+    -fx-background-color: -secondary-light;
+    -fx-text-fill: -light;
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 20;
+    -fx-padding: 4px 16px;
+    -fx-background-radius: 16px;
+}
+
+.footerWrapper {
+    -fx-background-color: -dark;
+}
