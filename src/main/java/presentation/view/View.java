@@ -1,14 +1,10 @@
-package presentation;
+package presentation.view;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,6 +19,7 @@ public class View extends Application {
         GridPane footer = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/footer.fxml")));
 
         Pane pane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/test.fxml")));
+        Pane pane2 = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/test2.fxml")));
 
         base.add(header, 0, 0);
         base.add(pane, 0, 1);

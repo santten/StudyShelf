@@ -1,4 +1,4 @@
-import presentation.View;
+import presentation.view.View;
 
 /**
  *  The main entry point for the Airport Simulator application.
