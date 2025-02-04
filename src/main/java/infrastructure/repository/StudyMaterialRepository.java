@@ -1,15 +1,17 @@
 package infrastructure.repository;
 
-import domain.model.User;
+import domain.model.StudyMaterial;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
-public class UserRepository extends BaseRepository<User> {
-    public User findById(int id) {
+public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
+
+
+    public StudyMaterial findById(int id) {
         EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
         try {
-            return em.find(User.class, id);
+            return em.find(StudyMaterial.class, id);
         } finally {
             em.close();
         }

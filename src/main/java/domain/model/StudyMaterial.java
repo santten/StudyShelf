@@ -1,0 +1,125 @@
+package domain.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "StudyMaterial")
+
+public class StudyMaterial {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int materialId;
+
+    @ManyToOne
+    @JoinColumn(name = "UploaderId")
+    private User uploader;
+
+    @Column(name = "MaterialName", length = 255)
+    private String name;
+
+    @Column(name = "MaterialDescription", columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "MaterialLink", length = 255)
+    private String link;
+
+    @Column(name = "FileSize")
+    private Float fileSize;
+
+    @Column(name = "FileType", length = 50)
+    private String fileType;
+
+    @Column(name = "TimeStamp")
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Status")
+    private MaterialStatus status;
+
+    // Default constructor
+    public StudyMaterial() {}
+
+    // Constructor for new study materials
+    public StudyMaterial(User uploader, String name, String description, String link,
+                         Float fileSize, String fileType, MaterialStatus status) {
+        this.uploader = uploader;
+        this.name = name;
+        this.description = description;
+        this.link = link;
+        this.fileSize = fileSize;
+        this.fileType = fileType;
+        this.status = status;
+    }
+
+    // Constructor for existing study materials
+    public StudyMaterial(int materialId, User uploader, String name, String description,
+                         String link, Float fileSize, String fileType,
+                         LocalDateTime timestamp, MaterialStatus status) {
+        this.materialId = materialId;
+        this.uploader = uploader;
+        this.name = name;
+        this.description = description;
+        this.link = link;
+        this.fileSize = fileSize;
+        this.fileType = fileType;
+        this.timestamp = timestamp;
+        this.status = status;
+    }
+    // Getters and setters
+    public int getMaterialId() {
+        return materialId;
+    }
+    public void setMaterialId(int materialId) {
+        this.materialId = materialId;
+    }
+    public User getUploader() {
+        return uploader;
+    }
+    public void setUploader(User uploader) {
+        this.uploader = uploader;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public String getLink() {
+        return link;
+    }
+    public void setLink(String link) {
+        this.link = link;
+    }
+    public Float getFileSize() {
+        return fileSize;
+    }
+    public void setFileSize(Float fileSize) {
+        this.fileSize = fileSize;
+    }
+    public String getFileType() {
+        return fileType;
+    }
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+    public MaterialStatus getStatus() {
+        return status;
+    }
+    public void setStatus(MaterialStatus status) {
+        this.status = status;
+    }
+
+}
