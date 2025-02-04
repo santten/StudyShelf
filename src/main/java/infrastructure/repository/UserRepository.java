@@ -3,7 +3,7 @@ package infrastructure.repository;
 import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+
 
 public class UserRepository extends BaseRepository<User> {
     public User findById(int id) {

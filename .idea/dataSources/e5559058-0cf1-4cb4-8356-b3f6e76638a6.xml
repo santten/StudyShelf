@@ -1,166 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="@localhost">
+<dataSource name="@localhost [2]">
   <database-model serializer="dbm" dbms="MARIADB" family-id="MARIADB" format-version="4.53">
     <root id="1">
       <DefaultCasing>lower/lower</DefaultCasing>
       <DefaultEngine>InnoDB</DefaultEngine>
-      <Grants>|root||root|127.0.0.1|ALTER|G
-|root||root|::1|ALTER|G
-|root||root|armas|ALTER|G
-|root||root|localhost|ALTER|G
-|root||root|127.0.0.1|ALTER ROUTINE|G
-|root||root|::1|ALTER ROUTINE|G
-|root||root|armas|ALTER ROUTINE|G
-|root||root|localhost|ALTER ROUTINE|G
-|root||root|127.0.0.1|BINLOG ADMIN|G
-|root||root|::1|BINLOG ADMIN|G
-|root||root|armas|BINLOG ADMIN|G
-|root||root|localhost|BINLOG ADMIN|G
-|root||root|127.0.0.1|BINLOG MONITOR|G
-|root||root|::1|BINLOG MONITOR|G
-|root||root|armas|BINLOG MONITOR|G
-|root||root|localhost|BINLOG MONITOR|G
-|root||root|127.0.0.1|BINLOG REPLAY|G
-|root||root|::1|BINLOG REPLAY|G
-|root||root|armas|BINLOG REPLAY|G
-|root||root|localhost|BINLOG REPLAY|G
-|root||root|127.0.0.1|CONNECTION ADMIN|G
-|root||root|::1|CONNECTION ADMIN|G
-|root||root|armas|CONNECTION ADMIN|G
-|root||root|localhost|CONNECTION ADMIN|G
-|root||root|127.0.0.1|CREATE|G
-|root||root|::1|CREATE|G
-|root||root|armas|CREATE|G
-|root||root|localhost|CREATE|G
-|root||root|127.0.0.1|CREATE ROUTINE|G
-|root||root|::1|CREATE ROUTINE|G
-|root||root|armas|CREATE ROUTINE|G
-|root||root|localhost|CREATE ROUTINE|G
-|root||root|127.0.0.1|CREATE TABLESPACE|G
-|root||root|::1|CREATE TABLESPACE|G
-|root||root|armas|CREATE TABLESPACE|G
-|root||root|localhost|CREATE TABLESPACE|G
-|root||root|127.0.0.1|CREATE TEMPORARY TABLES|G
-|root||root|::1|CREATE TEMPORARY TABLES|G
-|root||root|armas|CREATE TEMPORARY TABLES|G
-|root||root|localhost|CREATE TEMPORARY TABLES|G
-|root||root|127.0.0.1|CREATE USER|G
-|root||root|::1|CREATE USER|G
-|root||root|armas|CREATE USER|G
-|root||root|localhost|CREATE USER|G
-|root||root|127.0.0.1|CREATE VIEW|G
-|root||root|::1|CREATE VIEW|G
-|root||root|armas|CREATE VIEW|G
-|root||root|localhost|CREATE VIEW|G
-|root||root|127.0.0.1|DELETE|G
-|root||root|::1|DELETE|G
-|root||root|armas|DELETE|G
-|root||root|localhost|DELETE|G
-|root||root|127.0.0.1|DELETE HISTORY|G
-|root||root|::1|DELETE HISTORY|G
-|root||root|armas|DELETE HISTORY|G
-|root||root|localhost|DELETE HISTORY|G
-|root||root|127.0.0.1|DROP|G
-|root||root|::1|DROP|G
-|root||root|armas|DROP|G
-|root||root|localhost|DROP|G
-|root||root|127.0.0.1|EVENT|G
-|root||root|::1|EVENT|G
-|root||root|armas|EVENT|G
-|root||root|localhost|EVENT|G
-|root||root|127.0.0.1|EXECUTE|G
-|root||root|::1|EXECUTE|G
-|root||root|armas|EXECUTE|G
-|root||root|localhost|EXECUTE|G
-|root||root|127.0.0.1|FEDERATED ADMIN|G
-|root||root|::1|FEDERATED ADMIN|G
-|root||root|armas|FEDERATED ADMIN|G
-|root||root|localhost|FEDERATED ADMIN|G
-|root||root|127.0.0.1|FILE|G
-|root||root|::1|FILE|G
-|root||root|armas|FILE|G
-|root||root|localhost|FILE|G
-|root||root|127.0.0.1|INDEX|G
-|root||root|::1|INDEX|G
-|root||root|armas|INDEX|G
-|root||root|localhost|INDEX|G
-|root||root|127.0.0.1|INSERT|G
-|root||root|::1|INSERT|G
-|root||root|armas|INSERT|G
-|root||root|localhost|INSERT|G
-|root||root|127.0.0.1|LOCK TABLES|G
-|root||root|::1|LOCK TABLES|G
-|root||root|armas|LOCK TABLES|G
-|root||root|localhost|LOCK TABLES|G
-|root||root|127.0.0.1|PROCESS|G
-|root||root|::1|PROCESS|G
-|root||root|armas|PROCESS|G
-|root||root|localhost|PROCESS|G
-|root||root|127.0.0.1|READ_ONLY ADMIN|G
-|root||root|::1|READ_ONLY ADMIN|G
-|root||root|armas|READ_ONLY ADMIN|G
-|root||root|localhost|READ_ONLY ADMIN|G
-|root||root|127.0.0.1|REFERENCES|G
-|root||root|::1|REFERENCES|G
-|root||root|armas|REFERENCES|G
-|root||root|localhost|REFERENCES|G
-|root||root|127.0.0.1|RELOAD|G
-|root||root|::1|RELOAD|G
-|root||root|armas|RELOAD|G
-|root||root|localhost|RELOAD|G
-|root||root|127.0.0.1|REPLICATION MASTER ADMIN|G
-|root||root|::1|REPLICATION MASTER ADMIN|G
-|root||root|armas|REPLICATION MASTER ADMIN|G
-|root||root|localhost|REPLICATION MASTER ADMIN|G
-|root||root|127.0.0.1|REPLICATION SLAVE|G
-|root||root|::1|REPLICATION SLAVE|G
-|root||root|armas|REPLICATION SLAVE|G
-|root||root|localhost|REPLICATION SLAVE|G
-|root||root|127.0.0.1|REPLICATION SLAVE ADMIN|G
-|root||root|::1|REPLICATION SLAVE ADMIN|G
-|root||root|armas|REPLICATION SLAVE ADMIN|G
-|root||root|localhost|REPLICATION SLAVE ADMIN|G
-|root||root|127.0.0.1|SELECT|G
-|root||root|::1|SELECT|G
-|root||root|armas|SELECT|G
-|root||root|localhost|SELECT|G
-|root||root|127.0.0.1|SET USER|G
-|root||root|::1|SET USER|G
-|root||root|armas|SET USER|G
-|root||root|localhost|SET USER|G
-|root||root|127.0.0.1|SHOW DATABASES|G
-|root||root|::1|SHOW DATABASES|G
-|root||root|armas|SHOW DATABASES|G
-|root||root|localhost|SHOW DATABASES|G
-|root||root|127.0.0.1|SHOW VIEW|G
-|root||root|::1|SHOW VIEW|G
-|root||root|armas|SHOW VIEW|G
-|root||root|localhost|SHOW VIEW|G
-|root||root|127.0.0.1|SHUTDOWN|G
-|root||root|::1|SHUTDOWN|G
-|root||root|armas|SHUTDOWN|G
-|root||root|localhost|SHUTDOWN|G
-|root||root|127.0.0.1|SLAVE MONITOR|G
-|root||root|::1|SLAVE MONITOR|G
-|root||root|armas|SLAVE MONITOR|G
-|root||root|localhost|SLAVE MONITOR|G
-|root||root|127.0.0.1|SUPER|G
-|root||root|::1|SUPER|G
-|root||root|armas|SUPER|G
-|root||root|localhost|SUPER|G
-|root||root|127.0.0.1|TRIGGER|G
-|root||root|::1|TRIGGER|G
-|root||root|armas|TRIGGER|G
-|root||root|localhost|TRIGGER|G
-|root||root|127.0.0.1|UPDATE|G
-|root||root|::1|UPDATE|G
-|root||root|armas|UPDATE|G
-|root||root|localhost|UPDATE|G
-|root||root|127.0.0.1|grant option|G
-|root||root|::1|grant option|G
-|root||root|armas|grant option|G
-|root||root|localhost|grant option|G
-studyshelf|schema||appuser|localhost|ALTER|G
+      <Grants>studyshelf|schema||appuser|localhost|ALTER|G
 studyshelf|schema||appuser|localhost|ALTER ROUTINE|G
 studyshelf|schema||appuser|localhost|CREATE|G
 studyshelf|schema||appuser|localhost|CREATE ROUTINE|G
@@ -1371,59 +1215,13 @@ studyshelf|schema||appuser|localhost|UPDATE|G</Grants>
     <collation id="507" parent="1" name="utf8mb4_vietnamese_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <schema id="508" parent="1" name="ankkalinna">
-      <CollationName>latin1_swedish_ci</CollationName>
-    </schema>
-    <schema id="509" parent="1" name="bank_simulation">
-      <CollationName>latin1_swedish_ci</CollationName>
-    </schema>
-    <schema id="510" parent="1" name="company">
-      <CollationName>latin1_swedish_ci</CollationName>
-    </schema>
-    <schema id="511" parent="1" name="company2">
-      <CollationName>latin1_swedish_ci</CollationName>
-    </schema>
-    <schema id="512" parent="1" name="currencies">
-      <CollationName>latin1_swedish_ci</CollationName>
-    </schema>
-    <schema id="513" parent="1" name="currencies2">
-      <CollationName>latin1_swedish_ci</CollationName>
-    </schema>
-    <schema id="514" parent="1" name="flight_game">
-      <CollationName>latin1_swedish_ci</CollationName>
-    </schema>
-    <schema id="515" parent="1" name="information_schema">
+    <schema id="508" parent="1" name="information_schema">
       <CollationName>utf8mb3_general_ci</CollationName>
     </schema>
-    <schema id="516" parent="1" name="mysql">
+    <schema id="509" parent="1" name="studyshelf">
       <CollationName>latin1_swedish_ci</CollationName>
     </schema>
-    <schema id="517" parent="1" name="performance_schema">
-      <CollationName>utf8mb3_general_ci</CollationName>
-    </schema>
-    <schema id="518" parent="1" name="studyshelf">
-      <LastIntrospectionLocalTimestamp>2025-02-04.14:41:53</LastIntrospectionLocalTimestamp>
-      <CollationName>latin1_swedish_ci</CollationName>
-    </schema>
-    <schema id="519" parent="1" name="sys">
-      <CollationName>utf8mb3_general_ci</CollationName>
-    </schema>
-    <user id="520" parent="1" name="appuser">
-      <Host>localhost</Host>
-    </user>
-    <user id="521" parent="1" name="mariadb.sys">
-      <Host>localhost</Host>
-    </user>
-    <user id="522" parent="1" name="root">
-      <Host>127.0.0.1</Host>
-    </user>
-    <user id="523" parent="1" name="root">
-      <Host>::1</Host>
-    </user>
-    <user id="524" parent="1" name="root">
-      <Host>armas</Host>
-    </user>
-    <user id="525" parent="1" name="root">
+    <user id="510" parent="1" name="appuser">
       <Host>localhost</Host>
     </user>
   </database-model>

@@ -2,6 +2,8 @@ package domain.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "StudyMaterial")
@@ -14,6 +16,10 @@ public class StudyMaterial {
     @ManyToOne
     @JoinColumn(name = "UploaderId")
     private User uploader;
+
+    @ManyToOne
+    @JoinColumn(name = "CategoryId")
+    private Category category;
 
     @Column(name = "MaterialName", length = 255)
     private String name;
@@ -36,6 +42,13 @@ public class StudyMaterial {
     @Enumerated(EnumType.STRING)
     @Column(name = "Status")
     private MaterialStatus status;
+    @ManyToMany
+    @JoinTable(
+            name = "MaterialTag",
+            joinColumns = @JoinColumn(name = "MaterialId"),
+            inverseJoinColumns = @JoinColumn(name = "TagId")
+    )
+    private Set<Tag> tags = new HashSet<>();
 
     // Default constructor
     public StudyMaterial() {}
@@ -120,6 +133,19 @@ public class StudyMaterial {
     }
     public void setStatus(MaterialStatus status) {
         this.status = status;
+    }
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+    public Set<Tag> getTags() {
+        return tags;
+    }
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 
 }

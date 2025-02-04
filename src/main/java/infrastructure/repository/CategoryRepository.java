@@ -1,17 +1,14 @@
 package infrastructure.repository;
 
-import domain.model.StudyMaterial;
+import domain.model.Category;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 
-
-public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
-
-
-    public StudyMaterial findById(int id) {
+public class CategoryRepository extends BaseRepository<Category>  {
+    public Category findById(int id) {
         EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
         try {
-            return em.find(StudyMaterial.class, id);
+            return em.find(Category.class, id);
         } finally {
             em.close();
         }
