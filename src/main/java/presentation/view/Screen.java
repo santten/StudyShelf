@@ -1,4 +1,4 @@
-package presentation.controller;
+package presentation.view;
 
 public enum Screen {
     HOME,

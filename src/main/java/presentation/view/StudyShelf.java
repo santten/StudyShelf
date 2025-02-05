@@ -4,23 +4,27 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 
 import javafx.stage.Stage;
-import presentation.controller.SceneManager;
 
 import java.io.IOException;
 
-import static presentation.controller.Screen.HOME;
+import static presentation.view.Screen.HOME;
 
 public class StudyShelf extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
-
         SceneManager sm = SceneManager.getInstance();
 
         sm.setScene(HOME);
-        Scene scene = new Scene(sm.getCurBase());
 
         primaryStage.setTitle("StudyShelf");
-        primaryStage.setScene(scene);
+        primaryStage.setWidth(800);
+        primaryStage.setHeight(600);
+
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
+
+        primaryStage.setScene(new Scene(sm.getCurBase()));
+
         primaryStage.show();
     }
 

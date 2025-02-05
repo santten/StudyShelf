@@ -5,14 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0470772-9bb3-4899-afde-daa24f9eee87" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/presentation/controller/Screen.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/presentation/controller/TestController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/css/home.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/Marjaana_Malkamaki_KEKSI_Metropolia_kesa_S3A5718_nettikoko.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/pexels-yaroslav-shuraev-9490224.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/cssdialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cssdialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Launcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/presentation/controller/SceneManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/presentation/controller/SceneManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/presentation/view/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/presentation/view/StudyShelf.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/container.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/container.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/test.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/test.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/presentation/controller/SceneManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/presentation/view/SceneManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/presentation/controller/Screen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/presentation/view/Screen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/presentation/controller/TestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/presentation/controller/TestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/presentation/view/StudyShelf.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/presentation/view/StudyShelf.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/footer.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/footer.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/header.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/header.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/test2.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/test2.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,31 +57,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.HelloStudyShelf.executor": "Run",
-    "Application.Launcher.executor": "Run",
-    "Application.StudyShelfApplication.executor": "Run",
-    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "gui",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "SDKs",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "editor.preferences.completion",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.HelloStudyShelf.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Launcher.executor&quot;: &quot;Run&quot;,
+    &quot;Application.StudyShelfApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;gui&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\santt\IdeaProjects\StudyShelf\src\main\resources\css" />
+      <recent name="C:\Users\santt\IdeaProjects\StudyShelf\src\main\resources\images" />
+      <recent name="C:\Users\santt\IdeaProjects\StudyShelf\src\main\resources" />
+      <recent name="C:\Users\santt\IdeaProjects\StudyShelf\src\main\resources\fxml" />
       <recent name="C:\Users\Käyttäjä\IdeaProjects\StudyShelf\src\main\resources\fonts" />
     </key>
   </component>
@@ -140,7 +149,14 @@
       <workItem from="1738343397470" duration="7713000" />
       <workItem from="1738526626195" duration="2148000" />
       <workItem from="1738622685505" duration="527000" />
-      <workItem from="1738692159907" duration="3260000" />
+      <workItem from="1738692159907" duration="6793000" />
+      <workItem from="1738743722667" duration="50000" />
+      <workItem from="1738750137024" duration="5199000" />
+      <workItem from="1738757495354" duration="517000" />
+      <workItem from="1738758737395" duration="1537000" />
+      <workItem from="1738768946757" duration="3264000" />
+      <workItem from="1738773048000" duration="78000" />
+      <workItem from="1738777363848" duration="844000" />
     </task>
     <servers />
   </component>

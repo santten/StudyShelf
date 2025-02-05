@@ -12,21 +12,46 @@
 }
 
 .title {
-    -fx-text-fill: -error;
-    -fx-font-family: "Aladin";
-    -fx-font-size: 36;
+    -fx-font-family: "Aladin Regular";
+    -fx-font-size: 32;
     -fx-padding: 0, 24px;
 }
 
-.buttonM {
+.text {
+    -fx-font-family: "B612";
+    -fx-font-size: 12;
+}
+
+.buttonL {
     -fx-background-color: -secondary-light;
-    -fx-text-fill: -light;
-    -fx-font-family: "Calistoga";
-    -fx-font-size: 20;
     -fx-padding: 4px 16px;
     -fx-background-radius: 16px;
 }
 
+.buttonL .text {
+    -fx-fill: -light;
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 20;
+}
+
+.buttonM {
+    -fx-background-color: -primary;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 8px;
+}
+
+.buttonM .text {
+    -fx-font-family: "Calistoga";
+    -fx-fill: -light;
+    -fx-font-size: 20;
+}
+
 .footerWrapper {
+    -fx-font-family: Calistoga;
     -fx-background-color: -dark;
+}
+
+.heading3 {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 24;
 }

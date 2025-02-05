@@ -1,0 +1,9 @@
+.hero {
+    -fx-background-image: url("../images/pexels-yaroslav-shuraev-9490224.jpg");
+    -fx-background-size: 100%;
+}
+
+.image1 {
+    -fx-background-image: url("../images/Marjaana_Malkamaki_KEKSI_Metropolia_kesa_S3A5718_nettikoko.jpg");
+    -fx-background-size: 100%;
+}

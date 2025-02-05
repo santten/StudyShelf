@@ -1,13 +1,13 @@
 package presentation.controller;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import presentation.view.SceneManager;
 
 import java.io.IOException;
 
-import static presentation.controller.Screen.TEST2;
+import static presentation.view.Screen.TEST2;
 
 public class TestController {
     @FXML
