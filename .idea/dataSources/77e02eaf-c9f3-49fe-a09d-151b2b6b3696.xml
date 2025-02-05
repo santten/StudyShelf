@@ -1402,7 +1402,7 @@ studyshelf|schema||appuser|localhost|UPDATE|G</Grants>
       <CollationName>utf8mb3_general_ci</CollationName>
     </schema>
     <schema id="518" parent="1" name="studyshelf">
-      <LastIntrospectionLocalTimestamp>2025-02-04.14:41:53</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-02-05.18:22:30</LastIntrospectionLocalTimestamp>
       <CollationName>latin1_swedish_ci</CollationName>
     </schema>
     <schema id="519" parent="1" name="sys">

@@ -1,8 +1,5 @@
 import domain.model.*;
-import infrastructure.repository.CategoryRepository;
-import infrastructure.repository.StudyMaterialRepository;
-import infrastructure.repository.TagRepository;
-import infrastructure.repository.UserRepository;
+import infrastructure.repository.*;
 import presentation.StudyShelfApplication;
 
 import java.util.HashSet;
@@ -43,6 +40,17 @@ public class Launcher {
         StudyMaterialRepository materialRepo = new StudyMaterialRepository();
         StudyMaterial savedMaterial = materialRepo.save(testMaterial);
         System.out.println("Saved material with ID: " + savedMaterial.getMaterialId());
+        // Test Hibernate rating
+        RatingRepository ratingRepo = new RatingRepository();
+        Rating testRating = new Rating(5, savedMaterial, savedUser);
+        Rating savedRating = ratingRepo.save(testRating);
+        System.out.println("Saved rating with ID: " + savedRating.getRatingId());
+
+// Test Hibernate review
+        ReviewRepository reviewRepo = new ReviewRepository();
+        Review testReview = new Review("Great material for dummy like me!", savedMaterial, savedUser);
+        Review savedReview = reviewRepo.save(testReview);
+        System.out.println("Saved review with ID: " + savedReview.getReviewId());
 
 
 

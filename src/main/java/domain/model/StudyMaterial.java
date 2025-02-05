@@ -49,6 +49,10 @@ public class StudyMaterial {
             inverseJoinColumns = @JoinColumn(name = "TagId")
     )
     private Set<Tag> tags = new HashSet<>();
+    @OneToMany(mappedBy = "studyMaterial")
+    private Set<Rating> ratings = new HashSet<>();
+    @OneToMany(mappedBy = "studyMaterial")
+    private Set<Review> reviews = new HashSet<>();
 
     // Default constructor
     public StudyMaterial() {}
@@ -147,5 +151,13 @@ public class StudyMaterial {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
+    public Set<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
 
 }

@@ -2,6 +2,9 @@ package domain.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "User")
@@ -25,6 +28,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "Role", nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Rating> ratings = new HashSet<>();
 
     // Default constructor
     public User() {}
