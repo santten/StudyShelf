@@ -25,10 +25,6 @@ public class User {
     @Column(name = "Password", length = 255)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "Role", nullable = false)
-    private Role role;
-
     @OneToMany(mappedBy = "user")
     private Set<Rating> ratings = new HashSet<>();
 
@@ -36,22 +32,20 @@ public class User {
     public User() {}
 
     // Constructor for new users
-    public User(String firstName, String lastName, String email, String password, Role role) {
+    public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     // Constructor for existing users
-    public User(int userId, String firstName, String lastName, String email, String password, Role role) {
+    public User(int userId, String firstName, String lastName, String email, String password) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     // Getters and Setters
@@ -95,11 +89,4 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }

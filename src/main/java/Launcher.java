@@ -8,11 +8,18 @@ import java.util.Set;
 
 public class Launcher {
     public static void main(String[] args) {
+
         // Test Hibernate user
         UserRepository userRepo = new UserRepository();
-        User testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "password", Role.STUDENT);
+        User testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "password");
         User savedUser = userRepo.save(testUser);
         System.out.println("Saved user with ID: " + savedUser.getUserId());
+        // Test Hibernate role
+        RoleRepository roleRepo = new RoleRepository();
+        Role testRole = new Role("TEACHER");
+        Role savedRole = roleRepo.save(testRole);
+        System.out.println("Saved role with ID: " + savedRole.getId());
+
         // Test Hibernate category
         CategoryRepository categoryRepo = new CategoryRepository();
         Category testCategory = new Category("Java", savedUser);
