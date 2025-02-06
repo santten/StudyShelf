@@ -1,4 +1,4 @@
-import presentation.StudyShelfApplication;
+import presentation.view.StudyShelfApplication;
 
 /**
  *  The main entry point for the Airport Simulator application.
