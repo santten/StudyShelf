@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
 
-<HBox alignment="CENTER" prefHeight="24.0" prefWidth="600.0" spacing="200.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="600.0" spacing="200.0" style="-fx-background-color: -dark;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: white;" text="StudyShelf 0.0.1" textAlignment="CENTER" wrappingWidth="566.7721557617188" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: -light; -fx-font-size: 16;" styleClass="title" text="StudyShelf" textAlignment="RIGHT" />
    </children>
    <padding>
       <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.control.ScrollPane?>
-
-<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="500.0" maxWidth="-Infinity" minHeight="200.0" minViewportHeight="200.0" minWidth="-Infinity" prefHeight="500.0" prefViewportHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" />

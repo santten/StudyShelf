@@ -14,13 +14,13 @@ public class GUILogger {
 
     public static void warn(String warning){
         if (showWarnings) {
-            System.out.println("[GUILogger WARNING] " + warning);
+            System.out.println("\033[33m[GUILogger WARNING] " + warning);
         }
     }
 
     public static void info(String info){
         if (showInfo) {
-            System.out.println("[GUILogger INFO] " + info);
+            System.out.println("\033[36m[GUILogger INFO] " + info);
         }
     }
 }

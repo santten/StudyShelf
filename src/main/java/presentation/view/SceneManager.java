@@ -42,7 +42,6 @@ public class SceneManager {
             instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(screen == SCREEN_SIGNUP ? "/fxml/signup.fxml" : "/fxml/login.fxml")));
 
         } else {
-
             BorderPane bp = new BorderPane();
             bp.setTop(instance.header);
             bp.setBottom(instance.footer);
@@ -69,10 +68,11 @@ public class SceneManager {
                     break;
             }
 
-            GUILogger.info("Switching to show content at " + resourcePath);
             base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(resourcePath))));
             instance.current.setCenter(base);
         }
+
+        GUILogger.info("Displaying " + screen);
 
         primaryStage.setTitle("StudyShelf");
         primaryStage.setScene(new Scene(instance.current, 800, 600));

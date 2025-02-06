@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -9,7 +11,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<GridPane prefHeight="48.0" prefWidth="800.0" style="-fx-background-color: -dark;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.HeaderController">
+<GridPane prefHeight="48.0" prefWidth="800.0" style="-fx-background-color: -dark;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.HeaderController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -22,17 +24,24 @@
          <GridPane.margin>
             <Insets bottom="12.0" top="12.0" />
          </GridPane.margin>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Text>
       <HBox alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1">
          <children>
-            <Button fx:id="btn_toCourses" mnemonicParsing="false" text="Courses" />
-            <Button fx:id="btn_toSearch" mnemonicParsing="false" text="Search" />
-            <Button fx:id="btn_toProfile" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Profile" />
-            <Button fx:id="btn_logOut" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Log Out" />
+            <Button fx:id="btn_toCourses" mnemonicParsing="false" styleClass="naviBtn" text="Courses" />
+            <Button fx:id="btn_toSearch" mnemonicParsing="false" style="-fx-shape: M10 4.5a2 2 0 1 1-4 0a2 2 0 0 1 4 0m1.5 0a3.5 3.5 0 1 1-7 0a3.5 3.5 0 0 1 7 0m-9 8c0-.204.22-.809 1.32-1.459C4.838 10.44 6.32 10 8 10s3.162.44 4.18 1.041c1.1.65 1.32 1.255 1.32 1.459a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1m5.5-4c-3.85 0-7 2-7 4A2.5 2.5 0 0 0 3.5 15h9a2.5 2.5 0 0 0 2.5-2.5c0-2-3.15-4-7-4;" styleClass="naviBtn" text="Search" />
+            <Button fx:id="btn_toProfile" alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="naviBtn" text="Profile" />
+            <Button fx:id="btn_logOut" alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="naviBtn" text="Log Out" />
          </children>
       </HBox>
    </children>
    <padding>
       <Insets bottom="12.0" left="24.0" right="24.0" top="12.0" />
    </padding>
+   <stylesheets>
+      <URL value="@../css/style.css" />
+      <URL value="@../css/header.css" />
+   </stylesheets>
 </GridPane>

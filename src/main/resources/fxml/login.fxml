@@ -13,11 +13,12 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: -light;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: -light;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.LoginController">
    <center>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="4.0" BorderPane.alignment="CENTER">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: -error;" styleClass="title" text="StudyShelf" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="heading3" text="Log In" />
             <GridPane hgap="8.0" maxWidth="300.0" prefWidth="225.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.33331298828125" minWidth="10.0" prefWidth="55.33333333333333" />

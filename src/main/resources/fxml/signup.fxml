@@ -14,12 +14,12 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.SignupController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: -light;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.SignupController">
    <center>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="12.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="8.0" BorderPane.alignment="CENTER">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="StudyShelf" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: -error;" styleClass="title" text="StudyShelf" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="heading3" text="Register" />
             <GridPane hgap="8.0" maxWidth="403.0" prefHeight="210.0" prefWidth="403.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.33331298828125" minWidth="10.0" prefWidth="56.0" />
@@ -52,7 +52,7 @@
                   <Label alignment="CENTER_RIGHT" text="Role" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
                </children>
             </GridPane>
-            <Button fx:id="btn_signup" mnemonicParsing="false" text="Create your account" />
+            <Button fx:id="btn_signup" mnemonicParsing="false" styleClass="btnS" text="Create your account" />
             <TextFlow prefHeight="0.0" prefWidth="800.0" textAlignment="CENTER">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Coming back?" />
