@@ -3,6 +3,8 @@ package domain.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "Review")
 public class Review {
@@ -11,6 +13,8 @@ public class Review {
     private int reviewId;
     @Column(name = "ReviewText", length = 500)
     private String reviewText;
+    @Column(name="Timestamp")
+    private LocalDateTime timestamp = LocalDateTime.now();
     @ManyToOne
     @JoinColumn(name = "materialId")
     private StudyMaterial studyMaterial;

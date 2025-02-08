@@ -1,9 +1,15 @@
 import domain.model.*;
+import domain.service.StudyMaterialService;
 import infrastructure.repository.*;
 import presentation.StudyShelfApplication;
-
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import domain.service.GoogleDriveService;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 
 
 public class Launcher {
@@ -33,6 +39,7 @@ public class Launcher {
                 "materials/java-dumb.pdf",
                 1.5f,
                 "PDF",
+                LocalDateTime.now(),
                 MaterialStatus.PENDING
         );
         testMaterial.setCategory(savedCategory);
@@ -52,9 +59,27 @@ public class Launcher {
         Review savedReview = reviewRepo.save(testReview);
         System.out.println("Saved review with ID: " + savedReview.getReviewId());
 
+// Test Google Drive Upload
+        GoogleDriveService driveService = new GoogleDriveService();
+        StudyMaterialService materialService = new StudyMaterialService(driveService, materialRepo);
 
+        try {
+            byte[] content = Files.readAllBytes(Path.of("C:\\Users\\armas\\Downloads\\resort_hotel.txt")); // Replace with your file path
 
+            StudyMaterial uploadedMaterial = materialService.uploadMaterial(
+                    content,
+                    "resorthotel.txt",
+                    savedUser,
+                    "Resort Hotel Data",
+                    "Hotel information document"
+            );
 
+            System.out.println("Successfully uploaded file. URL: " + uploadedMaterial.getLink());
+
+        } catch (IOException e) {
+            System.out.println("Upload test failed: " + e.getMessage());
+            e.printStackTrace();
+        }
 
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }

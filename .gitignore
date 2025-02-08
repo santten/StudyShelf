@@ -34,5 +34,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
-.DS_Store
+### google cloud storage credentials###
+src/main/resources/credentials/
+*.json

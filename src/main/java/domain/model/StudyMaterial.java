@@ -59,19 +59,20 @@ public class StudyMaterial {
 
     // Constructor for new study materials
     public StudyMaterial(User uploader, String name, String description, String link,
-                         Float fileSize, String fileType, MaterialStatus status) {
+                         float fileSize, String fileType, LocalDateTime timestamp, MaterialStatus status) {
         this.uploader = uploader;
         this.name = name;
         this.description = description;
         this.link = link;
         this.fileSize = fileSize;
         this.fileType = fileType;
+        this.timestamp = timestamp;
         this.status = status;
     }
 
     // Constructor for existing study materials
     public StudyMaterial(int materialId, User uploader, String name, String description,
-                         String link, Float fileSize, String fileType,
+                         String link, float fileSize, String fileType,
                          LocalDateTime timestamp, MaterialStatus status) {
         this.materialId = materialId;
         this.uploader = uploader;
