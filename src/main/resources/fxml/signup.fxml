@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -22,8 +23,8 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="heading3" text="Register" />
             <GridPane hgap="8.0" maxWidth="403.0" prefHeight="210.0" prefWidth="403.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.33331298828125" minWidth="10.0" prefWidth="56.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.0" minWidth="10.0" prefWidth="244.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.33331298828125" minWidth="10.0" prefWidth="112.66668701171875" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.0" minWidth="10.0" prefWidth="283.33331298828125" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -38,18 +39,18 @@
                   <Label text="E-Mail" textAlignment="RIGHT" GridPane.halignment="RIGHT" />
                   <Label alignment="CENTER_RIGHT" text="Password" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
                   <TextField prefHeight="25.0" prefWidth="335.0" GridPane.columnIndex="1" />
-                  <TextField prefWidth="263.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField prefWidth="263.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <TextField prefWidth="263.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Re-Enter Password" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="129.0" text="Re-Enter Password" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
                   <Label text="Display Name" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                  <MenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="301.0" text="Teacher" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                  <MenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="301.0" text="Choose Your Role" GridPane.columnIndex="1" GridPane.rowIndex="6">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                      <MenuItem mnemonicParsing="false" text="Action 2" />
+                      <MenuItem mnemonicParsing="false" text="Student" />
+                      <MenuItem mnemonicParsing="false" text="Teacher" />
                     </items>
                   </MenuButton>
                   <Label alignment="CENTER_RIGHT" text="Role" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                  <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
             </GridPane>
             <Button fx:id="btn_signup" mnemonicParsing="false" styleClass="btnS" text="Create your account" />

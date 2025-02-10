@@ -27,13 +27,19 @@
     -fx-fill: -primary-light;
 }
 
+.heading4 {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 16;
+    -fx-fill: -primary-light;
+}
+
 .btnS {
     -fx-background-color: -primary;
     -fx-padding: 4px 8px;
     -fx-background-radius: 8;
 }
 
-.btnS:hover {
+.btnS:hover, btnS:focused {
     -fx-background-color: -secondary;
 }
 
@@ -56,17 +62,15 @@
     -fx-focus-fill: -primary-light;
 }
 
-.naviBtn {
-    -fx-background-color: transparent;
-    -fx-padding: 0 12;
+.menu-button {
+    -fx-background-color: #ccd7b8;
 }
 
-.naviBtn .text {
-    -fx-fill: -light;
-    -fx-font-family: "Calistoga";
-    -fx-font-size: 16;
+.context-menu {
+    -fx-effect: null;
+    -fx-background-radius: 4;
 }
 
-.naviBtn .text:hover {
-    -fx-fill: -secondary-light;
+.menu-item:focused {
+    -fx-background-color: -primary;
 }

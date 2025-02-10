@@ -2,7 +2,7 @@ package presentation.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
+import javafx.scene.control.Hyperlink;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import static presentation.view.Screen.*;
 
 public class HeaderController {
-    @FXML Text txt_logo;
+    @FXML Hyperlink link_logo;
     @FXML Button btn_toCourses;
     @FXML Button btn_toSearch;
     @FXML Button btn_toProfile;
@@ -20,7 +20,7 @@ public class HeaderController {
     private void initialize() throws IOException {
         SceneManager sm = SceneManager.getInstance();
 
-        txt_logo.setOnMouseClicked( (e) -> {
+        link_logo.setOnAction( (e) -> {
             try { sm.setScreen(SCREEN_HOME); }
             catch (IOException ex) { throw new RuntimeException(ex); }
         });

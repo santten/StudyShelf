@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -32,7 +33,7 @@
                   <Label text="E-Mail" textAlignment="RIGHT" GridPane.halignment="RIGHT" />
                   <Label text="Password" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                   <TextField prefHeight="25.0" prefWidth="216.0" GridPane.columnIndex="1" />
-                  <TextField prefWidth="263.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <Button fx:id="btn_login" mnemonicParsing="false" styleClass="btnS" text="Log In" />
