@@ -44,7 +44,7 @@ public class Category {
     }
 
     public void setCategoryName(String categoryName) {
-        this.name = name;
+        this.name = categoryName;
     }
 
     public User getCreator() {
