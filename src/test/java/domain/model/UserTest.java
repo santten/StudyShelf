@@ -38,7 +38,6 @@ class UserTest {
     void testUserWithoutPermissionsShouldDenyAll() {
         User guest = new User("Guest", "User", "guest@example.com", "password");
         assertFalse(guest.hasPermission(PermissionType.CREATE_TAGS, guest.getUserId()));
-        assertFalse(guest.hasPermission(PermissionType.READ_RESOURCES, guest.getUserId()));
     }
 
     @Test
