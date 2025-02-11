@@ -6,169 +6,180 @@
       <DefaultEngine>InnoDB</DefaultEngine>
       <Grants>|root||root|127.0.0.1|ALTER|G
 |root||root|::1|ALTER|G
-|root||root|jy|ALTER|G
+|root||root|armas|ALTER|G
 |root||root|localhost|ALTER|G
 |root||root|127.0.0.1|ALTER ROUTINE|G
 |root||root|::1|ALTER ROUTINE|G
-|root||root|jy|ALTER ROUTINE|G
+|root||root|armas|ALTER ROUTINE|G
 |root||root|localhost|ALTER ROUTINE|G
 |root||root|127.0.0.1|BINLOG ADMIN|G
 |root||root|::1|BINLOG ADMIN|G
-|root||root|jy|BINLOG ADMIN|G
+|root||root|armas|BINLOG ADMIN|G
 |root||root|localhost|BINLOG ADMIN|G
 |root||root|127.0.0.1|BINLOG MONITOR|G
 |root||root|::1|BINLOG MONITOR|G
-|root||root|jy|BINLOG MONITOR|G
+|root||root|armas|BINLOG MONITOR|G
 |root||root|localhost|BINLOG MONITOR|G
 |root||root|127.0.0.1|BINLOG REPLAY|G
 |root||root|::1|BINLOG REPLAY|G
-|root||root|jy|BINLOG REPLAY|G
+|root||root|armas|BINLOG REPLAY|G
 |root||root|localhost|BINLOG REPLAY|G
 |root||root|127.0.0.1|CONNECTION ADMIN|G
 |root||root|::1|CONNECTION ADMIN|G
-|root||root|jy|CONNECTION ADMIN|G
+|root||root|armas|CONNECTION ADMIN|G
 |root||root|localhost|CONNECTION ADMIN|G
 |root||root|127.0.0.1|CREATE|G
 |root||root|::1|CREATE|G
-|root||root|jy|CREATE|G
+|root||root|armas|CREATE|G
 |root||root|localhost|CREATE|G
 |root||root|127.0.0.1|CREATE ROUTINE|G
 |root||root|::1|CREATE ROUTINE|G
-|root||root|jy|CREATE ROUTINE|G
+|root||root|armas|CREATE ROUTINE|G
 |root||root|localhost|CREATE ROUTINE|G
 |root||root|127.0.0.1|CREATE TABLESPACE|G
 |root||root|::1|CREATE TABLESPACE|G
-|root||root|jy|CREATE TABLESPACE|G
+|root||root|armas|CREATE TABLESPACE|G
 |root||root|localhost|CREATE TABLESPACE|G
 |root||root|127.0.0.1|CREATE TEMPORARY TABLES|G
 |root||root|::1|CREATE TEMPORARY TABLES|G
-|root||root|jy|CREATE TEMPORARY TABLES|G
+|root||root|armas|CREATE TEMPORARY TABLES|G
 |root||root|localhost|CREATE TEMPORARY TABLES|G
 |root||root|127.0.0.1|CREATE USER|G
 |root||root|::1|CREATE USER|G
-|root||root|jy|CREATE USER|G
+|root||root|armas|CREATE USER|G
 |root||root|localhost|CREATE USER|G
 |root||root|127.0.0.1|CREATE VIEW|G
 |root||root|::1|CREATE VIEW|G
-|root||root|jy|CREATE VIEW|G
+|root||root|armas|CREATE VIEW|G
 |root||root|localhost|CREATE VIEW|G
 |root||root|127.0.0.1|DELETE|G
 |root||root|::1|DELETE|G
-|root||root|jy|DELETE|G
+|root||root|armas|DELETE|G
 |root||root|localhost|DELETE|G
 |root||root|127.0.0.1|DELETE HISTORY|G
 |root||root|::1|DELETE HISTORY|G
-|root||root|jy|DELETE HISTORY|G
+|root||root|armas|DELETE HISTORY|G
 |root||root|localhost|DELETE HISTORY|G
 |root||root|127.0.0.1|DROP|G
 |root||root|::1|DROP|G
-|root||root|jy|DROP|G
+|root||root|armas|DROP|G
 |root||root|localhost|DROP|G
 |root||root|127.0.0.1|EVENT|G
 |root||root|::1|EVENT|G
-|root||root|jy|EVENT|G
+|root||root|armas|EVENT|G
 |root||root|localhost|EVENT|G
 |root||root|127.0.0.1|EXECUTE|G
 |root||root|::1|EXECUTE|G
-|root||root|jy|EXECUTE|G
+|root||root|armas|EXECUTE|G
 |root||root|localhost|EXECUTE|G
 |root||root|127.0.0.1|FEDERATED ADMIN|G
 |root||root|::1|FEDERATED ADMIN|G
-|root||root|jy|FEDERATED ADMIN|G
+|root||root|armas|FEDERATED ADMIN|G
 |root||root|localhost|FEDERATED ADMIN|G
 |root||root|127.0.0.1|FILE|G
 |root||root|::1|FILE|G
-|root||root|jy|FILE|G
+|root||root|armas|FILE|G
 |root||root|localhost|FILE|G
 |root||root|127.0.0.1|INDEX|G
 |root||root|::1|INDEX|G
-|root||root|jy|INDEX|G
+|root||root|armas|INDEX|G
 |root||root|localhost|INDEX|G
 |root||root|127.0.0.1|INSERT|G
 |root||root|::1|INSERT|G
-|root||root|jy|INSERT|G
+|root||root|armas|INSERT|G
 |root||root|localhost|INSERT|G
 |root||root|127.0.0.1|LOCK TABLES|G
 |root||root|::1|LOCK TABLES|G
-|root||root|jy|LOCK TABLES|G
+|root||root|armas|LOCK TABLES|G
 |root||root|localhost|LOCK TABLES|G
 |root||root|127.0.0.1|PROCESS|G
 |root||root|::1|PROCESS|G
-|root||root|jy|PROCESS|G
+|root||root|armas|PROCESS|G
 |root||root|localhost|PROCESS|G
 |root||root|127.0.0.1|READ_ONLY ADMIN|G
 |root||root|::1|READ_ONLY ADMIN|G
-|root||root|jy|READ_ONLY ADMIN|G
+|root||root|armas|READ_ONLY ADMIN|G
 |root||root|localhost|READ_ONLY ADMIN|G
 |root||root|127.0.0.1|REFERENCES|G
 |root||root|::1|REFERENCES|G
-|root||root|jy|REFERENCES|G
+|root||root|armas|REFERENCES|G
 |root||root|localhost|REFERENCES|G
 |root||root|127.0.0.1|RELOAD|G
 |root||root|::1|RELOAD|G
-|root||root|jy|RELOAD|G
+|root||root|armas|RELOAD|G
 |root||root|localhost|RELOAD|G
 |root||root|127.0.0.1|REPLICATION MASTER ADMIN|G
 |root||root|::1|REPLICATION MASTER ADMIN|G
-|root||root|jy|REPLICATION MASTER ADMIN|G
+|root||root|armas|REPLICATION MASTER ADMIN|G
 |root||root|localhost|REPLICATION MASTER ADMIN|G
 |root||root|127.0.0.1|REPLICATION SLAVE|G
 |root||root|::1|REPLICATION SLAVE|G
-|root||root|jy|REPLICATION SLAVE|G
+|root||root|armas|REPLICATION SLAVE|G
 |root||root|localhost|REPLICATION SLAVE|G
 |root||root|127.0.0.1|REPLICATION SLAVE ADMIN|G
 |root||root|::1|REPLICATION SLAVE ADMIN|G
-|root||root|jy|REPLICATION SLAVE ADMIN|G
+|root||root|armas|REPLICATION SLAVE ADMIN|G
 |root||root|localhost|REPLICATION SLAVE ADMIN|G
 |root||root|127.0.0.1|SELECT|G
 |root||root|::1|SELECT|G
-|root||root|jy|SELECT|G
+|root||root|armas|SELECT|G
 |root||root|localhost|SELECT|G
 |root||root|127.0.0.1|SET USER|G
 |root||root|::1|SET USER|G
-|root||root|jy|SET USER|G
+|root||root|armas|SET USER|G
 |root||root|localhost|SET USER|G
-|root||root|127.0.0.1|SHOW CREATE ROUTINE|G
-|root||root|::1|SHOW CREATE ROUTINE|G
-|root||root|jy|SHOW CREATE ROUTINE|G
-|root||root|localhost|SHOW CREATE ROUTINE|G
 |root||root|127.0.0.1|SHOW DATABASES|G
 |root||root|::1|SHOW DATABASES|G
-|root||root|jy|SHOW DATABASES|G
+|root||root|armas|SHOW DATABASES|G
 |root||root|localhost|SHOW DATABASES|G
 |root||root|127.0.0.1|SHOW VIEW|G
 |root||root|::1|SHOW VIEW|G
-|root||root|jy|SHOW VIEW|G
+|root||root|armas|SHOW VIEW|G
 |root||root|localhost|SHOW VIEW|G
 |root||root|127.0.0.1|SHUTDOWN|G
 |root||root|::1|SHUTDOWN|G
-|root||root|jy|SHUTDOWN|G
+|root||root|armas|SHUTDOWN|G
 |root||root|localhost|SHUTDOWN|G
 |root||root|127.0.0.1|SLAVE MONITOR|G
 |root||root|::1|SLAVE MONITOR|G
-|root||root|jy|SLAVE MONITOR|G
+|root||root|armas|SLAVE MONITOR|G
 |root||root|localhost|SLAVE MONITOR|G
 |root||root|127.0.0.1|SUPER|G
 |root||root|::1|SUPER|G
-|root||root|jy|SUPER|G
+|root||root|armas|SUPER|G
 |root||root|localhost|SUPER|G
 |root||root|127.0.0.1|TRIGGER|G
 |root||root|::1|TRIGGER|G
-|root||root|jy|TRIGGER|G
+|root||root|armas|TRIGGER|G
 |root||root|localhost|TRIGGER|G
 |root||root|127.0.0.1|UPDATE|G
 |root||root|::1|UPDATE|G
-|root||root|jy|UPDATE|G
+|root||root|armas|UPDATE|G
 |root||root|localhost|UPDATE|G
 |root||root|127.0.0.1|grant option|G
 |root||root|::1|grant option|G
-|root||root|jy|grant option|G
+|root||root|armas|grant option|G
 |root||root|localhost|grant option|G
-currencydb|schema||appuser|localhost|DELETE|G
-currencydb|schema||appuser|localhost|INSERT|G
-currencydb|schema||appuser|localhost|SELECT|G
-currencydb|schema||appuser|localhost|UPDATE|G</Grants>
-      <ServerVersion>11.6.2</ServerVersion>
+studyshelf|schema||appuser|localhost|ALTER|G
+studyshelf|schema||appuser|localhost|ALTER ROUTINE|G
+studyshelf|schema||appuser|localhost|CREATE|G
+studyshelf|schema||appuser|localhost|CREATE ROUTINE|G
+studyshelf|schema||appuser|localhost|CREATE TEMPORARY TABLES|G
+studyshelf|schema||appuser|localhost|CREATE VIEW|G
+studyshelf|schema||appuser|localhost|DELETE|G
+studyshelf|schema||appuser|localhost|DELETE HISTORY|G
+studyshelf|schema||appuser|localhost|DROP|G
+studyshelf|schema||appuser|localhost|EVENT|G
+studyshelf|schema||appuser|localhost|EXECUTE|G
+studyshelf|schema||appuser|localhost|INDEX|G
+studyshelf|schema||appuser|localhost|INSERT|G
+studyshelf|schema||appuser|localhost|LOCK TABLES|G
+studyshelf|schema||appuser|localhost|REFERENCES|G
+studyshelf|schema||appuser|localhost|SELECT|G
+studyshelf|schema||appuser|localhost|SHOW VIEW|G
+studyshelf|schema||appuser|localhost|TRIGGER|G
+studyshelf|schema||appuser|localhost|UPDATE|G</Grants>
+      <ServerVersion>11.1.2</ServerVersion>
     </root>
     <collation id="2" parent="1" name="armscii8_bin">
       <Charset>armscii8</Charset>
@@ -851,6 +862,7 @@ currencydb|schema||appuser|localhost|UPDATE|G</Grants>
     </collation>
     <collation id="340" parent="1" name="ucs2_general_ci">
       <Charset>ucs2</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
     </collation>
     <collation id="341" parent="1" name="ucs2_general_mysql500_ci">
       <Charset>ucs2</Charset>
@@ -966,6 +978,7 @@ currencydb|schema||appuser|localhost|UPDATE|G</Grants>
     </collation>
     <collation id="378" parent="1" name="utf16_general_ci">
       <Charset>utf16</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
     </collation>
     <collation id="379" parent="1" name="utf16_general_nopad_ci">
       <Charset>utf16</Charset>
@@ -1078,6 +1091,7 @@ currencydb|schema||appuser|localhost|UPDATE|G</Grants>
     </collation>
     <collation id="415" parent="1" name="utf32_general_ci">
       <Charset>utf32</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
     </collation>
     <collation id="416" parent="1" name="utf32_general_nopad_ci">
       <Charset>utf32</Charset>
@@ -1175,227 +1189,241 @@ currencydb|schema||appuser|localhost|UPDATE|G</Grants>
     <collation id="447" parent="1" name="utf8mb3_estonian_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="448" parent="1" name="utf8mb3_general1400_as_ci">
+    <collation id="448" parent="1" name="utf8mb3_general_ci">
+      <Charset>utf8mb3</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="449" parent="1" name="utf8mb3_general_mysql500_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="449" parent="1" name="utf8mb3_general_ci">
+    <collation id="450" parent="1" name="utf8mb3_general_nopad_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="450" parent="1" name="utf8mb3_general_mysql500_ci">
+    <collation id="451" parent="1" name="utf8mb3_german2_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="451" parent="1" name="utf8mb3_general_nopad_ci">
+    <collation id="452" parent="1" name="utf8mb3_hungarian_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="452" parent="1" name="utf8mb3_german2_ci">
+    <collation id="453" parent="1" name="utf8mb3_icelandic_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="453" parent="1" name="utf8mb3_hungarian_ci">
+    <collation id="454" parent="1" name="utf8mb3_latvian_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="454" parent="1" name="utf8mb3_icelandic_ci">
+    <collation id="455" parent="1" name="utf8mb3_lithuanian_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="455" parent="1" name="utf8mb3_latvian_ci">
+    <collation id="456" parent="1" name="utf8mb3_myanmar_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="456" parent="1" name="utf8mb3_lithuanian_ci">
+    <collation id="457" parent="1" name="utf8mb3_nopad_bin">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="457" parent="1" name="utf8mb3_myanmar_ci">
+    <collation id="458" parent="1" name="utf8mb3_persian_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="458" parent="1" name="utf8mb3_nopad_bin">
+    <collation id="459" parent="1" name="utf8mb3_polish_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="459" parent="1" name="utf8mb3_persian_ci">
+    <collation id="460" parent="1" name="utf8mb3_roman_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="460" parent="1" name="utf8mb3_polish_ci">
+    <collation id="461" parent="1" name="utf8mb3_romanian_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="461" parent="1" name="utf8mb3_roman_ci">
+    <collation id="462" parent="1" name="utf8mb3_sinhala_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="462" parent="1" name="utf8mb3_romanian_ci">
+    <collation id="463" parent="1" name="utf8mb3_slovak_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="463" parent="1" name="utf8mb3_sinhala_ci">
+    <collation id="464" parent="1" name="utf8mb3_slovenian_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="464" parent="1" name="utf8mb3_slovak_ci">
+    <collation id="465" parent="1" name="utf8mb3_spanish2_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="465" parent="1" name="utf8mb3_slovenian_ci">
+    <collation id="466" parent="1" name="utf8mb3_spanish_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="466" parent="1" name="utf8mb3_spanish2_ci">
+    <collation id="467" parent="1" name="utf8mb3_swedish_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="467" parent="1" name="utf8mb3_spanish_ci">
+    <collation id="468" parent="1" name="utf8mb3_thai_520_w2">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="468" parent="1" name="utf8mb3_swedish_ci">
+    <collation id="469" parent="1" name="utf8mb3_turkish_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="469" parent="1" name="utf8mb3_thai_520_w2">
+    <collation id="470" parent="1" name="utf8mb3_unicode_520_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="470" parent="1" name="utf8mb3_turkish_ci">
+    <collation id="471" parent="1" name="utf8mb3_unicode_520_nopad_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="471" parent="1" name="utf8mb3_unicode_520_ci">
+    <collation id="472" parent="1" name="utf8mb3_unicode_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="472" parent="1" name="utf8mb3_unicode_520_nopad_ci">
+    <collation id="473" parent="1" name="utf8mb3_unicode_nopad_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="473" parent="1" name="utf8mb3_unicode_ci">
+    <collation id="474" parent="1" name="utf8mb3_vietnamese_ci">
       <Charset>utf8mb3</Charset>
     </collation>
-    <collation id="474" parent="1" name="utf8mb3_unicode_nopad_ci">
-      <Charset>utf8mb3</Charset>
-    </collation>
-    <collation id="475" parent="1" name="utf8mb3_vietnamese_ci">
-      <Charset>utf8mb3</Charset>
-    </collation>
-    <collation id="476" parent="1" name="utf8mb4_bin">
+    <collation id="475" parent="1" name="utf8mb4_bin">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="477" parent="1" name="utf8mb4_croatian_ci">
+    <collation id="476" parent="1" name="utf8mb4_croatian_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="478" parent="1" name="utf8mb4_croatian_mysql561_ci">
+    <collation id="477" parent="1" name="utf8mb4_croatian_mysql561_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="479" parent="1" name="utf8mb4_czech_ci">
+    <collation id="478" parent="1" name="utf8mb4_czech_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="480" parent="1" name="utf8mb4_danish_ci">
+    <collation id="479" parent="1" name="utf8mb4_danish_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="481" parent="1" name="utf8mb4_esperanto_ci">
+    <collation id="480" parent="1" name="utf8mb4_esperanto_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="482" parent="1" name="utf8mb4_estonian_ci">
+    <collation id="481" parent="1" name="utf8mb4_estonian_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="483" parent="1" name="utf8mb4_general1400_as_ci">
+    <collation id="482" parent="1" name="utf8mb4_general_ci">
+      <Charset>utf8mb4</Charset>
+      <DefaultForCharset>1</DefaultForCharset>
+    </collation>
+    <collation id="483" parent="1" name="utf8mb4_general_nopad_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="484" parent="1" name="utf8mb4_general_ci">
+    <collation id="484" parent="1" name="utf8mb4_german2_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="485" parent="1" name="utf8mb4_general_nopad_ci">
+    <collation id="485" parent="1" name="utf8mb4_hungarian_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="486" parent="1" name="utf8mb4_german2_ci">
+    <collation id="486" parent="1" name="utf8mb4_icelandic_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="487" parent="1" name="utf8mb4_hungarian_ci">
+    <collation id="487" parent="1" name="utf8mb4_latvian_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="488" parent="1" name="utf8mb4_icelandic_ci">
+    <collation id="488" parent="1" name="utf8mb4_lithuanian_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="489" parent="1" name="utf8mb4_latvian_ci">
+    <collation id="489" parent="1" name="utf8mb4_myanmar_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="490" parent="1" name="utf8mb4_lithuanian_ci">
+    <collation id="490" parent="1" name="utf8mb4_nopad_bin">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="491" parent="1" name="utf8mb4_myanmar_ci">
+    <collation id="491" parent="1" name="utf8mb4_persian_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="492" parent="1" name="utf8mb4_nopad_bin">
+    <collation id="492" parent="1" name="utf8mb4_polish_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="493" parent="1" name="utf8mb4_persian_ci">
+    <collation id="493" parent="1" name="utf8mb4_roman_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="494" parent="1" name="utf8mb4_polish_ci">
+    <collation id="494" parent="1" name="utf8mb4_romanian_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="495" parent="1" name="utf8mb4_roman_ci">
+    <collation id="495" parent="1" name="utf8mb4_sinhala_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="496" parent="1" name="utf8mb4_romanian_ci">
+    <collation id="496" parent="1" name="utf8mb4_slovak_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="497" parent="1" name="utf8mb4_sinhala_ci">
+    <collation id="497" parent="1" name="utf8mb4_slovenian_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="498" parent="1" name="utf8mb4_slovak_ci">
+    <collation id="498" parent="1" name="utf8mb4_spanish2_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="499" parent="1" name="utf8mb4_slovenian_ci">
+    <collation id="499" parent="1" name="utf8mb4_spanish_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="500" parent="1" name="utf8mb4_spanish2_ci">
+    <collation id="500" parent="1" name="utf8mb4_swedish_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="501" parent="1" name="utf8mb4_spanish_ci">
+    <collation id="501" parent="1" name="utf8mb4_thai_520_w2">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="502" parent="1" name="utf8mb4_swedish_ci">
+    <collation id="502" parent="1" name="utf8mb4_turkish_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="503" parent="1" name="utf8mb4_thai_520_w2">
+    <collation id="503" parent="1" name="utf8mb4_unicode_520_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="504" parent="1" name="utf8mb4_turkish_ci">
+    <collation id="504" parent="1" name="utf8mb4_unicode_520_nopad_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="505" parent="1" name="utf8mb4_unicode_520_ci">
+    <collation id="505" parent="1" name="utf8mb4_unicode_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="506" parent="1" name="utf8mb4_unicode_520_nopad_ci">
+    <collation id="506" parent="1" name="utf8mb4_unicode_nopad_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="507" parent="1" name="utf8mb4_unicode_ci">
+    <collation id="507" parent="1" name="utf8mb4_vietnamese_ci">
       <Charset>utf8mb4</Charset>
     </collation>
-    <collation id="508" parent="1" name="utf8mb4_unicode_nopad_ci">
-      <Charset>utf8mb4</Charset>
-    </collation>
-    <collation id="509" parent="1" name="utf8mb4_vietnamese_ci">
-      <Charset>utf8mb4</Charset>
-    </collation>
-    <schema id="510" parent="1" name="currencydb">
-      <CollationName>utf8mb4_uca1400_ai_ci</CollationName>
+    <schema id="508" parent="1" name="ankkalinna">
+      <CollationName>latin1_swedish_ci</CollationName>
     </schema>
-    <schema id="511" parent="1" name="information_schema">
+    <schema id="509" parent="1" name="bank_simulation">
+      <CollationName>latin1_swedish_ci</CollationName>
+    </schema>
+    <schema id="510" parent="1" name="company">
+      <CollationName>latin1_swedish_ci</CollationName>
+    </schema>
+    <schema id="511" parent="1" name="company2">
+      <CollationName>latin1_swedish_ci</CollationName>
+    </schema>
+    <schema id="512" parent="1" name="currencies">
+      <CollationName>latin1_swedish_ci</CollationName>
+    </schema>
+    <schema id="513" parent="1" name="currencies2">
+      <CollationName>latin1_swedish_ci</CollationName>
+    </schema>
+    <schema id="514" parent="1" name="flight_game">
+      <CollationName>latin1_swedish_ci</CollationName>
+    </schema>
+    <schema id="515" parent="1" name="information_schema">
       <CollationName>utf8mb3_general_ci</CollationName>
     </schema>
-    <schema id="512" parent="1" name="mysql">
-      <CollationName>utf8mb4_uca1400_ai_ci</CollationName>
+    <schema id="516" parent="1" name="mysql">
+      <CollationName>latin1_swedish_ci</CollationName>
     </schema>
-    <schema id="513" parent="1" name="performance_schema">
+    <schema id="517" parent="1" name="performance_schema">
       <CollationName>utf8mb3_general_ci</CollationName>
     </schema>
-    <schema id="514" parent="1" name="studyshelf">
-      <LastIntrospectionLocalTimestamp>2025-02-10.19:40:11</LastIntrospectionLocalTimestamp>
-      <CollationName>utf8mb4_uca1400_ai_ci</CollationName>
+    <schema id="518" parent="1" name="studyshelf">
+      <LastIntrospectionLocalTimestamp>2025-02-05.18:22:30</LastIntrospectionLocalTimestamp>
+      <CollationName>latin1_swedish_ci</CollationName>
     </schema>
-    <schema id="515" parent="1" name="sys">
+    <schema id="519" parent="1" name="sys">
       <CollationName>utf8mb3_general_ci</CollationName>
     </schema>
-    <user id="516" parent="1" name="appuser">
+    <user id="520" parent="1" name="appuser">
       <Host>localhost</Host>
     </user>
-    <user id="517" parent="1" name="mariadb.sys">
+    <user id="521" parent="1" name="mariadb.sys">
       <Host>localhost</Host>
     </user>
-    <user id="518" parent="1" name="root">
+    <user id="522" parent="1" name="root">
       <Host>127.0.0.1</Host>
     </user>
-    <user id="519" parent="1" name="root">
+    <user id="523" parent="1" name="root">
       <Host>::1</Host>
     </user>
-    <user id="520" parent="1" name="root">
-      <Host>jy</Host>
+    <user id="524" parent="1" name="root">
+      <Host>armas</Host>
     </user>
-    <user id="521" parent="1" name="root">
+    <user id="525" parent="1" name="root">
       <Host>localhost</Host>
     </user>
   </database-model>

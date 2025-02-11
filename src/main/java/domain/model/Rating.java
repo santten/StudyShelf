@@ -2,7 +2,7 @@ package domain.model;
 
 import jakarta.persistence.*;
 @Entity
-@Table(name = "Rating")
+@Table(name = "ratings")
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
