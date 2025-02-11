@@ -69,10 +69,6 @@ public class User {
 
     // Checks if user has permission
     public boolean hasPermission(PermissionType permissionType, int resourceOwnerId) {
-        if (permissionType == PermissionType.READ_RESOURCES) {
-            return true;
-        }
-
         if ((permissionType == PermissionType.DELETE_OWN_RESOURCE ||
                 permissionType == PermissionType.UPDATE_OWN_RESOURCE) &&
                 this.userId != resourceOwnerId) {
