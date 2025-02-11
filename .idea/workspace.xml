@@ -6,15 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a0470772-9bb3-4899-afde-daa24f9eee87" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Permission.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/CategoryTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/MaterialStatusTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/RatingTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/ReviewTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/StudyMaterialTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Category.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,16 +54,15 @@
     "Application.HelloStudyShelf.executor": "Run",
     "Application.Launcher.executor": "Run",
     "Application.StudyShelfApplication.executor": "Run",
-    "JUnit.PermissionServiceTest.executor": "Run",
-    "JUnit.PermissionTest.executor": "Run",
-    "JUnit.RoleTest.executor": "Run",
-    "JUnit.UserTest.executor": "Run",
-    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
     "JUnit.CategoryTest.executor": "Run",
     "JUnit.MaterialStatusTest.executor": "Run",
+    "JUnit.PermissionServiceTest.executor": "Run",
+    "JUnit.PermissionTest.executor": "Run",
     "JUnit.RatingTest.executor": "Run",
     "JUnit.ReviewTest.executor": "Run",
+    "JUnit.RoleTest.executor": "Run",
     "JUnit.StudyMaterialTest.executor": "Run",
+    "JUnit.UserTest.executor": "Run",
     "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
     "Maven.StudyShelf [clean,install].executor": "Run",
     "Maven.StudyShelf [clean].executor": "Run",
@@ -90,9 +80,9 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "jiayue-branch",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "bug-fix",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/armas/IdeaProjects/StudyShelf/src/main/resources/credentials",
@@ -101,7 +91,6 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   },
@@ -115,10 +104,6 @@
     ]
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration name="HelloStudyShelf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="HelloStudyShelf" />
-
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\armas\IdeaProjects\StudyShelf\src\main\resources\credentials" />
@@ -137,7 +122,7 @@
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.StudyMaterialTest">
+  <component name="RunManager">
     <configuration name="MaterialStatusTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="StudyShelf" />
       <extension name="coverage">
@@ -148,6 +133,21 @@
       </extension>
       <option name="PACKAGE_NAME" value="domain.model" />
       <option name="MAIN_CLASS_NAME" value="domain.model.MaterialStatusTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PermissionServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.service" />
+      <option name="MAIN_CLASS_NAME" value="domain.service.PermissionServiceTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -214,32 +214,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PermissionServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="StudyShelf" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="domain.service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="domain.service" />
-      <option name="MAIN_CLASS_NAME" value="domain.service.PermissionServiceTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.PermissionServiceTest" />
-        <item itemvalue="Application.Launcher" />
-        <item itemvalue="Application.StudyShelfApplication" />
-        <item itemvalue="Application.HelloStudyShelf" />
         <item itemvalue="JUnit.StudyMaterialTest" />
         <item itemvalue="JUnit.StudyMaterialTest.getStatus" />
         <item itemvalue="JUnit.RatingTest" />
         <item itemvalue="JUnit.ReviewTest" />
-        <item itemvalue="JUnit.MaterialStatusTest" />
       </list>
     </recent_temporary>
   </component>
