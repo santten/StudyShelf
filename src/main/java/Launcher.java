@@ -3,7 +3,7 @@ import presentation.view.StudyShelfApplication;
 import domain.model.*;
 import domain.service.StudyMaterialService;
 import infrastructure.repository.*;
-import presentation.StudyShelfApplication;
+import presentation.view.StudyShelfApplication;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
