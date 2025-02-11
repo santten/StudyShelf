@@ -7,7 +7,11 @@
     <list default="true" id="ad911a53-0b37-49c9-89d2-1bff7d4619a3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Launcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/PermissionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/PermissionTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/RoleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/RoleTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/UserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/UserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/service/PermissionServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/service/PermissionServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +38,7 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2suT8OB53ZFsR3sLtc3Znbyixo9" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -49,8 +54,12 @@
     "JUnit.RoleTest.executor": "Run",
     "JUnit.StudyMaterialTest.executor": "Run",
     "JUnit.UserTest.executor": "Run",
+    "Maven.StudyShelf [clean].executor": "Run",
+    "Maven.StudyShelf [install].executor": "Run",
+    "Maven.StudyShelf [site].executor": "Run",
+    "Maven.StudyShelf [test].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "new-bug-fix",
+    "git-widget-placeholder": "jiayue-testing",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",

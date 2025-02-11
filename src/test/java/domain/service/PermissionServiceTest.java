@@ -111,7 +111,6 @@ public class PermissionServiceTest {
     public void RoleWithoutPermissionsShouldDenyAll() {
         User guest = new User("Guest", "User", "guest@example.com", "password123");
         Role guestRole = new Role("GUEST");
-
         guest.getRoles().add(guestRole);
 
         for (PermissionType perm : PermissionType.values()) {
