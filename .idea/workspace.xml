@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a0470772-9bb3-4899-afde-daa24f9eee87" name="Changes" comment="" />
+    <list default="true" id="a0470772-9bb3-4899-afde-daa24f9eee87" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/CategoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/MaterialStatusTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/RatingTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/ReviewTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/StudyMaterialTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Category.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,14 +23,35 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ArmasNevolainen&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/santten/StudyShelf&quot;,
+    &quot;accountId&quot;: &quot;180eaf9e-0df2-479e-b361-f6ead638cc44&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2sIyFRw1VObtQQoKrkzdEuf6ZBg" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -29,60 +59,163 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.HelloStudyShelf.executor": "Run",
+    "Application.Launcher.executor": "Run",
     "Application.StudyShelfApplication.executor": "Run",
+    "JUnit.CategoryTest.executor": "Run",
+    "JUnit.MaterialStatusTest.executor": "Run",
+    "JUnit.RatingTest.executor": "Run",
+    "JUnit.ReviewTest.executor": "Run",
+    "JUnit.StudyMaterialTest.executor": "Run",
     "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "Maven.StudyShelf [clean,install].executor": "Run",
+    "Maven.StudyShelf [clean].executor": "Run",
+    "Maven.StudyShelf [install].executor": "Run",
+    "RunOnceActivity.ChatTagsLlmMigration": "true",
+    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
+    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+    "RunOnceActivity.DeprecatedChatLlmMigration": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "armas-branch",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/armas/IdeaProjects/StudyShelf/src/main/resources/credentials",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory",
+      "module"
+    ],
+    "DatabaseDriversLRU": [
+      "mariadb"
+    ]
   }
 }]]></component>
-  <component name="RunManager" selected="Application.Launcher">
-    <configuration name="HelloStudyShelf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="HelloStudyShelf" />
-      <module name="StudyShelf" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Launcher" />
-      <module name="StudyShelf" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="StudyShelfApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="presentation.StudyShelfApplication" />
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\armas\IdeaProjects\StudyShelf\src\main\resources\credentials" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="domain.model" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean" />
+      <command value="mvn install" />
+      <command value="mvn clean install" />
+    </option>
+  </component>
+  <component name="RunManager" selected="JUnit.StudyMaterialTest">
+    <configuration name="MaterialStatusTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="StudyShelf" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="presentation.*" />
+          <option name="PATTERN" value="domain.model.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.MaterialStatusTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RatingTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.RatingTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ReviewTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.ReviewTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StudyMaterialTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.StudyMaterialTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StudyMaterialTest.getStatus" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.StudyMaterialTest" />
+      <option name="METHOD_NAME" value="getStatus" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Launcher" />
-        <item itemvalue="Application.StudyShelfApplication" />
-        <item itemvalue="Application.HelloStudyShelf" />
+        <item itemvalue="JUnit.StudyMaterialTest" />
+        <item itemvalue="JUnit.StudyMaterialTest.getStatus" />
+        <item itemvalue="JUnit.RatingTest" />
+        <item itemvalue="JUnit.ReviewTest" />
+        <item itemvalue="JUnit.MaterialStatusTest" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
       </set>
     </attachedChunks>
   </component>
@@ -96,6 +229,18 @@
       <updated>1738157284467</updated>
       <workItem from="1738157287079" duration="391000" />
       <workItem from="1738157733444" duration="312000" />
+      <workItem from="1738432053991" duration="10437000" />
+      <workItem from="1738576661872" duration="99000" />
+      <workItem from="1738576785622" duration="6288000" />
+      <workItem from="1738667310690" duration="914000" />
+      <workItem from="1738668261380" duration="9769000" />
+      <workItem from="1738679243306" duration="643000" />
+      <workItem from="1738776513398" duration="8016000" />
+      <workItem from="1738841338272" duration="589000" />
+      <workItem from="1738844199028" duration="412000" />
+      <workItem from="1738844643248" duration="589000" />
+      <workItem from="1739020858682" duration="85000" />
+      <workItem from="1739020970245" duration="33188000" />
     </task>
     <servers />
   </component>
