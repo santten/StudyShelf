@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Aladin&family=B612:ital,wght@0,400;0,700;1,400;1,700&family=Calistoga&display=swap');
+
+* {
+    -light: #f3fae7;
+    -error: #e42513;
+    -warning: #e47b13;
+    -secondary: #306c01;
+    -secondary-light: #568105;
+    -primary: #113f79;
+    -primary-light: #2c7794;
+    -dark: #000806;
+}
+
+.title {
+    -fx-font-family: "Aladin Regular";
+    -fx-font-size: 32;
+}
+
+.text {
+    -fx-font-family: "B612";
+    -fx-font-size: 12;
+}
+
+.heading3 {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 20;
+    -fx-fill: -primary-light;
+}
+
+.heading4 {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 16;
+    -fx-fill: -primary-light;
+}
+
+.btnS {
+    -fx-background-color: -primary;
+    -fx-padding: 4px 8px;
+    -fx-background-radius: 8;
+}
+
+.btnS:hover, btnS:focused {
+    -fx-background-color: -secondary;
+}
+
+.btnS .text {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 14;
+    -fx-fill: -light;
+}
+
+.hyperlink {
+    -fx-text-fill: -primary-light;
+    -fx-underline: true;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: -primary;
+}
+
+.text-field {
+    -fx-focus-fill: -primary-light;
+}
+
+.menu-button {
+    -fx-background-color: #ccd7b8;
+}
+
+.context-menu {
+    -fx-effect: null;
+    -fx-background-radius: 4;
+}
+
+.menu-item:focused {
+    -fx-background-color: -primary;
+}

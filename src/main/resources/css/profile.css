@@ -1,0 +1,17 @@
+.profileLink {
+    -fx-text-fill: -light;
+    -fx-padding: 0;
+    -fx-underline: false;
+}
+
+.profileLink:hover, .profileLink:focused {
+    -fx-text-fill: -primary-light;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.logOutLink:hover, .logOutLink:focused {
+    -fx-text-fill: -error;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
