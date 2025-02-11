@@ -24,5 +24,21 @@
         <dependency> <groupId>jakarta.persistence</groupId> <artifactId>jakarta.persistence-api</artifactId> <version>3.0.0</version> </dependency>
         <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-core</artifactId> <version>6.0.0.Final</version> </dependency>
         <dependency> <groupId>ch.qos.logback</groupId> <artifactId>logback-classic</artifactId> <version>1.4.6</version> </dependency>
+        <!-- JUnit 5 API -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit 5 Engine -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.9.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>
