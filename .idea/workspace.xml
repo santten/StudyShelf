@@ -8,6 +8,13 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Permission.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/CategoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/MaterialStatusTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/RatingTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/ReviewTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/StudyMaterialTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Category.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +25,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -60,6 +68,13 @@
     "JUnit.RoleTest.executor": "Run",
     "JUnit.UserTest.executor": "Run",
     "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "JUnit.CategoryTest.executor": "Run",
+    "JUnit.MaterialStatusTest.executor": "Run",
+    "JUnit.RatingTest.executor": "Run",
+    "JUnit.ReviewTest.executor": "Run",
+    "JUnit.StudyMaterialTest.executor": "Run",
+    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "Maven.StudyShelf [clean,install].executor": "Run",
     "Maven.StudyShelf [clean].executor": "Run",
     "Maven.StudyShelf [install].executor": "Run",
     "Maven.StudyShelf [test].executor": "Run",
@@ -76,16 +91,25 @@
     "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "jiayue-branch",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/armas/IdeaProjects/StudyShelf/src/main/resources/credentials",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory",
+      "module"
+    ],
     "DatabaseDriversLRU": [
       "mariadb"
     ]
@@ -94,27 +118,98 @@
   <component name="RunManager">
     <configuration name="HelloStudyShelf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="HelloStudyShelf" />
-      <module name="StudyShelf" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Launcher" />
-      <module name="StudyShelf" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="StudyShelfApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="presentation.StudyShelfApplication" />
+
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\armas\IdeaProjects\StudyShelf\src\main\resources\credentials" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="domain.model" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean" />
+      <command value="mvn install" />
+      <command value="mvn clean install" />
+    </option>
+  </component>
+  <component name="RunManager" selected="JUnit.StudyMaterialTest">
+    <configuration name="MaterialStatusTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="StudyShelf" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="presentation.*" />
+          <option name="PATTERN" value="domain.model.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.MaterialStatusTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RatingTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.RatingTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ReviewTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.ReviewTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StudyMaterialTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.StudyMaterialTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StudyMaterialTest.getStatus" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.StudyMaterialTest" />
+      <option name="METHOD_NAME" value="getStatus" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -140,6 +235,11 @@
         <item itemvalue="Application.Launcher" />
         <item itemvalue="Application.StudyShelfApplication" />
         <item itemvalue="Application.HelloStudyShelf" />
+        <item itemvalue="JUnit.StudyMaterialTest" />
+        <item itemvalue="JUnit.StudyMaterialTest.getStatus" />
+        <item itemvalue="JUnit.RatingTest" />
+        <item itemvalue="JUnit.ReviewTest" />
+        <item itemvalue="JUnit.MaterialStatusTest" />
       </list>
     </recent_temporary>
   </component>
@@ -170,6 +270,12 @@
       <workItem from="1738776513398" duration="3196000" />
       <workItem from="1739197062980" duration="10563000" />
       <workItem from="1739213271768" duration="14552000" />
+      <workItem from="1738776513398" duration="8016000" />
+      <workItem from="1738841338272" duration="589000" />
+      <workItem from="1738844199028" duration="412000" />
+      <workItem from="1738844643248" duration="589000" />
+      <workItem from="1739020858682" duration="85000" />
+      <workItem from="1739020970245" duration="33188000" />
     </task>
     <servers />
   </component>
