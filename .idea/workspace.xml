@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="a0470772-9bb3-4899-afde-daa24f9eee87" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/CategoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/CategoryTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/RatingTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/RatingTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/ReviewTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/ReviewTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/StudyMaterialTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/StudyMaterialTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,8 +220,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.StudyMaterialTest" />
         <item itemvalue="JUnit.PermissionServiceTest" />
+        <item itemvalue="JUnit.StudyMaterialTest" />
         <item itemvalue="JUnit.StudyMaterialTest.getStatus" />
         <item itemvalue="JUnit.RatingTest" />
         <item itemvalue="JUnit.ReviewTest" />
