@@ -82,7 +82,7 @@ public class User {
                 }
             }
         }
-        return permissionType == PermissionType.READ_RESOURCES;
+        return false;
     }
 
     public boolean hasPermissionOnResource(PermissionType permissionType, int resourceOwnerId) {

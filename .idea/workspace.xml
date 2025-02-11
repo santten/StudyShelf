@@ -5,18 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0470772-9bb3-4899-afde-daa24f9eee87" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Category.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Rating.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Rating.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Review.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Review.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/StudyMaterial.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/StudyMaterial.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Tag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Permission.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +56,9 @@
     "Application.Launcher.executor": "Run",
     "Application.StudyShelfApplication.executor": "Run",
     "JUnit.PermissionServiceTest.executor": "Run",
+    "JUnit.PermissionTest.executor": "Run",
+    "JUnit.RoleTest.executor": "Run",
+    "JUnit.UserTest.executor": "Run",
     "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
     "Maven.StudyShelf [clean].executor": "Run",
     "Maven.StudyShelf [install].executor": "Run",
@@ -97,7 +91,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.PermissionServiceTest">
+  <component name="RunManager">
     <configuration name="HelloStudyShelf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="HelloStudyShelf" />
       <module name="StudyShelf" />
@@ -175,7 +169,7 @@
       <workItem from="1738679243306" duration="643000" />
       <workItem from="1738776513398" duration="3196000" />
       <workItem from="1739197062980" duration="10563000" />
-      <workItem from="1739213271768" duration="10693000" />
+      <workItem from="1739213271768" duration="14552000" />
     </task>
     <servers />
   </component>

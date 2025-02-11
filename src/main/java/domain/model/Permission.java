@@ -3,6 +3,7 @@ package domain.model;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Objects;
 
 @Entity
 @Table(name = "permissions")
@@ -39,4 +40,21 @@ public class Permission {
         this.roles = roles;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Permission)) return false;
+        Permission permission = (Permission) o;
+        return name == permission.name;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Permission{id=" + id + ", name=" + name + "}";
+    }
 }
