@@ -5,7 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0470772-9bb3-4899-afde-daa24f9eee87" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Launcher.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/model/TagTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/service/GoogleDriveServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/domain/service/StudyMaterialServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/infrastructure/config/DatabaseConnectionTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/BaseRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/CategoryRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/RatingRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/ReviewRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/StudyMaterialRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/TagRepositoryTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/UserRepositoryTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/UserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/UserTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +30,7 @@
       <list>
         <option value="Class" />
         <option value="Enum" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -50,7 +64,23 @@
     "Application.HelloStudyShelf.executor": "Run",
     "Application.Launcher.executor": "Run",
     "Application.StudyShelfApplication.executor": "Run",
+    "JUnit.BaseRepositoryTest.executor": "Run",
+    "JUnit.CategoryRepositoryTest.executor": "Run",
+    "JUnit.DatabaseConnectionTest.executor": "Run",
+    "JUnit.GoogleDriveServiceTest.executor": "Run",
+    "JUnit.RatingRepositoryTest.executor": "Run",
+    "JUnit.ReviewRepositoryTest.executor": "Run",
+    "JUnit.StudyMaterialRepositoryTest.executor": "Run",
+    "JUnit.StudyMaterialServiceTest.executor": "Run",
+    "JUnit.TagRepositoryTest.executor": "Run",
+    "JUnit.TagTest.executor": "Run",
+    "JUnit.UserRepositoryTest.executor": "Run",
+    "JUnit.UserTest.executor": "Run",
+    "JUnit.UserTest.testUserWithoutPermissionsShouldDenyAll.executor": "Run",
     "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "Maven.StudyShelf [clean,install].executor": "Run",
+    "Maven.StudyShelf [clean].executor": "Run",
+    "Maven.StudyShelf [install].executor": "Run",
     "RunOnceActivity.ChatTagsLlmMigration": "true",
     "RunOnceActivity.CodyAccountHistoryMigration": "true",
     "RunOnceActivity.CodyAccountsIdsRefresh": "true",
@@ -64,7 +94,9 @@
     "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "armas-branch",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/santt/IdeaProjects/StudyShelf/src/main/resources/images",
@@ -85,40 +117,107 @@
       <recent name="C:\Users\santt\IdeaProjects\StudyShelf\src\main\resources\images" />
       <recent name="C:\Users\santt\IdeaProjects\StudyShelf\src\main\resources\fxml" />
     </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="domain.service" />
+      <recent name="domain.model" />
+      <recent name="infrastructure.repository" />
+      <recent name="infrastructure.config" />
+    </key>
   </component>
-  <component name="RunManager" selected="Application.Launcher">
-    <configuration name="HelloStudyShelf" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="HelloStudyShelf" />
-      <module name="StudyShelf" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Launcher" />
-      <module name="StudyShelf" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="StudyShelfApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="presentation.view.StudyShelfApplication" />
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn clean" />
+      <command value="mvn install" />
+      <command value="mvn clean install" />
+    </option>
+  </component>
+  <component name="RunManager" selected="JUnit.UserTest.testUserWithoutPermissionsShouldDenyAll">
+    <configuration name="GoogleDriveServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="StudyShelf" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="presentation.view.*" />
+          <option name="PATTERN" value="domain.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="domain.service" />
+      <option name="MAIN_CLASS_NAME" value="domain.service.GoogleDriveServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StudyMaterialServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.service" />
+      <option name="MAIN_CLASS_NAME" value="domain.service.StudyMaterialServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TagTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.TagTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.UserTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserTest.testUserWithoutPermissionsShouldDenyAll" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="domain.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="domain.model" />
+      <option name="MAIN_CLASS_NAME" value="domain.model.UserTest" />
+      <option name="METHOD_NAME" value="testUserWithoutPermissionsShouldDenyAll" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Launcher" />
-        <item itemvalue="Application.StudyShelfApplication" />
-        <item itemvalue="Application.HelloStudyShelf" />
+        <item itemvalue="JUnit.UserTest.testUserWithoutPermissionsShouldDenyAll" />
+        <item itemvalue="JUnit.UserTest" />
+        <item itemvalue="JUnit.StudyMaterialServiceTest" />
+        <item itemvalue="JUnit.GoogleDriveServiceTest" />
+        <item itemvalue="JUnit.TagTest" />
       </list>
     </recent_temporary>
   </component>
