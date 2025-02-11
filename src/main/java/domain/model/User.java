@@ -69,10 +69,18 @@ public class User {
 
     // Checks if user has permission
     public boolean hasPermission(PermissionType permissionType, int resourceOwnerId) {
-        if ((permissionType == PermissionType.DELETE_OWN_RESOURCE ||
-                permissionType == PermissionType.UPDATE_OWN_RESOURCE) &&
-                this.userId != resourceOwnerId) {
-            return false;
+//        if (roles.isEmpty()) {
+//            return false;  // No roles, no permissions
+//        }
+//
+//        if ((permissionType == PermissionType.DELETE_OWN_RESOURCE ||
+//                permissionType == PermissionType.UPDATE_OWN_RESOURCE) &&
+//                this.userId != resourceOwnerId) {
+//            return false;
+//        }
+
+        if (permissionType == PermissionType.READ_RESOURCES) {
+            return true;
         }
 
         for (Role role : roles) {
