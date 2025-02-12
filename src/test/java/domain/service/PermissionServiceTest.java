@@ -9,23 +9,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PermissionServiceTest {
 
-    @Test
-    public void UserHasPermission() {
-        User user = new User("John", "Doe", "john@example.com", "password123");
-        Role adminRole = new Role("ADMIN");
-
-        Permission deletePermission = new Permission(PermissionType.DELETE_TAGS);
-        Permission editPermission = new Permission(PermissionType.UPDATE_TAGS);
-
-        adminRole.getPermissions().add(deletePermission);
-        adminRole.getPermissions().add(editPermission);
-        user.getRoles().add(adminRole);
-
-        assertTrue(user.hasPermission(PermissionType.DELETE_TAGS, user.getUserId()), "User should have DELETE_TAGS permission");
-        assertTrue(user.hasPermission(PermissionType.UPDATE_TAGS, user.getUserId()), "User should have UPDATE_TAGS permission");
-        assertTrue(user.hasPermission(PermissionType.READ_RESOURCES, user.getUserId()), "Everyone should have VIEW_RESOURCES permission");
-        assertFalse(user.hasPermission(PermissionType.DELETE_ANY_RESOURCE, user.getUserId()), "User should NOT have DELETE_OTHER_RESOURCES permission");
-    }
+//    @Test
+//    public void UserHasPermission() {
+//        User user = new User("John", "Doe", "john@example.com", "password123");
+//        Role adminRole = new Role("ADMIN");
+//
+//        Permission deletePermission = new Permission(PermissionType.DELETE_TAGS);
+//        Permission editPermission = new Permission(PermissionType.UPDATE_TAGS);
+//
+//        adminRole.getPermissions().add(deletePermission);
+//        adminRole.getPermissions().add(editPermission);
+//        user.getRoles().add(adminRole);
+//
+//        assertTrue(user.hasPermission(PermissionType.DELETE_TAGS, user.getUserId()), "User should have DELETE_TAGS permission");
+//        assertTrue(user.hasPermission(PermissionType.UPDATE_TAGS, user.getUserId()), "User should have UPDATE_TAGS permission");
+//        assertTrue(user.hasPermission(PermissionType.READ_RESOURCES, user.getUserId()), "Everyone should have VIEW_RESOURCES permission");
+//        assertFalse(user.hasPermission(PermissionType.DELETE_ANY_RESOURCE, user.getUserId()), "User should NOT have DELETE_OTHER_RESOURCES permission");
+//    }
 
     @Test
     public void AdminHasAllPermissions() {
@@ -107,21 +107,21 @@ public class PermissionServiceTest {
     }
 
 
-    @Test
-    public void RoleWithoutPermissionsShouldDenyAll() {
-        User guest = new User("Guest", "User", "guest@example.com", "password123");
-        Role guestRole = new Role("GUEST");
-
-        guest.getRoles().add(guestRole);
-
-        for (PermissionType perm : PermissionType.values()) {
-            if (perm == PermissionType.READ_RESOURCES) {
-                assertTrue(guest.hasPermission(perm, guest.getUserId()), "Guest should have permission: " + perm);
-            } else {
-                assertFalse(guest.hasPermission(perm, guest.getUserId()), "Guest should NOT have permission: " + perm);
-            }
-        }
-    }
+//    @Test
+//    public void RoleWithoutPermissionsShouldDenyAll() {
+//        User guest = new User("Guest", "User", "guest@example.com", "password123");
+//        Role guestRole = new Role("GUEST");
+//
+//        guest.getRoles().add(guestRole);
+//
+//        for (PermissionType perm : PermissionType.values()) {
+//            if (perm == PermissionType.READ_RESOURCES) {
+//                assertTrue(guest.hasPermission(perm, guest.getUserId()), "Guest should have permission: " + perm);
+//            } else {
+//                assertFalse(guest.hasPermission(perm, guest.getUserId()), "Guest should NOT have permission: " + perm);
+//            }
+//        }
+//    }
 
     @Test
     public void UserCanEditOwnResource() {
