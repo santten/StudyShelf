@@ -54,4 +54,12 @@ public class Category {
     public void setCreator(User creator) {
         this.creator = creator;
     }
+
+    public List<StudyMaterial> getMaterials() {
+        return materials;
+    }
+
+    public void setMaterials(List<StudyMaterial> materials) {
+        this.materials = materials;
+    }
 }
