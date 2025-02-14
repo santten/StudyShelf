@@ -67,6 +67,16 @@
     -fx-background-color: #ccd7b8;
 }
 
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
 .context-menu {
     -fx-effect: null;
     -fx-background-radius: 4;
@@ -77,8 +87,10 @@
 }
 
 .materialCardM {
-    -fx-width: 175px;
-    -fx-height: 125px;
+    -fx-min-width: 175px;
+    -fx-max-width: 175px;
+    -fx-min-height: 125px;
+    -fx-max-height: 125px;
     -fx-spacing: 4;
     -fx-padding: 4;
     -fx-border-radius: 4;
