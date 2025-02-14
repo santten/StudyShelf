@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Aladin&family=B612:ital,wght@0,400;0,700;1,400;1,700&family=Calistoga&display=swap');
 
 * {
-    -light: #f3fae7;
+    -light: #F4F4F4;
+    -light-hover: #e4e4e4;
     -error: #e42513;
     -warning: #e47b13;
     -secondary: #306c01;
@@ -73,4 +74,40 @@
 
 .menu-item:focused {
     -fx-background-color: -primary;
+}
+
+.materialCardM {
+    -fx-width: 175px;
+    -fx-height: 125px;
+    -fx-spacing: 4;
+    -fx-padding: 4;
+    -fx-border-radius: 4;
+    -fx-border-color: -primary-light;
+    -fx-background-color: -light;
+}
+
+.materialCardM:hover, .materialCardM:focused {
+    -fx-background-color: -light-hover;
+    -fx-cursor: hand;
+}
+
+.tag {
+    -fx-padding: 3;
+    -fx-text-fill: -light;
+    -fx-background-color: -primary-light;
+}
+
+.tag:hover {
+    -fx-background-color: -primary;
+}
+
+.materialCardSubtitle {
+    -fx-font-size: 12;
+    -fx-fill: -primary-light;
+}
+
+.materialCardIcon {
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 1.5;
+    -fx-fill: -primary-light;
 }

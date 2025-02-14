@@ -12,31 +12,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Launcher {
-    public static void main(String[] args) {
-
+    public static void hibernateExample(){
         // Test Hibernate user
         UserRepository userRepo = new UserRepository();
-        User testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "password");
+        User testUser = new User("Test", System.currentTimeMillis() + "Name", System.currentTimeMillis() + "@gmail.com", "password");
         User savedUser = userRepo.save(testUser);
         System.out.println("Saved user with ID: " + savedUser.getUserId());
         // Test Hibernate role
-        RoleRepository roleRepo = new RoleRepository();
-        Role testRole = new Role("TEACHER");
-        Role savedRole = roleRepo.save(testRole);
-        System.out.println("Saved role with ID: " + savedRole.getId());
+        // RoleRepository roleRepo = new RoleRepository();
+        //Role testRole = new Role("TEACHER");
+        // Role savedRole = roleRepo.save(testRole);
+        // System.out.println("Saved role with ID: " + savedRole.getId());
 
         // Test Hibernate category
         CategoryRepository categoryRepo = new CategoryRepository();
-        Category testCategory = new Category("Java", savedUser);
+        Category testCategory = new Category("Java" + System.currentTimeMillis(), savedUser);
         Category savedCategory = categoryRepo.save(testCategory);
         System.out.println("Saved category with ID: " + savedCategory.getCategoryId());
         // Test Hibernate tag
-        TagRepository tagRepo = new TagRepository();
-        Tag testTag = new Tag("Java", savedUser);
+/*        TagRepository tagRepo = new TagRepository();
+        Tag testTag = new Tag("Java" + System.currentTimeMillis(), savedUser);
         Tag savedTag = tagRepo.save(testTag);
         System.out.println("Saved tag with ID: " + savedTag.getTagId());
         Set<Tag> materialTags = new HashSet<>();
-        materialTags.add(savedTag);
+        materialTags.add(savedTag);*/
         //Test Hibernate study material
         StudyMaterial testMaterial = new StudyMaterial(
                 savedUser,
@@ -49,7 +48,7 @@ public class Launcher {
                 MaterialStatus.PENDING
         );
         testMaterial.setCategory(savedCategory);
-        testMaterial.setTags(materialTags);
+
         StudyMaterialRepository materialRepo = new StudyMaterialRepository();
         StudyMaterial savedMaterial = materialRepo.save(testMaterial);
         System.out.println("Saved material with ID: " + savedMaterial.getMaterialId());
@@ -86,7 +85,10 @@ public class Launcher {
             System.out.println("Upload test failed: " + e.getMessage());
             e.printStackTrace();
         }
+    }
 
+    public static void main(String[] args) {
+        hibernateExample();
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }
 }
