@@ -38,19 +38,22 @@
                <children>
                   <Label text="E-Mail" textAlignment="RIGHT" GridPane.halignment="RIGHT" />
                   <Label alignment="CENTER_RIGHT" text="Password" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                  <TextField prefHeight="25.0" prefWidth="335.0" GridPane.columnIndex="1" />
+                  <TextField fx:id="emailField" prefHeight="25.0" prefWidth="335.0" GridPane.columnIndex="1" />
                   <TextField prefWidth="263.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="129.0" text="Re-Enter Password" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                  <Label text="Display Name" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                  <MenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="301.0" text="Choose Your Role" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                   <Label text="First Name" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                   <TextField fx:id="firstNameField" prefWidth="263.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                   <Label text="Last Name" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                   <TextField fx:id="lastNameField" prefWidth="263.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <MenuButton  fx:id="roleMenuButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="301.0" text="Choose Your Role" GridPane.columnIndex="1" GridPane.rowIndex="6">
                     <items>
                       <MenuItem mnemonicParsing="false" text="Student" />
                       <MenuItem mnemonicParsing="false" text="Teacher" />
                     </items>
                   </MenuButton>
                   <Label alignment="CENTER_RIGHT" text="Role" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-                  <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <PasswordField fx:id="reenterPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
             </GridPane>
             <Button fx:id="btn_signup" mnemonicParsing="false" styleClass="btnS" text="Create your account" />
