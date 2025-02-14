@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Aladin&family=B612:ital,wght@0,400;0,700;1,400;1,700&family=Calistoga&display=swap');
 
 * {
-    -light: #f3fae7;
+    -light: #F4F4F4;
+    -light-shadow: #e8e8e8;
     -error: #e42513;
     -warning: #e47b13;
     -secondary: #306c01;
@@ -11,16 +12,19 @@
     -dark: #000806;
 }
 
+/* logo */
 .title {
     -fx-font-family: "Aladin Regular";
     -fx-font-size: 32;
 }
 
+/* regular text */
 .text {
     -fx-font-family: "B612";
     -fx-font-size: 12;
 }
 
+/* text heading styles */
 .heading3 {
     -fx-font-family: "Calistoga";
     -fx-font-size: 20;
@@ -32,6 +36,30 @@
     -fx-font-size: 16;
     -fx-fill: -primary-light;
 }
+
+/* label heading styles */
+
+.label3 {
+    -fx-padding: 20 0 10 0
+}
+
+.label3 .text {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 20;
+    -fx-fill: -primary-light;
+}
+
+.label4 {
+    -fx-padding: 10 0 4 0
+}
+
+.label4 .text {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 16;
+    -fx-fill: -primary-light;
+}
+
+/* button styles */
 
 .btnS {
     -fx-background-color: -primary;
@@ -72,5 +100,53 @@
 }
 
 .menu-item:focused {
+    -fx-background-color: -primary;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.materialCardM {
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-min-height: 125px;
+    -fx-max-height: 125px;
+    -fx-spacing: 4;
+    -fx-padding: 4;
+    -fx-border-radius: 4;
+    -fx-border-color: -primary-light;
+    -fx-background-color: -light;
+}
+
+.materialCardM:hover, .materialCardM:focused {
+    -fx-background-color: -light-shadow;
+    -fx-cursor: hand;
+}
+
+.materialCardSubtitle {
+    -fx-font-size: 12;
+    -fx-fill: -primary-light;
+}
+
+.materialCardIcon {
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 1.5;
+    -fx-fill: -primary-light;
+}
+
+.tag {
+    -fx-padding: 3;
+    -fx-text-fill: -light;
+    -fx-background-color: -primary-light;
+}
+
+.tag:hover {
     -fx-background-color: -primary;
 }

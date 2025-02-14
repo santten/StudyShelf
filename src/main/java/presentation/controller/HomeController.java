@@ -2,51 +2,42 @@ package presentation.controller;
 
 import domain.model.Category;
 import domain.model.StudyMaterial;
-import domain.service.CategoryService;
+import domain.model.User;
 import infrastructure.repository.CategoryRepository;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import presentation.components.MaterialCard;
+import presentation.logger.GUILogger;
 
 import java.util.List;
 
 public class HomeController {
-    private CategoryRepository categoryRepo = new CategoryRepository();
+    private final CategoryRepository categoryRepo = new CategoryRepository();
 
-    @FXML
-    private ListView<Category> categoryList;
-    @FXML
-    private ListView<StudyMaterial> materialList;
+    @FXML private VBox mainVBox;
 
     @FXML
     private void initialize() {
         List<Category> categories = categoryRepo.findAll();
-        System.out.println("Loading categories: " + categories.size());
-        categoryList.getItems().addAll(categories);
+        GUILogger.info("Loading categories: " + categories.size());
 
-        categoryList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                List<StudyMaterial> materials = newVal.getMaterials();
-                System.out.println("Loading materials for category: " + materials.size());
-                materialList.getItems().setAll(materials);
-            }
-        });
+        for (Category c : categories) {
+            Label title = new Label();
 
-        categoryList.setCellFactory(lv -> new ListCell<Category>() {
-            @Override
-            protected void updateItem(Category category, boolean empty) {
-                super.updateItem(category, empty);
-                setText(empty ? null : category.getCategoryName());
-            }
-        });
+            title.setText(c.getCategoryName());
+            title.getStyleClass().add("label3");
 
-        materialList.setCellFactory(lv -> new ListCell<StudyMaterial>() {
-            @Override
-            protected void updateItem(StudyMaterial material, boolean empty) {
-                super.updateItem(material, empty);
-                setText(empty ? null : material.getName());
-            }
-        });
+            mainVBox.getChildren().add(title);
+
+            List<StudyMaterial> materials  = categoryRepo.findMaterialsByCategory(c);
+            GUILogger.info("Loading materials " + materials.size() + " for category " + c.getCategoryName());
+            ScrollPane pane = MaterialCard.materialCardScrollHBox(materials);
+
+            mainVBox.getChildren().add(pane);
+        }
     }
-
 }
