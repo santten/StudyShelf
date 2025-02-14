@@ -14,7 +14,7 @@ class RatingTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("Armas", "Nevolainen", "armas@gmail.com", "password");
+        user = new User("Armas", "Nevolainen", "armas@gmail.com", "password", );
         material = new StudyMaterial(
                 user,
                 "Java for dummies",

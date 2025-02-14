@@ -9,7 +9,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private Long userId;
 
     @Column(name = "FirstName", length = 50)
     private String firstName;
@@ -23,90 +23,51 @@ public class User {
     @Column(name = "Password", length = 255)
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Rating> ratings = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Review> reviews = new HashSet<>();
 
     // Default constructor
     public User() {}
 
     // Constructor for new users
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     // Constructor for existing users
-    public User(int userId, String firstName, String lastName, String email, String password) {
+    public User(Long userId, String firstName, String lastName, String email, String password , Role role) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    // Returns permissions
-    public Set<Permission> getPermissions() {
-        Set<Permission> allPermissions = new HashSet<>();
-        for (Role role : roles) {
-            allPermissions.addAll(role.getPermissions());
-        }
-        return allPermissions;
-    }
 
     // Checks if user has permission
-    public boolean hasPermission(PermissionType permissionType, int resourceOwnerId) {
-//        if (roles.isEmpty()) {
-//            return false;  // No roles, no permissions
-//        }
-//
-//        if ((permissionType == PermissionType.DELETE_OWN_RESOURCE ||
-//                permissionType == PermissionType.UPDATE_OWN_RESOURCE) &&
-//                this.userId != resourceOwnerId) {
-//            return false;
-//        }
-
-        if (permissionType == PermissionType.READ_RESOURCES) {
-            return true;
+    public boolean hasPermission(PermissionType permissionType) {
+        if (role == null) {
+            return false;
         }
-
-        for (Role role : roles) {
-            for (Permission permission : role.getPermissions()) {
-                if (permission.getName() == permissionType) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return role.getPermissions().stream()
+                .anyMatch(permission -> permission.getName().equals(permissionType));
     }
 
-    public boolean hasPermissionOnResource(PermissionType permissionType, int resourceOwnerId) {
-        if (hasPermission(permissionType, resourceOwnerId) && this.userId == resourceOwnerId) {
-            return true;
-        }
-        return false;
-    }
 
     // Getters and Setters
-    public int getUserId() {
-        return userId;
-    }
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+    public Long getUserId() { return userId; }
     public String getFirstName() {
         return firstName;
     }
@@ -131,5 +92,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 }
