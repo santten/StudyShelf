@@ -4,6 +4,7 @@ import domain.model.StudyMaterial;
 import domain.model.User;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.FillRule;
@@ -57,12 +58,21 @@ public class MaterialComponents {
         return materialCard;
     }
 
-    public static HBox materialCardHBox(List<StudyMaterial> list) {
+    public static ScrollPane materialCardScrollHBox(List<StudyMaterial> list) {
         HBox materialCardHBox = new HBox();
         for (StudyMaterial s : list) {
             materialCardHBox.getChildren().add(materialCard(s));
         }
         materialCardHBox.setSpacing(10);
-        return materialCardHBox;
+
+        ScrollPane pane = new ScrollPane();
+
+        pane.setContent(materialCardHBox);
+        pane.setMinViewportHeight(130);
+        pane.setMinViewportWidth(760);
+        pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        return pane;
     }
 }
