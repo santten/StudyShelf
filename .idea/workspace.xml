@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7e681506-6a41-4279-a0dd-5e22ad60023c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/domain/service/Session.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Launcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/infrastructure/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/infrastructure/repository/RoleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/presentation/controller/SignupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/presentation/controller/SignupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/signup.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/signup.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/infrastructure/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/infrastructure/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/presentation/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/presentation/controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/login.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,9 +19,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
         <option value="JUnit5 Test Class" />
+        <option value="Class" />
       </list>
     </option>
   </component>
