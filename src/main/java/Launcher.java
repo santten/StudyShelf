@@ -12,6 +12,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Launcher {
+    private static void initializeRoles() {
+        RoleRepository roleRepo = new RoleRepository();
+
+
+        String[] defaultRoles = {"Student", "Teacher"};
+        for (String roleName : defaultRoles) {
+            Role role = roleRepo.findByName(roleName);
+            if (role == null) {
+                role = new Role(roleName);
+                roleRepo.save(role);
+                System.out.println("Created role: " + roleName);
+            }
+        }
+    }
     public static void main(String[] args) {
 
 //        // Test Hibernate user
@@ -86,7 +100,7 @@ public class Launcher {
 //            System.out.println("Upload test failed: " + e.getMessage());
 //            e.printStackTrace();
 //        }
-
+        initializeRoles();
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }
 }
