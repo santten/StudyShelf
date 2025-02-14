@@ -2,20 +2,17 @@ package presentation.controller;
 
 import domain.model.Category;
 import domain.model.StudyMaterial;
-import domain.model.User;
 import infrastructure.repository.CategoryRepository;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
 import presentation.logger.GUILogger;
 
 import java.util.List;
 
-public class HomeController {
+public class CoursesController {
     private final CategoryRepository categoryRepo = new CategoryRepository();
 
     @FXML private VBox mainVBox;

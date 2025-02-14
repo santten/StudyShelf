@@ -3,10 +3,7 @@ package presentation.components;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.OverrunStyle;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.FillRule;
@@ -62,6 +59,7 @@ public class MaterialCard {
         Text timestamp = new Text(formattedTimestamp);
         graphic.getChildren().add(timestamp);
 
+        materialCard.setTooltip(new Tooltip("\"" + s.getName() + "\", uploaded by " + uploader.getFirstName() + " " + uploader.getLastName()));
 
         materialCard.setGraphic(graphic);
         materialCard.getStyleClass().add("materialCardM");
