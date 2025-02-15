@@ -15,9 +15,9 @@ class RatingRepositoryTest {
     @BeforeEach
     void setUp() {
         repository = new RatingRepository();
-
         UserRepository userRepo = new UserRepository();
-        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password");
+        Role testRole = new Role(RoleType.STUDENT);
+        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", testRole);
         user = userRepo.save(user);
 
         StudyMaterialRepository materialRepo = new StudyMaterialRepository();

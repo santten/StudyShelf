@@ -18,11 +18,27 @@ public class Role {
     @OneToMany(mappedBy = "role")
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany
+//    @ManyToMany
+//    @JoinTable(
+//            name = "role_permissions",
+//            joinColumns = @JoinColumn(name = "role_id"),
+//            inverseJoinColumns = @JoinColumn(name = "permission_id")
+//    )
+//    private Set<Permission> permissions = new HashSet<>();
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "role_permissions",
+//            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id")
+//    )
+//    private Set<Permission> permissions = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "role_permissions",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id")
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id", nullable = false)
     )
     private Set<Permission> permissions = new HashSet<>();
 
@@ -34,6 +50,7 @@ public class Role {
     }
     public RoleType getName() { return name; }
     public Set<Permission> getPermissions() {return permissions;}
-
+    public Set<User> getUsers() { return users; }
 
 }
+

@@ -1,5 +1,6 @@
 package infrastructure.repository;
 
+import domain.model.RoleType;
 import domain.model.Tag;
 import domain.model.User;
 import domain.model.Role;
@@ -15,9 +16,9 @@ class TagRepositoryTest {
     @BeforeEach
     void setUp() {
         repository = new TagRepository();
-
+        Role testRole = new Role(RoleType.STUDENT);
         UserRepository userRepo = new UserRepository();
-        creator = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password");
+        creator = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", testRole);
         creator = userRepo.save(creator);
 
         testTag = new Tag("Java" + System.currentTimeMillis(), creator);

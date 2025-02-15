@@ -21,19 +21,9 @@ public class Permission {
     public Permission() { }
     public Permission(PermissionType name) {
         this.name = name;
-        this.roles = new HashSet<>();
     }
 
     public Long getId() { return id; }
     public PermissionType getName() { return name; }
     public Set<Role> getRoles() { return roles; }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles.clear();
-        this.roles.addAll(roles);
-        for (Role role : roles) {
-            role.getPermissions().add(this);
-        }
-
-    }
 }

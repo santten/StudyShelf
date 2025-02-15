@@ -15,11 +15,10 @@ class StudyMaterialRepositoryTest {
     @BeforeEach
     void setUp() {
         repository = new StudyMaterialRepository();
-
+        Role testRole = new Role(RoleType.STUDENT);
         UserRepository userRepo = new UserRepository();
-        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password");
+        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password",testRole);
         user = userRepo.save(user);
-
         CategoryRepository categoryRepo = new CategoryRepository();
         category = new Category("Test Category", user);
         category = categoryRepo.save(category);

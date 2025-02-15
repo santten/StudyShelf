@@ -19,7 +19,8 @@ class ReviewRepositoryTest {
         repository = new ReviewRepository();
         UserRepository userRepo = new UserRepository();
         StudyMaterialRepository materialRepo = new StudyMaterialRepository();
-        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password");
+        Role testUser = new Role(RoleType.STUDENT);
+        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password",testUser);
         user = userRepo.save(user);
         CategoryRepository categoryRepo = new CategoryRepository();
         Category category = new Category("Java", user);

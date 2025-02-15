@@ -1,6 +1,8 @@
 package infrastructure.repository;
 
 import domain.model.Category;
+import domain.model.Role;
+import domain.model.RoleType;
 import domain.model.User;
 
 
@@ -24,7 +26,8 @@ class BaseRepositoryTest {
     @BeforeEach
     void setUp() {
         repository = new TestRepository();
-        testUser = new User("Matti", "Valovirta", "matti@test.com" + System.currentTimeMillis(), "password");
+        Role testRole = new Role(RoleType.TEACHER);
+        testUser = new User("Matti", "Valovirta", "matti@test.com" + System.currentTimeMillis(), "password",testRole );
         testCategory = new Category("Some category", testUser);
     }
 
