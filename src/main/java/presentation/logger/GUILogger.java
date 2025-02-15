@@ -14,7 +14,7 @@ public class GUILogger {
 
     public static void warn(String warning){
         if (showWarnings) {
-            System.out.println("\033[33m[GUILogger WARNING] " + warning + "\033[0m");
+            System.out.println("\033[33m[GUILogger WARN] " + warning + "\033[0m");
         }
     }
 
