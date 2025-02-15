@@ -13,12 +13,12 @@ public class HomeController {
     StudyMaterialRepository test = new StudyMaterialRepository();
 
     @FXML
-    private VBox mainVBox;
+    private VBox mainVBoxHome;
 
     private String s;
     private final List<StudyMaterial> materialList = test.findAllStudyMaterials();
 
     public void initialize() {
-        mainVBox.getChildren().add(materialCardScrollHBox(materialList));
+        mainVBoxHome.getChildren().add(materialCardScrollHBox(materialList));
     }
 }
