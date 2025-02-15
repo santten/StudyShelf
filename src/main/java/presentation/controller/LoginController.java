@@ -1,10 +1,12 @@
 package presentation.controller;
 
+import domain.model.User;
+import domain.service.Session;
+import infrastructure.repository.UserRepository;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.control.*;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
@@ -19,17 +21,41 @@ public class LoginController {
 
     @FXML private Button btn_login;
     @FXML public Hyperlink link_toSignup;
+    @FXML private Label errorLabel;
+    @FXML private TextField emailField;
+    @FXML private PasswordField passwordField;
 
     @FXML
     private void initialize(){
         btn_login.setOnAction( (e) -> {
-            try { sm.login(); }
-            catch (IOException ex) { throw new RuntimeException(ex); }
+            handleLogin();
         });
 
         link_toSignup.setOnAction( (e) -> {
             try { sm.setScreen(SCREEN_SIGNUP); }
             catch (IOException ex) { throw new RuntimeException(ex); }
         });
+    }
+    @FXML
+    private void handleLogin() {
+        String email = emailField.getText();
+        String password = passwordField.getText();
+
+        UserRepository userRepository = new UserRepository();
+        User user = userRepository.findByEmail(email);
+
+        if (user != null && user.getPassword().equals(password)) {
+            try {
+                // Store logged in user for the session
+                Session.getInstance().setCurrentUser(user);
+                sm.login();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else {
+            // Show login error message
+            errorLabel.setText("Invalid email or password");
+            errorLabel.setVisible(true);
+        }
     }
 };

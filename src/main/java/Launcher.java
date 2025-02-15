@@ -12,83 +12,69 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Launcher {
-    public static void hibernateExample(){
-        // Test Hibernate user
-        UserRepository userRepo = new UserRepository();
-        User testUser = new User("Test", System.currentTimeMillis() + "Name", System.currentTimeMillis() + "@gmail.com", "password");
-        User savedUser = userRepo.save(testUser);
-        System.out.println("Saved user with ID: " + savedUser.getUserId());
-        // Test Hibernate role
-        // RoleRepository roleRepo = new RoleRepository();
-        //Role testRole = new Role("TEACHER");
-        // Role savedRole = roleRepo.save(testRole);
-        // System.out.println("Saved role with ID: " + savedRole.getId());
+    private static void initializeRoles() {
+        RoleRepository roleRepo = new RoleRepository();
 
-        // Test Hibernate category
-        CategoryRepository categoryRepo = new CategoryRepository();
-        Category testCategory = new Category("Java" + System.currentTimeMillis(), savedUser);
-        Category savedCategory = categoryRepo.save(testCategory);
-        System.out.println("Saved category with ID: " + savedCategory.getCategoryId());
-        // Test Hibernate tag
-/*        TagRepository tagRepo = new TagRepository();
-        Tag testTag = new Tag("Java" + System.currentTimeMillis(), savedUser);
-        Tag savedTag = tagRepo.save(testTag);
-        System.out.println("Saved tag with ID: " + savedTag.getTagId());
-        Set<Tag> materialTags = new HashSet<>();
-        materialTags.add(savedTag);*/
-        //Test Hibernate study material
-        StudyMaterial testMaterial = new StudyMaterial(
-                savedUser,
-                "Java for dummies",
-                "Introduction to Java Programming for dummies",
-                "materials/java-dumb.pdf",
-                1.5f,
-                "PDF",
-                LocalDateTime.now(),
-                MaterialStatus.PENDING
-        );
-        testMaterial.setCategory(savedCategory);
 
-        StudyMaterialRepository materialRepo = new StudyMaterialRepository();
-        StudyMaterial savedMaterial = materialRepo.save(testMaterial);
-        System.out.println("Saved material with ID: " + savedMaterial.getMaterialId());
-        // Test Hibernate rating
-        RatingRepository ratingRepo = new RatingRepository();
-        Rating testRating = new Rating(5, savedMaterial, savedUser);
-        Rating savedRating = ratingRepo.save(testRating);
-        System.out.println("Saved rating with ID: " + savedRating.getRatingId());
-
-// Test Hibernate review
-        ReviewRepository reviewRepo = new ReviewRepository();
-        Review testReview = new Review("Great material for dummy like me!", savedMaterial, savedUser);
-        Review savedReview = reviewRepo.save(testReview);
-        System.out.println("Saved review with ID: " + savedReview.getReviewId());
-
-// Test Google Drive Upload
-        GoogleDriveService driveService = new GoogleDriveService();
-        StudyMaterialService materialService = new StudyMaterialService(driveService, materialRepo);
-
-        try {
-            byte[] content = Files.readAllBytes(Path.of("C:\\Users\\armas\\Downloads\\resort_hotel.txt")); // Replace with your file path
-
-            StudyMaterial uploadedMaterial = materialService.uploadMaterial(
-                    content,
-                    "resorthotel.txt",
-                    savedUser,
-                    "Resort Hotel Data",
-                    "Hotel information document"
-            );
-
-            System.out.println("Successfully uploaded file. URL: " + uploadedMaterial.getLink());
-
-        } catch (IOException e) {
-            System.out.println("Upload test failed: " + e.getMessage());
-            e.printStackTrace();
+        String[] defaultRoles = {"Student", "Teacher"};
+        for (String roleName : defaultRoles) {
+            Role role = roleRepo.findByName(roleName);
+            if (role == null) {
+                role = new Role(roleName);
+                roleRepo.save(role);
+                System.out.println("Created role: " + roleName);
+            }
         }
     }
+    private static void initializeTestMaterials() {
+        UserRepository userRepo = new UserRepository();
+        CategoryRepository categoryRepo = new CategoryRepository();
+        StudyMaterialRepository materialRepo = new StudyMaterialRepository();
 
+        User testUser = userRepo.findByEmail("armas@gmail.com");
+        if (testUser == null) {
+            testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "123");
+            testUser = userRepo.save(testUser);
+        }
+
+        Category javaCategory = new Category(0, "Java", testUser);
+        Category pythonCategory = new Category(0, "Python", testUser);
+        javaCategory = categoryRepo.save(javaCategory);
+        pythonCategory = categoryRepo.save(pythonCategory);
+
+        for (int i = 1; i <= 5; i++) {
+            StudyMaterial javaMaterial = new StudyMaterial(
+                    testUser,
+                    "Java for Dummies " + i,
+                    "Introduction to Java Programming for Dummies Part " + i,
+                    "materials/java-dumb-" + i + ".pdf",
+                    1.5f,
+                    "PDF",
+                    LocalDateTime.now(),
+                    MaterialStatus.PENDING
+            );
+            javaMaterial.setCategory(javaCategory);
+            materialRepo.save(javaMaterial);
+        }
+
+        for (int i = 1; i <= 5; i++) {
+            StudyMaterial pythonMaterial = new StudyMaterial(
+                    testUser,
+                    "Python for Dummies " + i,
+                    "Introduction to Python Programming for Dummies Part " + i,
+                    "materials/python-dumb-" + i + ".pdf",
+                    1.2f,
+                    "PDF",
+                    LocalDateTime.now(),
+                    MaterialStatus.PENDING
+            );
+            pythonMaterial.setCategory(pythonCategory);
+            materialRepo.save(pythonMaterial);
+        }
+    }
     public static void main(String[] args) {
-        hibernateExample();
+        // initializeRoles();
+        // initializeTestMaterials();
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }
 }
