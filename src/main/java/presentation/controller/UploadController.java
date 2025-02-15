@@ -13,11 +13,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.util.StringConverter;
 import presentation.logger.GUILogger;
+import presentation.view.SceneManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static presentation.view.Screen.SCREEN_COURSES;
 
 public class UploadController {
     @FXML public VBox mainVBoxUpload;
@@ -38,6 +43,20 @@ public class UploadController {
         ObservableList<Category> categoriesObservableList = FXCollections.observableList(categories);
 
         choice_category.setItems(categoriesObservableList);
+        choice_category.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Category category) {
+                if (category != null) {
+                    return category.getCategoryName() + " (" + category.getCreator().getFullName() + ")";
+                } else {
+                    return "";
+            }}
+
+            @Override
+            public Category fromString(String s) {
+                return null; // not used
+            }
+        });
     }
 
     private void setUp(){
@@ -61,19 +80,23 @@ public class UploadController {
             } else {
                 currentFile = null;
             }
-            btn_uploadMaterial.setDisable(!(currentFile != null && checkbox_uploadAgreement.isSelected() && !field_title.getText().isEmpty()));
+            btn_uploadMaterial.setDisable(checkButtonCondition());
         });
 
         checkbox_uploadAgreement.selectedProperty().addListener((obs, wasSelected, isSelected) ->
-                btn_uploadMaterial.setDisable(!(currentFile != null && isSelected && !field_title.getText().isEmpty()))
+                btn_uploadMaterial.setDisable(checkButtonCondition())
         );
 
         field_title.textProperty().addListener((obs, oldText, newText) ->
-                btn_uploadMaterial.setDisable(!(currentFile != null && checkbox_uploadAgreement.isSelected() && !newText.isEmpty()))
+                btn_uploadMaterial.setDisable(checkButtonCondition())
         );
 
         setCategoryChoices();
     }
+
+    private boolean checkButtonCondition(){
+        return !(choice_category.getValue() != null && currentFile != null && checkbox_uploadAgreement.isSelected() && !field_title.getText().isEmpty());
+    };
 
     @FXML private void initialize(){
         setUp();
@@ -92,6 +115,12 @@ public class UploadController {
             );
             material.setCategory(choice_category.getValue());
             materialRepo.save(material);
+            SceneManager sm = SceneManager.getInstance();
+            try {
+                sm.setScreen(SCREEN_COURSES);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
 
