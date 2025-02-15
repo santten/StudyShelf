@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7e681506-6a41-4279-a0dd-5e22ad60023c" name="Changes" comment="" />
+    <list default="true" id="7e681506-6a41-4279-a0dd-5e22ad60023c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/domain/service/SearchService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/presentation/controller/SearchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Launcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/infrastructure/repository/CategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/infrastructure/repository/CategoryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/infrastructure/repository/StudyMaterialRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/infrastructure/repository/StudyMaterialRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/search.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/search.fxml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,7 +72,7 @@
     "RunOnceActivity.DeprecatedChatLlmMigration": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "armas-branch",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

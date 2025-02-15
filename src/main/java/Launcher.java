@@ -37,7 +37,7 @@ public class Launcher {
             testUser = userRepo.save(testUser);
         }
 
-        Category javaCategory = new Category(0, "Java", testUser);
+        Category javaCategory = new Category(0, "React", testUser);
         Category pythonCategory = new Category(0, "Python", testUser);
         javaCategory = categoryRepo.save(javaCategory);
         pythonCategory = categoryRepo.save(pythonCategory);
@@ -74,7 +74,7 @@ public class Launcher {
     }
     public static void main(String[] args) {
         // initializeRoles();
-        // initializeTestMaterials();
+//         initializeTestMaterials();
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }
 }
