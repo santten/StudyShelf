@@ -1,14 +1,19 @@
 package infrastructure.repository;
 
-import domain.model.Permission;
 import domain.model.StudyMaterial;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
 
 public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
+
+
     public StudyMaterial findById(int id) {
         EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
         try {
@@ -17,15 +22,16 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
             em.close();
         }
     }
+    public List<StudyMaterial> findByNameOrDescription(String query) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<StudyMaterial> cq = cb.createQuery(StudyMaterial.class);
+        Root<StudyMaterial> root = cq.from(StudyMaterial.class);
 
-    public List<StudyMaterial> findAllStudyMaterials() {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        try {
-            return em.createQuery("SELECT s FROM StudyMaterial s", StudyMaterial.class)
-                    .getResultList();
-        } finally {
-            em.close();
-        }
+        Predicate namePredicate = cb.like(cb.lower(root.get("name")), "%" + query.toLowerCase() + "%");
+        Predicate descPredicate = cb.like(cb.lower(root.get("description")), "%" + query.toLowerCase() + "%");
+
+        cq.where(cb.or(namePredicate, descPredicate));
+        return em.createQuery(cq).getResultList();
     }
-
 }
