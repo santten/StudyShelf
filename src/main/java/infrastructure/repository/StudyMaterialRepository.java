@@ -34,4 +34,13 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
         cq.where(cb.or(namePredicate, descPredicate));
         return em.createQuery(cq).getResultList();
     }
+    public List<StudyMaterial> findAllStudyMaterials() {
+        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        try {
+            return em.createQuery("SELECT s FROM StudyMaterial s", StudyMaterial.class)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }
