@@ -19,7 +19,7 @@ public class PermissionServiceTest {
 
         adminRole.getPermissions().add(deletePermission);
         adminRole.getPermissions().add(editPermission);
-        user.getRoles().add(adminRole);
+        user.setRole(adminRole);
 
         assertTrue(user.hasPermission(PermissionType.DELETE_TAGS, user.getUserId()), "User should have DELETE_TAGS permission");
         assertTrue(user.hasPermission(PermissionType.UPDATE_TAGS, user.getUserId()), "User should have UPDATE_TAGS permission");
@@ -35,7 +35,7 @@ public class PermissionServiceTest {
         for (PermissionType perm : PermissionType.values()) {
             adminRole.getPermissions().add(new Permission(perm));
         }
-        admin.getRoles().add(adminRole);
+        admin.setRole(adminRole);
         for (PermissionType perm : PermissionType.values()) {
             assertTrue(admin.hasPermission(perm, admin.getUserId()), "Admin should have permission: " + perm);
         }
@@ -63,7 +63,7 @@ public class PermissionServiceTest {
             teacherRole.getPermissions().add(new Permission(perm));
         }
 
-        teacher.getRoles().add(teacherRole);
+        teacher.setRole(teacherRole);
 
         for (PermissionType perm : allowedPermissions) {
             assertTrue(teacher.hasPermission(perm, teacher.getUserId()), "Teacher should have permission: " + perm);
@@ -95,7 +95,7 @@ public class PermissionServiceTest {
             studentRole.getPermissions().add(new Permission(perm));
         }
 
-        student.getRoles().add(studentRole);
+        student.setRole(studentRole);
 
         for (PermissionType perm : allowedPermissions) {
             assertTrue(student.hasPermission(perm, student.getUserId()), "Student should have permission: " + perm);
@@ -111,7 +111,7 @@ public class PermissionServiceTest {
     public void RoleWithoutPermissionsShouldDenyAll() {
         User guest = new User("Guest", "User", "guest@example.com", "password123");
         Role guestRole = new Role("GUEST");
-        guest.getRoles().add(guestRole);
+        guest.setRole(guestRole);
 
         for (PermissionType perm : PermissionType.values()) {
             if (perm == PermissionType.READ_RESOURCES) {
@@ -126,10 +126,11 @@ public class PermissionServiceTest {
     public void UserCanEditOwnResource() {
         User uploader = new User("Uploader", "User", "uploader@example.com", "password123");
         User viewer = new User("Viewer", "User", "viewer@example.com", "password321");
-
+        Role viewerRole = new Role("VIEWER");
         Role uploaderRole = new Role("UPLOADER");
         uploaderRole.getPermissions().add(new Permission(PermissionType.UPDATE_OWN_RESOURCE));
-        uploader.getRoles().add(uploaderRole);
+        uploader.setRole(uploaderRole);
+        viewer.setRole(viewerRole);
 
         assertTrue(uploader.hasPermissionOnResource(PermissionType.UPDATE_OWN_RESOURCE, uploader.getUserId()),
                 "Uploader should be able to edit their own resource");

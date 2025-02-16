@@ -66,7 +66,7 @@ class UserTest {
     @Test
     void testUserHasPermission() {
         adminRole.getPermissions().add(permission);
-        user.getRoles().add(adminRole);
+        user.setRole(adminRole);
 
         assertTrue(user.hasPermission(PermissionType.DELETE_ANY_RESOURCE, user.getUserId()));
         assertFalse(user.hasPermission(PermissionType.UPDATE_OWN_RESOURCE, user.getUserId()));
@@ -75,6 +75,8 @@ class UserTest {
     @Test
     void testGuestUserHasOnlyReadPermission() {
         User guest = new User("Guest", "User", "guest@example.com", "password");
+        Role guestRole = new Role("GUEST");
+        guest.setRole(guestRole);
         assertFalse(guest.hasPermission(PermissionType.CREATE_TAGS, guest.getUserId()));
         assertTrue(guest.hasPermission(PermissionType.READ_RESOURCES, guest.getUserId()));
     }
@@ -84,17 +86,18 @@ class UserTest {
         User uploader = new User("Uploader", "User", "uploader@example.com", "password");
         Role uploaderRole = new Role("UPLOADER");
         uploaderRole.getPermissions().add(new Permission(PermissionType.UPDATE_OWN_RESOURCE));
-        uploader.getRoles().add(uploaderRole);
+        uploader.setRole(uploaderRole);
 
         assertTrue(uploader.hasPermissionOnResource(PermissionType.UPDATE_OWN_RESOURCE, uploader.getUserId()));
-        User viewer = new User("Viewer", "User", "viewer@example.com", "password");
-        assertFalse(viewer.hasPermissionOnResource(PermissionType.UPDATE_OWN_RESOURCE, uploader.getUserId()));
     }
 
     @Test
     void testUserCannotEditOtherUsersResource() {
         User owner = new User("Owner", "User", "owner@example.com", "password");
         User otherUser = new User("Other", "User", "other@example.com", "password");
+        Role userRole = new Role("USER");
+        owner.setRole(userRole);
+        otherUser.setRole(userRole);
         owner.setUserId(1);
         otherUser.setUserId(2);
         assertFalse(otherUser.hasPermissionOnResource(PermissionType.UPDATE_OWN_RESOURCE, owner.getUserId()));
@@ -110,7 +113,7 @@ class UserTest {
 
         Role role = new Role("STUDENT");
         role.getPermissions().add(new Permission(PermissionType.UPDATE_OWN_RESOURCE));
-        otherUser.getRoles().add(role);
+        otherUser.setRole(role);
 
         assertFalse(otherUser.hasPermissionOnResource(PermissionType.UPDATE_OWN_RESOURCE, owner.getUserId()));
     }
@@ -118,18 +121,17 @@ class UserTest {
 
 
     @Test
-    void testUserGetRoles() {
-        assertTrue(user.getRoles().isEmpty());
-        user.getRoles().add(adminRole);
-        assertFalse(user.getRoles().isEmpty());
-        assertTrue(user.getRoles().contains(adminRole));
+    void testUserGetRole() {
+        assertNull(user.getRole());
+        user.setRole(adminRole);
+        assertEquals(adminRole, user.getRole());
     }
 
     @Test
     void testUserGetPermissions() {
         Role role = new Role("TEST_ROLE");
         role.getPermissions().add(new Permission(PermissionType.CREATE_TAGS));
-        user.getRoles().add(role);
+        user.setRole(role);
 
         Set<Permission> permissions = user.getPermissions();
         assertFalse(permissions.isEmpty());

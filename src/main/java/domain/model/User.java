@@ -26,13 +26,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Rating> ratings = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     // Default constructor
     public User() {}
@@ -54,40 +50,26 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    // Returns permissions
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public Set<Permission> getPermissions() {
-        Set<Permission> allPermissions = new HashSet<>();
-        for (Role role : roles) {
-            allPermissions.addAll(role.getPermissions());
-        }
-        return allPermissions;
+        return role.getPermissions();
     }
 
-    // Checks if user has permission
     public boolean hasPermission(PermissionType permissionType, int resourceOwnerId) {
-//        if (roles.isEmpty()) {
-//            return false;  // No roles, no permissions
-//        }
-//
-//        if ((permissionType == PermissionType.DELETE_OWN_RESOURCE ||
-//                permissionType == PermissionType.UPDATE_OWN_RESOURCE) &&
-//                this.userId != resourceOwnerId) {
-//            return false;
-//        }
-
         if (permissionType == PermissionType.READ_RESOURCES) {
             return true;
         }
 
-        for (Role role : roles) {
-            for (Permission permission : role.getPermissions()) {
-                if (permission.getName() == permissionType) {
-                    return true;
-                }
+        for (Permission permission : role.getPermissions()) {
+            if (permission.getName() == permissionType) {
+                return true;
             }
         }
         return false;

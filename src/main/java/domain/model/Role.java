@@ -1,7 +1,7 @@
 package domain.model;
 
 import jakarta.persistence.*;
-
+import domain.model.Permission;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
@@ -17,12 +17,7 @@ public class Role {
     @Column(nullable = false, unique = true)
     private String name; // "ADMIN", "TEACHER", "STUDENT"
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @OneToMany(mappedBy = "role")
     private Set<User> users = new HashSet<>();
 
     @ManyToMany

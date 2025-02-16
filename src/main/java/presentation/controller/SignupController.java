@@ -75,7 +75,7 @@ public class SignupController {
                 System.out.println("[DB] Created new role: " + selectedRole);
             }
 
-            newUser.getRoles().add(userRole);
+            newUser.setRole(userRole);
             UserRepository userRepository = new UserRepository();
             User savedUser = userRepository.save(newUser);
 
