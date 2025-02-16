@@ -34,4 +34,12 @@ public class CategoryRepository extends BaseRepository<Category>  {
         Root<Category> root = query.from(Category.class);
         return em.createQuery(query).getResultList();
     }
+    public List<Category> findByName(String name) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Category> query = cb.createQuery(Category.class);
+        Root<Category> root = query.from(Category.class);
+        query.where(cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+        return em.createQuery(query).getResultList();
+    }
 }
