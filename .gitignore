@@ -38,5 +38,7 @@ build/
 ### google cloud storage credentials###
 src/main/resources/credentials/
 *.json
-tokens/.idea/
+
 tokens/
+src/main/resources/META-INF/persistence.xml
+tokens/.idea/

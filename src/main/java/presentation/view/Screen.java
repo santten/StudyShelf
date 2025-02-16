@@ -6,5 +6,6 @@ public enum Screen {
     SCREEN_SIGNUP,
     SCREEN_COURSES,
     SCREEN_PROFILE,
-    SCREEN_FIND
+    SCREEN_FIND,
+    SCREEN_UPLOAD,
 }

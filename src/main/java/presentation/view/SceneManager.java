@@ -26,15 +26,24 @@ public class SceneManager {
     private SceneManager(){
     }
 
-    public static SceneManager getInstance() throws IOException {
+    public static SceneManager getInstance() {
         if (instance == null){
             instance = new SceneManager();
-            instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/login.fxml")));
-            instance.header = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/header.fxml")));
-            instance.footer = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/footer.fxml")));
-            instance.logged = false;
+
+            try {
+                instance.initializeComponents();
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to load FXML components", e);
+            }
         }
         return instance;
+    }
+
+    private void initializeComponents() throws IOException {
+        instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/login.fxml")));
+        instance.header = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/header.fxml")));
+        instance.footer = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/footer.fxml")));
+        instance.logged = false;
     }
 
     public void setScreen(Screen screen) throws IOException {
@@ -51,22 +60,13 @@ public class SceneManager {
             base.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
             base.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-            String resourcePath;
-
-            switch(screen){
-                case SCREEN_COURSES:
-                    resourcePath = "/fxml/courses.fxml";
-                    break;
-                case SCREEN_PROFILE:
-                    resourcePath = "/fxml/profile.fxml";
-                    break;
-                case SCREEN_FIND:
-                    resourcePath = "/fxml/search.fxml";
-                    break;
-                default: /* defaults to home screen */
-                    resourcePath = "/fxml/home.fxml";
-                    break;
-            }
+            String resourcePath = switch (screen) {
+                case SCREEN_COURSES -> "/fxml/courses.fxml";
+                case SCREEN_PROFILE -> "/fxml/profile.fxml";
+                case SCREEN_FIND -> "/fxml/search.fxml";
+                case SCREEN_UPLOAD -> "/fxml/upload.fxml";
+                default -> "/fxml/home.fxml";
+            };
 
             base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(resourcePath))));
             instance.current.setCenter(base);

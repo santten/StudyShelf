@@ -15,7 +15,7 @@ import java.util.List;
 public class CoursesController {
     private final CategoryRepository categoryRepo = new CategoryRepository();
 
-    @FXML private VBox mainVBox;
+    @FXML private VBox mainVBoxCourses;
 
     @FXML
     private void initialize() {
@@ -28,13 +28,13 @@ public class CoursesController {
             title.setText(c.getCategoryName());
             title.getStyleClass().add("label3");
 
-            mainVBox.getChildren().add(title);
+            mainVBoxCourses.getChildren().add(title);
 
             List<StudyMaterial> materials  = categoryRepo.findMaterialsByCategory(c);
             GUILogger.info("Loading materials " + materials.size() + " for category " + c.getCategoryName());
             ScrollPane pane = MaterialCard.materialCardScrollHBox(materials);
 
-            mainVBox.getChildren().add(pane);
+            mainVBoxCourses.getChildren().add(pane);
         }
     }
 }
