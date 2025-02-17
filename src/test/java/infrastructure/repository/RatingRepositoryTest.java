@@ -11,21 +11,48 @@ class RatingRepositoryTest {
     private User user;
     private StudyMaterial material;
     private Rating testRating;
+    private RoleRepository roleRepo;
+    private UserRepository userRepo;
+    private StudyMaterialRepository materialRepo;
+
+//    @BeforeEach
+//    void setUp() {
+//        repository = new RatingRepository();
+//        UserRepository userRepo = new UserRepository();
+//        Role testRole = new Role(RoleType.STUDENT);
+//        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", testRole);
+//        user = userRepo.save(user);
+//
+//        StudyMaterialRepository materialRepo = new StudyMaterialRepository();
+//        material = new StudyMaterial(user, "Java", "Best Practices",
+//                "link", 100.0f, "PDF", LocalDateTime.now(), MaterialStatus.APPROVED);
+//        material = materialRepo.save(material);
+//
+//        // Create test rating
+//        testRating = new Rating(5, material, user);
+//    }
+
 
     @BeforeEach
     void setUp() {
         repository = new RatingRepository();
+        roleRepo = new RoleRepository();
+        userRepo = new UserRepository();
+        materialRepo = new StudyMaterialRepository();
 
-        UserRepository userRepo = new UserRepository();
-        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password");
+        Role testRole = roleRepo.findByName(RoleType.STUDENT);
+        if (testRole == null) {
+            testRole = new Role(RoleType.STUDENT);
+            testRole = roleRepo.save(testRole);
+        }
+
+        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", testRole);
         user = userRepo.save(user);
 
-        StudyMaterialRepository materialRepo = new StudyMaterialRepository();
         material = new StudyMaterial(user, "Java", "Best Practices",
                 "link", 100.0f, "PDF", LocalDateTime.now(), MaterialStatus.APPROVED);
         material = materialRepo.save(material);
 
-        // Create test rating
         testRating = new Rating(5, material, user);
     }
 

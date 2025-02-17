@@ -18,6 +18,25 @@ public class UserRepository extends BaseRepository<User> {
             em.close();
         }
     }
+
+
+    public User save(User user) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User savedUser = em.merge(user);
+            em.getTransaction().commit();
+            return savedUser;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
     public User findByEmail(String email) {
         EntityManager em = getEntityManager();
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -31,5 +50,6 @@ public class UserRepository extends BaseRepository<User> {
             return null;
         }
     }
+
 
 }

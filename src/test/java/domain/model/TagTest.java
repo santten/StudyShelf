@@ -15,7 +15,7 @@ class TagTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("Armas", "Nevolainen", "armas@gmail.com", "password");
+        user = new User("Armas", "Nevolainen", "armas@gmail.com", "password",new Role(RoleType.STUDENT));
         tag = new Tag("Java", user);
     }
 
@@ -42,7 +42,7 @@ class TagTest {
 
     @Test
     void setCreator() {
-        User newCreator = new User("Matti",  "Valovirta", "matti@test.com" + System.currentTimeMillis(), "password");
+        User newCreator = new User("Matti",  "Valovirta", "matti@test.com" + System.currentTimeMillis(), "password",new Role(RoleType.TEACHER));
         tag.setCreator(newCreator);
         assertEquals(newCreator, tag.getCreator());
     }

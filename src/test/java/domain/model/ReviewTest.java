@@ -14,7 +14,7 @@ class ReviewTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("Armas", "Nevolainen", "armas@gmail.com", "password");
+        user = new User("Armas", "Nevolainen", "armas@gmail.com", "password",new Role(RoleType.STUDENT));
         material = new StudyMaterial(
                 user,
                 "Java for dummies",
@@ -71,7 +71,7 @@ class ReviewTest {
 
     @Test
     void setUser() {
-        User newUser = new User("Matti", "Valovirta", "matti@test.com", "password");
+        User newUser = new User("Matti", "Valovirta", "matti@test.com", "password",new Role(RoleType.TEACHER));
         review.setUser(newUser);
         assertEquals(newUser, review.getUser());
     }

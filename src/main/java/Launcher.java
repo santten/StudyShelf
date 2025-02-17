@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Launcher {
+
     private static void initializeRoles() {
         RoleRepository roleRepo = new RoleRepository();
 

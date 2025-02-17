@@ -1,6 +1,7 @@
 package infrastructure.repository;
 
 import domain.model.Category;
+import domain.model.RoleType;
 import domain.model.User;
 import domain.model.Role;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,13 +12,34 @@ class CategoryRepositoryTest {
     private CategoryRepository repository;
     private User creator;
     private Category testCategory;
+    private RoleRepository roleRepo;
+    private UserRepository userRepo;
+
+//    @BeforeEach
+//    void setUp() {
+//        repository = new CategoryRepository();
+//        UserRepository userRepo = new UserRepository();
+//        Role testRole = new Role(RoleType.STUDENT);
+//        creator = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", testRole);
+//        creator = userRepo.save(creator);
+//        testCategory = new Category("Java", creator);
+//    }
 
     @BeforeEach
     void setUp() {
         repository = new CategoryRepository();
-        UserRepository userRepo = new UserRepository();
-        creator = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password");
+        roleRepo = new RoleRepository();
+        userRepo = new UserRepository();
+
+        Role testRole = roleRepo.findByName(RoleType.STUDENT);
+        if (testRole == null) {
+            testRole = new Role(RoleType.STUDENT);
+            testRole = roleRepo.save(testRole);
+        }
+
+        creator = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", testRole);
         creator = userRepo.save(creator);
+
         testCategory = new Category("Java", creator);
     }
 

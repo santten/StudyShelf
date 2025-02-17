@@ -33,7 +33,8 @@ class StudyMaterialServiceTest {
         // Setup
         byte[] content = "Test content".getBytes();
         String filename = "test.txt";
-        User uploader = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password");
+        Role testRole = new Role(RoleType.STUDENT);
+        User uploader = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password",testRole);
         String name = "Test Material";
         String description = "Test Description";
         String expectedDriveUrl = "https://drive.google.com/file/test";

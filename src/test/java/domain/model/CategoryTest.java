@@ -8,7 +8,7 @@ class CategoryTest {
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
-        creator = new User("Amir", "Dirin", "amir@test.com", "password");
+        creator = new User("Amir", "Dirin", "amir@test.com", "password",new Role(RoleType.TEACHER));
         category = new Category("Java Programming", creator);
     }
 
@@ -36,7 +36,7 @@ class CategoryTest {
 
     @org.junit.jupiter.api.Test
     void setCreator() {
-        User newCreator = new User("Matti", "Valovirta", "matti@test.com", "password");
+        User newCreator = new User("Matti", "Valovirta", "matti@test.com", "password",new Role(RoleType.ADMIN));
         category.setCreator(newCreator);
         assertEquals(newCreator, category.getCreator());
     }
