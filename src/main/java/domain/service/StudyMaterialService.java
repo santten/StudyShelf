@@ -6,6 +6,8 @@ import domain.model.User;
 import infrastructure.repository.StudyMaterialRepository;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
 public class StudyMaterialService {
@@ -18,7 +20,8 @@ public class StudyMaterialService {
     }
 
     public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description) throws IOException {
-        String fileUrl = driveService.uploadFile(content, filename, "text/plain");
+        String fileType = Files.probeContentType(Path.of(filename));
+        String fileUrl = driveService.uploadFile(content, filename, fileType);
 
         StudyMaterial material = new StudyMaterial(
                 uploader,
@@ -26,9 +29,9 @@ public class StudyMaterialService {
                 description,
                 fileUrl,
                 content.length / 1024f,
-                "text/plain",
+                fileType,
                 LocalDateTime.now(),
-                MaterialStatus.APPROVED
+                MaterialStatus.PENDING  // New materials start as PENDING
         );
 
         return repository.save(material);
