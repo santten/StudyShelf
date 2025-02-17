@@ -9,7 +9,7 @@ import java.util.Set;
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true, updatable = false)
@@ -18,12 +18,21 @@ public class Permission {
     @ManyToMany(mappedBy = "permissions")
     private Set<Role> roles = new HashSet<>();
 
+//    @ManyToMany
+//    @JoinTable(
+//            name = "role_permissions",
+//            joinColumns = @JoinColumn(name = "permission_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id")
+//    )
+//    private Set<Role> roles = new HashSet<>();
+
+
     public Permission() { }
     public Permission(PermissionType name) {
         this.name = name;
     }
 
-    public Long getId() { return id; }
+    public int getId() { return id; }
     public PermissionType getName() { return name; }
     public Set<Role> getRoles() { return roles; }
 }

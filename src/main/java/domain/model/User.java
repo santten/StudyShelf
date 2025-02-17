@@ -9,7 +9,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private int userId;
 
     @Column(name = "FirstName", length = 50)
     private String firstName;
@@ -23,8 +23,9 @@ public class User {
     @Column(name = "Password", length = 255)
     private String password;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
+//    @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -46,7 +47,7 @@ public class User {
     }
 
     // Constructor for existing users
-    public User(Long userId, String firstName, String lastName, String email, String password , Role role) {
+    public User(int userId, String firstName, String lastName, String email, String password , Role role) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -67,7 +68,7 @@ public class User {
 
 
     // Getters and Setters
-    public Long getUserId() { return userId; }
+    public int getUserId() { return userId; }
     public String getFirstName() {
         return firstName;
     }
@@ -90,6 +91,8 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+//    public Role setRole() { return role; }
+     public Role getRole() { return role; }
+     public void setRole(Role role) { this.role = role; }
+
 }

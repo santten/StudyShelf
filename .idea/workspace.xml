@@ -5,20 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0470772-9bb3-4899-afde-daa24f9eee87" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/77e02eaf-c9f3-49fe-a09d-151b2b6b3696.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/77e02eaf-c9f3-49fe-a09d-151b2b6b3696.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Launcher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Permission.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/Role.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/domain/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/domain/service/PermissionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/service/PermissionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/domain/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/domain/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/infrastructure/repository/PermissionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/infrastructure/repository/PermissionRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/infrastructure/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/infrastructure/repository/RoleRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/infrastructure/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/infrastructure/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/CategoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/CategoryTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/PermissionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/PermissionTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/RatingTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/RatingTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/ReviewTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/ReviewTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/StudyMaterialTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/StudyMaterialTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/TagTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/TagTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/domain/service/StudyMaterialServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/service/StudyMaterialServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/model/UserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/model/UserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/domain/service/PermissionServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/domain/service/PermissionServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/infrastructure/repository/BaseRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/BaseRepositoryTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/infrastructure/repository/CategoryRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/CategoryRepositoryTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/infrastructure/repository/RatingRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/infrastructure/repository/RatingRepositoryTest.java" afterDir="false" />
@@ -56,11 +54,12 @@
     &quot;accountId&quot;: &quot;bbaa7fdf-0a33-479c-9715-01b7340003a1&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/test/java/domain/service/PermissionServiceTest.java" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="JavaAutoRunManager">
     <enabled-run-configurations>
-      <run-configuration type="JUnit" name="Rerun Failed Tests" />
-      <run-configuration type="JUnit" name="Rerun Failed Tests" />
-      <run-configuration type="JUnit" name="Rerun Failed Tests" />
+      <run-configuration type="JUnit" name="java in StudyShelf" />
     </enabled-run-configurations>
   </component>
   <component name="ProjectColorInfo">{
@@ -84,6 +83,7 @@
     "JUnit.CategoryTest.executor": "Run",
     "JUnit.DatabaseConnectionTest.executor": "Run",
     "JUnit.GoogleDriveServiceTest.executor": "Run",
+    "JUnit.PermissionServiceTest.executor": "Run",
     "JUnit.RatingRepositoryTest.executor": "Run",
     "JUnit.ReviewRepositoryTest.executor": "Run",
     "JUnit.StudyMaterialRepositoryTest.executor": "Run",
@@ -154,23 +154,8 @@
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="Application.Launcher">
-    <configuration name="Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Launcher" />
-      <module name="StudyShelf" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="All in StudyShelf" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="StudyShelf" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="GoogleDriveServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.java in StudyShelf">
+    <configuration name="PermissionServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="StudyShelf" />
       <extension name="coverage">
         <pattern>
@@ -179,7 +164,52 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="domain.service" />
-      <option name="MAIN_CLASS_NAME" value="domain.service.GoogleDriveServiceTest" />
+      <option name="MAIN_CLASS_NAME" value="domain.service.PermissionServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ReviewRepositoryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="infrastructure.repository.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="infrastructure.repository" />
+      <option name="MAIN_CLASS_NAME" value="infrastructure.repository.ReviewRepositoryTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="StudyMaterialRepositoryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="infrastructure.repository.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="infrastructure.repository" />
+      <option name="MAIN_CLASS_NAME" value="infrastructure.repository.StudyMaterialRepositoryTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TagRepositoryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="StudyShelf" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="infrastructure.repository.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="infrastructure.repository" />
+      <option name="MAIN_CLASS_NAME" value="infrastructure.repository.TagRepositoryTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -193,21 +223,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="repository in StudyShelf" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="StudyShelf" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/src/test/java/infrastructure/repository" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Launcher" />
         <item itemvalue="JUnit.java in StudyShelf" />
-        <item itemvalue="JUnit.repository in StudyShelf" />
-        <item itemvalue="JUnit.GoogleDriveServiceTest" />
-        <item itemvalue="JUnit.All in StudyShelf" />
+        <item itemvalue="JUnit.PermissionServiceTest" />
+        <item itemvalue="JUnit.TagRepositoryTest" />
+        <item itemvalue="JUnit.StudyMaterialRepositoryTest" />
+        <item itemvalue="JUnit.ReviewRepositoryTest" />
       </list>
     </recent_temporary>
   </component>
@@ -222,13 +244,14 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="ad911a53-0b37-49c9-89d2-1bff7d4619a3" name="Changes" comment="" />
+      <changelist id="a0470772-9bb3-4899-afde-daa24f9eee87" name="Changes" comment="" />
       <created>1739304303585</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1739304303585</updated>
       <workItem from="1739304306341" duration="44000" />
       <workItem from="1739304361195" duration="1338000" />
+      <workItem from="1739705579054" duration="8556000" />
     </task>
     <servers />
   </component>

@@ -13,19 +13,35 @@ class UserRepositoryTest {
     private RoleRepository roleRepo;
 
 
+//    @BeforeEach
+//    void setUp() {
+//        repository = new UserRepository();
+//        roleRepo = new RoleRepository();
+//        Role testRole = new Role(RoleType.STUDENT);
+//        if (testRole == null) {
+//            testRole = new Role(RoleType.STUDENT);
+//            testRole = roleRepo.save(testRole);
+//        }
+//
+//        Role savedRole = roleRepo.save(testRole);
+//        testUser = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", savedRole);
+//    }
+
     @BeforeEach
     void setUp() {
         repository = new UserRepository();
         roleRepo = new RoleRepository();
-        Role testRole = new Role(RoleType.STUDENT);
+
+        Role testRole = roleRepo.findByName(RoleType.STUDENT);
         if (testRole == null) {
             testRole = new Role(RoleType.STUDENT);
             testRole = roleRepo.save(testRole);
         }
 
-        Role savedRole = roleRepo.save(testRole);
-        testUser = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", savedRole);
+        testUser = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", testRole);
     }
+
+
 
     @Test
     void save() {

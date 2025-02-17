@@ -1,12 +1,14 @@
 package infrastructure.repository;
 
 import domain.model.Role;
+import domain.model.RoleType;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 
 
 public class RoleRepository  extends BaseRepository<Role> {
-    public Role findById(Long id) {
+    public Role findById(int id) {
         EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
         try {
             return em.find(Role.class, id);
@@ -38,4 +40,18 @@ public class RoleRepository  extends BaseRepository<Role> {
             em.close();
         }
     }
+
+    public Role findByName(RoleType roleType) {
+        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        try {
+            return em.createQuery("SELECT r FROM Role r WHERE r.name = :name", Role.class)
+                    .setParameter("name", roleType)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
 }
