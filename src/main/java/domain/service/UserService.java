@@ -5,7 +5,6 @@ import domain.model.RoleType;
 import domain.model.User;
 import infrastructure.repository.RoleRepository;
 import infrastructure.repository.UserRepository;
-import java.util.Optional;
 
 public class UserService {
     private final UserRepository userRepository;
