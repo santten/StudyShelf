@@ -1,3 +1,4 @@
+import infrastructure.config.DatabaseInitializer;
 import presentation.view.StudyShelfApplication;
 
 import domain.model.*;
@@ -75,6 +76,8 @@ public class Launcher {
     public static void main(String[] args) {
         // initializeRoles();
 //         initializeTestMaterials();
+        DatabaseInitializer dbInit = new DatabaseInitializer();
+        dbInit.initializeRolesAndPermissions();
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }
 }

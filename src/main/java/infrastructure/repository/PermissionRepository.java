@@ -12,19 +12,12 @@ import org.slf4j.LoggerFactory;
 public class PermissionRepository {
     private static final Logger logger = LoggerFactory.getLogger(PermissionService.class);
 
-    public void save(Permission permission) {
+    public Permission save(Permission permission) {
         EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-            em.persist(permission);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+        em.getTransaction().begin();
+        em.persist(permission);
+        em.getTransaction().commit();
+        return permission;
     }
 
     public Permission findById(Long id) {
