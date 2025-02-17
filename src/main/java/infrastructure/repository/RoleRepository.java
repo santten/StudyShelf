@@ -5,6 +5,10 @@ import domain.model.RoleType;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+
 
 
 public class RoleRepository  extends BaseRepository<Role> {
@@ -16,6 +20,7 @@ public class RoleRepository  extends BaseRepository<Role> {
             em.close();
         }
     }
+
 
 
     public Role save(Role role) {

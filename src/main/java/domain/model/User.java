@@ -31,8 +31,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Rating> ratings = new HashSet<>();
 
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
+
 
     // Default constructor
     public User() {}
@@ -95,4 +97,5 @@ public class User {
      public Role getRole() { return role; }
      public void setRole(Role role) { this.role = role; }
 
+    public String getFullName() {return firstName + " " + lastName;}
 }

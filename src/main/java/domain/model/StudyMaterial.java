@@ -1,6 +1,8 @@
 package domain.model;
 
 import jakarta.persistence.*;
+import javafx.scene.Node;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -159,6 +161,5 @@ public class StudyMaterial {
     public void setRatings(Set<Rating> ratings) {
         this.ratings = ratings;
     }
-
 
 }

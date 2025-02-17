@@ -32,8 +32,8 @@
                <children>
                   <Label text="E-Mail" textAlignment="RIGHT" GridPane.halignment="RIGHT" />
                   <Label text="Password" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                  <TextField prefHeight="25.0" prefWidth="216.0" GridPane.columnIndex="1" />
-                  <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="emailField" prefHeight="25.0" prefWidth="216.0" GridPane.columnIndex="1" />
+                  <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <Button fx:id="btn_login" mnemonicParsing="false" styleClass="btnS" text="Log In" />
@@ -44,6 +44,7 @@
                   <Insets top="8.0" />
                </padding>
              </TextFlow>
+             <Label fx:id="errorLabel" text="" visible="false" styleClass="error-label"/>
          </children>
       </VBox>
    </center>
