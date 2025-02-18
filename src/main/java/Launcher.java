@@ -12,20 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Launcher {
-
     private static void initializeRoles() {
         RoleRepository roleRepo = new RoleRepository();
-
-        RoleType[] defaultRoles = {RoleType.STUDENT, RoleType.TEACHER, RoleType.ADMIN};
-        for (RoleType roleType : defaultRoles) {
-            Role role = roleRepo.findByName(roleType);
-            if (role == null) {
-                role = new Role(roleType);
-                roleRepo.save(role);
-                System.out.println("Created role: " + roleType);
-            }
-        }
-    }
 
 
 //        String[] defaultRoles = {"Student", "Teacher"};
@@ -37,13 +25,23 @@ public class Launcher {
 //                System.out.println("Created role: " + roleName);
 //            }
 //        }
+
+        RoleType[] defaultRoles = {RoleType.STUDENT, RoleType.TEACHER};
+        for (RoleType roleType : defaultRoles) {
+            Role role = roleRepo.findByName(roleType);
+            if (role == null) {
+                role = new Role(roleType);
+                roleRepo.save(role);
+            }
+        }
+
     }
     private static void initializeTestMaterials() {
         UserRepository userRepo = new UserRepository();
         CategoryRepository categoryRepo = new CategoryRepository();
         StudyMaterialRepository materialRepo = new StudyMaterialRepository();
-        RoleRepository roleRepo = new RoleRepository();
 
+        RoleRepository roleRepo = new RoleRepository();
         Role studentRole = roleRepo.findByName(RoleType.STUDENT);
         if (studentRole == null) {
             studentRole = roleRepo.save(new Role(RoleType.STUDENT));
@@ -51,7 +49,7 @@ public class Launcher {
 
         User testUser = userRepo.findByEmail("armas@gmail.com");
         if (testUser == null) {
-            testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "123", studentRole);
+            testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "123", studentRole); // ✅ 传入 Role
             testUser = userRepo.save(testUser);
         }
 
@@ -101,3 +99,4 @@ public class Launcher {
 //         initializeTestMaterials();
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }
+}
