@@ -19,22 +19,23 @@ public class CoursesController {
 
     @FXML
     private void initialize() {
+        loadAllMaterials();
+    }
+
+    private void loadAllMaterials() {
+        mainVBoxCourses.getChildren().clear();
         List<Category> categories = categoryRepo.findAll();
-        GUILogger.info("Loading categories: " + categories.size());
 
         for (Category c : categories) {
-            Label title = new Label();
+            List<StudyMaterial> materials = categoryRepo.findMaterialsByCategory(c);
+            if (!materials.isEmpty()) {
+                Label title = new Label(c.getCategoryName());
+                title.getStyleClass().add("label3");
+                mainVBoxCourses.getChildren().add(title);
 
-            title.setText(c.getCategoryName());
-            title.getStyleClass().add("label3");
-
-            mainVBoxCourses.getChildren().add(title);
-
-            List<StudyMaterial> materials  = categoryRepo.findMaterialsByCategory(c);
-            GUILogger.info("Loading materials " + materials.size() + " for category " + c.getCategoryName());
-            ScrollPane pane = MaterialCard.materialCardScrollHBox(materials);
-
-            mainVBoxCourses.getChildren().add(pane);
+                ScrollPane pane = MaterialCard.materialCardScrollHBox(materials);
+                mainVBoxCourses.getChildren().add(pane);
+            }
         }
     }
 }

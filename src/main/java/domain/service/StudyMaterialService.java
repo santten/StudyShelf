@@ -1,5 +1,6 @@
 package domain.service;
 
+import domain.model.Category;
 import domain.model.MaterialStatus;
 import domain.model.StudyMaterial;
 import domain.model.User;
@@ -19,7 +20,7 @@ public class StudyMaterialService {
         this.repository = repository;
     }
 
-    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description) throws IOException {
+    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category) throws IOException {
         String fileType = Files.probeContentType(Path.of(filename));
         String fileUrl = driveService.uploadFile(content, filename, fileType);
 
@@ -31,8 +32,9 @@ public class StudyMaterialService {
                 content.length / 1024f,
                 fileType,
                 LocalDateTime.now(),
-                MaterialStatus.PENDING  // New materials start as PENDING
+                MaterialStatus.PENDING
         );
+        material.setCategory(category);
 
         return repository.save(material);
     }

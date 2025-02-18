@@ -112,13 +112,21 @@ public class UploadController {
                 User uploader = Session.getInstance().getCurrentUser();
                 String name = field_title.getText();
                 String description = field_desc.getText();
+                Category category = choice_category.getValue();
 
                 StudyMaterialService materialService = new StudyMaterialService(
                         new GoogleDriveService(),
                         new StudyMaterialRepository()
                 );
 
-                StudyMaterial material = materialService.uploadMaterial(content, filename, uploader, name, description);
+                StudyMaterial material = materialService.uploadMaterial(
+                        content,
+                        filename,
+                        uploader,
+                        name,
+                        description,
+                        category
+                );
 
                 SceneManager.getInstance().setScreen(SCREEN_COURSES);
             } catch (IOException ex) {
