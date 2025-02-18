@@ -118,7 +118,6 @@ public class UploadController {
                         new StudyMaterialRepository()
                 );
 
-                // Let the service handle both upload and persistence
                 StudyMaterial material = materialService.uploadMaterial(content, filename, uploader, name, description);
 
                 SceneManager.getInstance().setScreen(SCREEN_COURSES);
@@ -139,29 +138,7 @@ public class UploadController {
         }
     }
 
-    @FXML
-    private void handleUpload() {
-        try {
-            byte[] content = Files.readAllBytes(currentFile.toPath());
-            String filename = currentFile.getName();
-            User uploader = Session.getInstance().getCurrentUser();
-            String name = field_title.getText();
-            String description = field_desc.getText();
 
-            StudyMaterialService materialService = new StudyMaterialService(
-                    new GoogleDriveService(),
-                    new StudyMaterialRepository()
-            );
 
-            materialService.uploadMaterial(content, filename, uploader, name, description);
-            //SceneManager.getInstance().setScreen(SCREEN_MATERIAL);
-        } catch (IOException e) {
-            GUILogger.warn("Failed to upload file: " + e.getMessage());
-        }
-    }
 
-    private String getFileExtension(File file) {
-        String fileName = file.getName();
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
-    }
 }
