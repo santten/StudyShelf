@@ -24,6 +24,9 @@ public class StudyMaterialService {
         String fileType = Files.probeContentType(Path.of(filename));
         String fileUrl = driveService.uploadFile(content, filename, fileType);
 
+        PreviewGeneratorService previewGenerator = new PreviewGeneratorService();
+        byte[] preview = previewGenerator.generatePreview(content, fileType);
+
         StudyMaterial material = new StudyMaterial(
                 uploader,
                 name,
@@ -35,6 +38,7 @@ public class StudyMaterialService {
                 MaterialStatus.PENDING
         );
         material.setCategory(category);
+        material.setPreviewImage(preview);
 
         return repository.save(material);
     }
