@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
 <VBox fx:id="mainVBoxCourses" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.CoursesController">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="heading3" text="Courses" />
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="This is where the user can see the courses they've pinned ?" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Courses">
+         <styleClass>
+            <String fx:value="heading3" />
+            <String fx:value="secondary-light" />
+         </styleClass></Text>
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
