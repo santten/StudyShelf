@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -98,5 +99,16 @@ class ReviewRepositoryTest {
         assertEquals(savedReview.getReviewText(), foundReview.getReviewText());
         assertEquals(material.getMaterialId(), foundReview.getStudyMaterial().getMaterialId());
         assertEquals(user.getUserId(), foundReview.getUser().getUserId());
+    }
+
+    @Test
+    void testFindByStudyMaterial() {
+        Review review1 = new Review("Great!!!", material, user);
+        Review review2 = new Review("Good!!!", material, user);
+        repository.save(review1);
+        repository.save(review2);
+        List<Review> reviews = repository.findByStudyMaterial(material);
+        assertNotNull(reviews);
+        assertEquals(2, reviews.size());
     }
 }
