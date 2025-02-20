@@ -130,10 +130,6 @@
     -fx-padding: 8px;
 }
 
-.listItemBtn :hover {
-    -fx-background-color: -error;
-}
-
 /* basic */
 
 .hyperlink {
