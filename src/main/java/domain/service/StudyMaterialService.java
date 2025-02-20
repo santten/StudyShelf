@@ -1,11 +1,14 @@
 package domain.service;
 
+import domain.model.Category;
 import domain.model.MaterialStatus;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import infrastructure.repository.StudyMaterialRepository;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
 public class StudyMaterialService {
@@ -17,8 +20,12 @@ public class StudyMaterialService {
         this.repository = repository;
     }
 
-    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description) throws IOException {
-        String fileUrl = driveService.uploadFile(content, filename, "text/plain");
+    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category) throws IOException {
+        String fileType = Files.probeContentType(Path.of(filename));
+        String fileUrl = driveService.uploadFile(content, filename, fileType);
+
+        PreviewGeneratorService previewGenerator = new PreviewGeneratorService();
+        byte[] preview = previewGenerator.generatePreview(content, fileType);
 
         StudyMaterial material = new StudyMaterial(
                 uploader,
@@ -26,10 +33,12 @@ public class StudyMaterialService {
                 description,
                 fileUrl,
                 content.length / 1024f,
-                "text/plain",
+                fileType,
                 LocalDateTime.now(),
-                MaterialStatus.APPROVED
+                MaterialStatus.PENDING
         );
+        material.setCategory(category);
+        material.setPreviewImage(preview);
 
         return repository.save(material);
     }

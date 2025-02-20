@@ -55,6 +55,9 @@ public class StudyMaterial {
     private Set<Rating> ratings = new HashSet<>();
     @OneToMany(mappedBy = "studyMaterial")
     private Set<Review> reviews = new HashSet<>();
+    @Lob
+    @Column(name = "PreviewImage", columnDefinition = "LONGBLOB")
+    private byte[] previewImage;
 
     // Default constructor
     public StudyMaterial() {}
@@ -144,7 +147,6 @@ public class StudyMaterial {
     public Category getCategory() {
         return category;
     }
-
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -157,9 +159,14 @@ public class StudyMaterial {
     public Set<Rating> getRatings() {
         return ratings;
     }
-
     public void setRatings(Set<Rating> ratings) {
         this.ratings = ratings;
+    }
+    public byte[] getPreviewImage() {
+        return previewImage;
+    }
+    public void setPreviewImage(byte[] previewImage) {
+        this.previewImage = previewImage;
     }
 
 }
