@@ -4,7 +4,9 @@ import domain.model.Category;
 import domain.model.MaterialStatus;
 import domain.model.StudyMaterial;
 import domain.model.User;
+import domain.service.GoogleDriveService;
 import domain.service.Session;
+import domain.service.StudyMaterialService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.collections.FXCollections;
@@ -19,6 +21,7 @@ import presentation.view.SceneManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -103,23 +106,31 @@ public class UploadController {
         StudyMaterialRepository materialRepo = new StudyMaterialRepository();
 
         btn_uploadMaterial.setOnAction(e -> {
-            StudyMaterial material = new StudyMaterial(
-                    Session.getInstance().getCurrentUser(),
-                    field_title.getText(),
-                    field_desc.getText(),
-                    currentFile.getAbsolutePath(),
-                    currentFile.getTotalSpace(),
-                    getExtension(currentFile),
-                    LocalDateTime.now(),
-                    MaterialStatus.PENDING
-            );
-            material.setCategory(choice_category.getValue());
-            materialRepo.save(material);
-            SceneManager sm = SceneManager.getInstance();
             try {
-                sm.setScreen(SCREEN_COURSES);
+                byte[] content = Files.readAllBytes(currentFile.toPath());
+                String filename = currentFile.getName();
+                User uploader = Session.getInstance().getCurrentUser();
+                String name = field_title.getText();
+                String description = field_desc.getText();
+                Category category = choice_category.getValue();
+
+                StudyMaterialService materialService = new StudyMaterialService(
+                        new GoogleDriveService(),
+                        new StudyMaterialRepository()
+                );
+
+                StudyMaterial material = materialService.uploadMaterial(
+                        content,
+                        filename,
+                        uploader,
+                        name,
+                        description,
+                        category
+                );
+
+                SceneManager.getInstance().setScreen(SCREEN_COURSES);
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                GUILogger.warn("Failed to upload material: " + ex.getMessage());
             }
         });
     }
@@ -134,4 +145,8 @@ public class UploadController {
             return "";
         }
     }
+
+
+
+
 }

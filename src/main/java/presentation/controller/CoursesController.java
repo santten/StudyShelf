@@ -24,6 +24,11 @@ public class CoursesController {
 
     @FXML
     private void initialize() {
+        loadAllMaterials();
+    }
+
+    private void loadAllMaterials() {
+        mainVBoxCourses.getChildren().clear();
         List<Category> categories = categoryRepo.findAll();
         GUILogger.info("Loading categories: " + categories.size());
 
