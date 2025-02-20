@@ -16,26 +16,48 @@ public class Launcher {
         RoleRepository roleRepo = new RoleRepository();
 
 
-        String[] defaultRoles = {"Student", "Teacher"};
-        for (String roleName : defaultRoles) {
-            Role role = roleRepo.findByName(roleName);
+//        String[] defaultRoles = {"Student", "Teacher"};
+//        for (String roleName : defaultRoles) {
+//            Role role = roleRepo.findByName(roleName);
+//            if (role == null) {
+//                role = new Role(roleName);
+//                roleRepo.save(role);
+//                System.out.println("Created role: " + roleName);
+//            }
+//        }
+
+        RoleType[] defaultRoles = {RoleType.STUDENT, RoleType.TEACHER};
+        for (RoleType roleType : defaultRoles) {
+            Role role = roleRepo.findByName(roleType);
             if (role == null) {
-                role = new Role(roleName);
+                role = new Role(roleType);
                 roleRepo.save(role);
-                System.out.println("Created role: " + roleName);
             }
         }
+
     }
     private static void initializeTestMaterials() {
         UserRepository userRepo = new UserRepository();
         CategoryRepository categoryRepo = new CategoryRepository();
         StudyMaterialRepository materialRepo = new StudyMaterialRepository();
 
+        RoleRepository roleRepo = new RoleRepository();
+        Role studentRole = roleRepo.findByName(RoleType.STUDENT);
+        if (studentRole == null) {
+            studentRole = roleRepo.save(new Role(RoleType.STUDENT));
+        }
+
         User testUser = userRepo.findByEmail("armas@gmail.com");
         if (testUser == null) {
-            testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "123");
+            testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "123", studentRole); // ✅ 传入 Role
             testUser = userRepo.save(testUser);
         }
+
+//        User testUser = userRepo.findByEmail("armas@gmail.com");
+//        if (testUser == null) {
+//            testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "123");
+//            testUser = userRepo.save(testUser);
+//        }
 
         Category javaCategory = new Category(0, "React", testUser);
         Category pythonCategory = new Category(0, "Python", testUser);

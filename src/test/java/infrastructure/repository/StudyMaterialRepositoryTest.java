@@ -11,16 +11,50 @@ class StudyMaterialRepositoryTest {
     private User user;
     private Category category;
     private StudyMaterial testMaterial;
+    private RoleRepository roleRepo;
+    private UserRepository userRepo;
+    private CategoryRepository categoryRepo;
+
+//    @BeforeEach
+//    void setUp() {
+//        repository = new StudyMaterialRepository();
+//        Role testRole = new Role(RoleType.STUDENT);
+//        UserRepository userRepo = new UserRepository();
+//        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password",testRole);
+//        user = userRepo.save(user);
+//        CategoryRepository categoryRepo = new CategoryRepository();
+//        category = new Category("Test Category", user);
+//        category = categoryRepo.save(category);
+//
+//        testMaterial = new StudyMaterial(
+//                user,
+//                "Java for dummies",
+//                "Introduction to Java Programming for dummies",
+//                "materials/java-dumb.pdf",
+//                10f,
+//                "PDF",
+//                LocalDateTime.now(),
+//                MaterialStatus.PENDING
+//        );
+//        testMaterial.setCategory(category);
+//    }
 
     @BeforeEach
     void setUp() {
         repository = new StudyMaterialRepository();
+        roleRepo = new RoleRepository();
+        userRepo = new UserRepository();
+        categoryRepo = new CategoryRepository();
 
-        UserRepository userRepo = new UserRepository();
-        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password");
+        Role testRole = roleRepo.findByName(RoleType.STUDENT);
+        if (testRole == null) {
+            testRole = new Role(RoleType.STUDENT);
+            testRole = roleRepo.save(testRole);
+        }
+
+        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", testRole);
         user = userRepo.save(user);
 
-        CategoryRepository categoryRepo = new CategoryRepository();
         category = new Category("Test Category", user);
         category = categoryRepo.save(category);
 

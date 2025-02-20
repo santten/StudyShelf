@@ -18,7 +18,7 @@ class StudyMaterialTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("Armas", "Nevolainen", "armas@gmail.com", "password");
+        user = new User("Armas", "Nevolainen", "armas@gmail.com", "password",new Role(RoleType.STUDENT));
         category = new Category("Java Programming", user);
         material = new StudyMaterial(
                 user,
@@ -53,7 +53,7 @@ class StudyMaterialTest {
 
     @Test
     void setUploader() {
-        User uploader = new User("Matti", "Valovirta", "matti@test.com", "password");
+        User uploader = new User("Matti", "Valovirta", "matti@test.com", "password",new Role(RoleType.TEACHER));
     }
 
     @Test
