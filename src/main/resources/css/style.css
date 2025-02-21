@@ -150,3 +150,11 @@
 .tag:hover {
     -fx-background-color: -primary;
 }
+
+.star-filled {
+    -fx-fill: gold;
+}
+
+.star-empty {
+    -fx-fill: #ccc;
+}

@@ -2,14 +2,18 @@ package presentation.components;
 
 import domain.model.StudyMaterial;
 import domain.model.User;
+import domain.service.RatingService;
+import infrastructure.repository.RatingRepository;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.FillRule;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -25,7 +29,7 @@ public class MaterialCard {
         VBox contentBox = new VBox(5);
         VBox previewBox = new VBox();
         User uploader = s.getUploader();
-        contentBox.setPadding(new Insets(8, 8, 8, 8));
+        contentBox.setPadding(new Insets(5, 5, 5, 5));
 
 
         TextFlow titleArea = new TextFlow();
@@ -70,11 +74,48 @@ public class MaterialCard {
 
         if (s.getPreviewImage() != null) {
             ImageView preview = new ImageView(new Image(new ByteArrayInputStream(s.getPreviewImage())));
-            preview.setFitWidth(80);
-            preview.setFitHeight(100);
+            preview.setFitWidth(60);
+            preview.setFitHeight(80);
             preview.setPreserveRatio(false);
-            previewBox.getChildren().add(preview);
+
+            HBox ratingBox = new HBox();
+            ratingBox.setPrefWidth(100);
+            ratingBox.setMaxWidth(100);
+            ratingBox.setMinWidth(100);
+            RatingService ratingService = new RatingService(new RatingRepository());
+            double avgRating = ratingService.getAverageRating(s);
+
+            for (int i = 1; i <= 5; i++) {
+                StackPane starContainer = new StackPane();
+
+
+                SVGPath emptyStar = new SVGPath();
+                emptyStar.setContent("M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z");
+                emptyStar.setScaleX(0.7);
+                emptyStar.setScaleY(0.7);
+                emptyStar.getStyleClass().add("star-empty");
+
+
+                SVGPath filledStar = new SVGPath();
+                filledStar.setContent("M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z");
+                filledStar.setScaleX(0.7);
+                filledStar.setScaleY(0.7);
+                filledStar.getStyleClass().add("star-filled");
+
+
+                double fillPercentage = Math.max(0, Math.min(1, avgRating - (i - 1)));
+                Rectangle clip = new Rectangle();
+                clip.setWidth(filledStar.getBoundsInLocal().getWidth() * fillPercentage);
+                clip.setHeight(filledStar.getBoundsInLocal().getHeight());
+                filledStar.setClip(clip);
+
+                starContainer.getChildren().addAll(emptyStar, filledStar);
+                ratingBox.getChildren().add(starContainer);
+            }
+
+            previewBox.getChildren().addAll(preview, ratingBox);
             previewBox.setAlignment(Pos.CENTER);
+            previewBox.setPrefWidth(100);
         }
 
         container.getChildren().addAll(contentBox, previewBox);
