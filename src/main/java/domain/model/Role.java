@@ -45,7 +45,7 @@ public class Role {
     public Role() {}
     public Role(RoleType name) { this.name = name; }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
     public RoleType getName() { return name; }
     public Set<Permission> getPermissions() {return permissions;}
     public Set<User> getUsers() { return users; }

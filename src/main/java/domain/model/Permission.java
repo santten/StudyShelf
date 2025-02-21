@@ -9,7 +9,7 @@ import java.util.Set;
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true, updatable = false)
@@ -34,5 +34,10 @@ public class Permission {
 
     public int getId() { return id; }
     public PermissionType getName() { return name; }
+
+    public void setName(PermissionType name) {
+        this.name = name;
+    }
+
     public Set<Role> getRoles() { return roles; }
 }
