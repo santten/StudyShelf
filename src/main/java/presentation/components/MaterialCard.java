@@ -3,7 +3,10 @@ package presentation.components;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.FillRule;
@@ -11,15 +14,19 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.io.ByteArrayInputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class MaterialCard {
     public static Button materialCard(StudyMaterial s) {
         Button materialCard = new Button();
-        VBox graphic = new VBox();
+        HBox container = new HBox(10);
+        VBox contentBox = new VBox(5);
+        VBox previewBox = new VBox();
         User uploader = s.getUploader();
-        graphic.setPadding(new Insets(8, 8, 8, 8));
+        contentBox.setPadding(new Insets(8, 8, 8, 8));
+
 
         TextFlow titleArea = new TextFlow();
 
@@ -44,25 +51,36 @@ public class MaterialCard {
 
         title.getStyleClass().add("label4");
         titleArea.getChildren().add(title);
-        graphic.getChildren().add(titleArea);
+        contentBox.getChildren().add(titleArea);
 
         Text uploaderLabel = new Text(uploader.getFirstName() + " " + uploader.getLastName());
-        graphic.getChildren().add(uploaderLabel);
+        contentBox.getChildren().add(uploaderLabel);
 
         Text fileLabel = new Text(s.getFileType());
         fileLabel.getStyleClass().add("materialCardSubtitle");
-        graphic.getChildren().add(fileLabel);
+        contentBox.getChildren().add(fileLabel);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
         String formattedTimestamp = s.getTimestamp().format(formatter);
 
         Text timestamp = new Text(formattedTimestamp);
-        graphic.getChildren().add(timestamp);
+        contentBox.getChildren().add(timestamp);
 
         materialCard.setTooltip(new Tooltip("\"" + s.getName() + "\", uploaded by " + uploader.getFirstName() + " " + uploader.getLastName()));
 
-        materialCard.setGraphic(graphic);
+        if (s.getPreviewImage() != null) {
+            ImageView preview = new ImageView(new Image(new ByteArrayInputStream(s.getPreviewImage())));
+            preview.setFitWidth(80);
+            preview.setFitHeight(100);
+            preview.setPreserveRatio(false);
+            previewBox.getChildren().add(preview);
+            previewBox.setAlignment(Pos.CENTER);
+        }
+
+        container.getChildren().addAll(contentBox, previewBox);
+        materialCard.setGraphic(container);
         materialCard.getStyleClass().add("materialCardM");
+
         return materialCard;
     }
 

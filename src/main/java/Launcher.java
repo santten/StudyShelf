@@ -13,9 +13,19 @@ import java.nio.file.Path;
 
 public class Launcher {
 
-//    private static void initializeRoles() {
-//        RoleRepository roleRepo = new RoleRepository();
-//
+    private static void initializeRoles() {
+    RoleRepository roleRepo = new RoleRepository();
+    RoleType[] defaultRoles = {RoleType.STUDENT, RoleType.TEACHER};
+    for(RoleType roleType :defaultRoles)
+
+    {
+        Role role = roleRepo.findByName(roleType);
+        if (role == null) {
+            role = new Role(roleType);
+            roleRepo.save(role);
+        }
+    }
+}
 //
 //        String[] defaultRoles = {"Student", "Teacher"};
 //        for (String roleName : defaultRoles) {
@@ -74,7 +84,7 @@ public class Launcher {
 //        }
 //    }
     public static void main(String[] args) {
-        // initializeRoles();
+        initializeRoles();
 //         initializeTestMaterials();
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }

@@ -18,7 +18,7 @@ class GoogleDriveServiceTest {
     @Test
     void uploadFile() throws IOException {
         byte[] content = "Test content".getBytes();
-        String filename = "test.txt";
+        String filename = "test1.txt";
         String contentType = "text/plain";
 
         String fileUrl = driveService.uploadFile(content, filename, contentType);
