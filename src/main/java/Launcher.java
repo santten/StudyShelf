@@ -26,17 +26,7 @@ public class Launcher {
         }
     }
 }
-//
-//        String[] defaultRoles = {"Student", "Teacher"};
-//        for (String roleName : defaultRoles) {
-//            Role role = roleRepo.findByName(roleName);
-//            if (role == null) {
-//                role = new Role(roleName);
-//                roleRepo.save(role);
-//                System.out.println("Created role: " + roleName);
-//            }
-//        }
-//    }
+
 //    private static void initializeTestMaterials() {
 //        UserRepository userRepo = new UserRepository();
 //        CategoryRepository categoryRepo = new CategoryRepository();
