@@ -10,17 +10,21 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import java.util.List;
 
+import static presentation.components.ListItem.searchResultGraphic;
+
 public class SearchController {
 
     private final SearchService searchService = new SearchService(
             new StudyMaterialRepository(),
             new CategoryRepository()
     );
+    public CheckBox checkbox_includeMaterials;
+    public CheckBox checkbox_includeCategories;
 
     @FXML private TextField searchField;
     @FXML private Button searchButton;
-    @FXML private CheckBox categoryOnlyCheckbox;
-    @FXML private ListView<StudyMaterial> resultsListView;
+    
+    @FXML private ListView<Button> resultsListView;
 
     @FXML
     private void initialize() {
@@ -31,11 +35,16 @@ public class SearchController {
             }
         });
 
-        resultsListView.setCellFactory(lv -> new ListCell<StudyMaterial>() {
+        resultsListView.setCellFactory(lv -> new ListCell<>() {
             @Override
-            protected void updateItem(StudyMaterial material, boolean empty) {
-                super.updateItem(material, empty);
-                setText(empty ? null : material.getName());
+            protected void updateItem(Button button, boolean empty) {
+                super.updateItem(button, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(button);
+                }
             }
         });
     }
@@ -45,15 +54,17 @@ public class SearchController {
         if (!query.isEmpty()) {
             resultsListView.getItems().clear();
 
-            if (categoryOnlyCheckbox.isSelected()) {
+            if (checkbox_includeMaterials.isSelected()) {
+                List<StudyMaterial> materialResults = searchService.searchMaterials(query);
+                materialResults.forEach(material -> resultsListView.getItems().add(searchResultGraphic(material)));
+            }
+
+            if (checkbox_includeCategories.isSelected()) {
                 // Search only from category
                 List<Category> categoryResults = searchService.searchCategories(query);
                 categoryResults.forEach(category ->
-                        resultsListView.getItems().addAll(category.getMaterials())
+                        resultsListView.getItems().add(searchResultGraphic(category))
                 );
-            } else {
-                List<StudyMaterial> materialResults = searchService.searchMaterials(query);
-                resultsListView.getItems().addAll(materialResults);
             }
         }
     }

@@ -53,12 +53,6 @@ public class Launcher {
             testUser = userRepo.save(testUser);
         }
 
-//        User testUser = userRepo.findByEmail("armas@gmail.com");
-//        if (testUser == null) {
-//            testUser = new User("Armas", "Nevolainen", "armas@gmail.com", "123");
-//            testUser = userRepo.save(testUser);
-//        }
-
         Category javaCategory = new Category(0, "React", testUser);
         Category pythonCategory = new Category(0, "Python", testUser);
         javaCategory = categoryRepo.save(javaCategory);
@@ -96,7 +90,7 @@ public class Launcher {
     }
     public static void main(String[] args) {
         // initializeRoles();
-//         initializeTestMaterials();
+        // initializeTestMaterials();
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }
 }

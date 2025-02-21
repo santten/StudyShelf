@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="mainVBoxCoursePage" minHeight="400.0" prefWidth="800.0" spacing="12.0" xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.CategoryPageController">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+   </padding>
+   <stylesheets>
+      <URL value="@../css/style.css"/>
+      <URL value="@../css/home.css"/>
+   </stylesheets>
+   <VBox prefHeight="0.0" prefWidth="760.0">
+      <Text fx:id="txt_courseTitle" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: -secondary-light;"
+            styleClass="heading3" text="Course Name"/>
+      <Text fx:id="txt_courseAuthor" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: -secondary;"
+            text="Course Author"/>
+   </VBox>
+   <Text fx:id="txt_courseDescription" strokeType="OUTSIDE" strokeWidth="0.0" text="Description if you wish"/>
+   <Text fx:id="txt_fromAuthor" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: -secondary;"
+         styleClass="heading4" text="Latest Materials from Course Author"/>
+   <Text fx:id="txt_fromOthers" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: -secondary;"
+         styleClass="heading4" text="Materials in Course Uploaded by Others"/>
+</VBox>

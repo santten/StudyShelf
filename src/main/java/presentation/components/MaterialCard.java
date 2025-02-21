@@ -50,6 +50,7 @@ public class MaterialCard {
         title.setMaxHeight(20);
 
         title.getStyleClass().add("label4");
+        title.getStyleClass().add("primary-light");
         titleArea.getChildren().add(title);
         contentBox.getChildren().add(titleArea);
 
@@ -86,7 +87,7 @@ public class MaterialCard {
 
     public static ScrollPane materialCardScrollHBox(List<StudyMaterial> list) {
         HBox materialCardHBox = new HBox();
-        for (int i = list.size() - 1; i > 0; i--) {
+        for (int i = list.size() - 1; i >= 0; i--) {
             materialCardHBox.getChildren().add(materialCard(list.get(i)));
         }
 
