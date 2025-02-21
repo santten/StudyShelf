@@ -44,6 +44,7 @@ public class StudyMaterial {
     @Enumerated(EnumType.STRING)
     @Column(name = "Status")
     private MaterialStatus status;
+
     @ManyToMany
     @JoinTable(
             name = "MaterialTag",
@@ -51,8 +52,10 @@ public class StudyMaterial {
             inverseJoinColumns = @JoinColumn(name = "TagId")
     )
     private Set<Tag> tags = new HashSet<>();
+
     @OneToMany(mappedBy = "studyMaterial")
     private Set<Rating> ratings = new HashSet<>();
+
     @OneToMany(mappedBy = "studyMaterial")
     private Set<Review> reviews = new HashSet<>();
     @Lob
