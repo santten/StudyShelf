@@ -44,6 +44,7 @@ public class Launcher {
         Rating rating2 = ratingService.rateMaterial(5, material, testUser);
         System.out.println("Added rating: " + rating2.getRatingScore());
 
+
         double avgRating = ratingService.getAverageRating(material);
         System.out.println("Average rating: " + avgRating);
     }
@@ -97,6 +98,7 @@ public class Launcher {
         initializeRoles();
        testRatings();
 //         initializeTestMaterials();
+
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }
 }

@@ -1,17 +1,30 @@
 package presentation.view;
+import domain.model.StudyMaterial;
+import presentation.components.MaterialCard;
+
+import domain.model.Category;
+import infrastructure.repository.CategoryRepository;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import static presentation.view.Screen.*;
+
+import presentation.controller.CategoryPageController;
 import presentation.logger.GUILogger;
 
 public class SceneManager {
@@ -46,10 +59,87 @@ public class SceneManager {
         instance.logged = false;
     }
 
+    public void displayCategory(int id) throws IOException {
+        if (!instance.logged){
+            setScreen(SCREEN_LOGIN);
+        } else {
+            CategoryRepository repo = new CategoryRepository();
+            Category c = repo.findById(id);
+            if (c == null) {
+                GUILogger.warn("DNE: Tried to go to category with id " + id);
+                displayErrorPage("This category does not exist.", SCREEN_HOME, "Go to home page");
+            } else {
+                VBox vbox = new VBox();
+
+                vbox.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+                vbox.setSpacing(12);
+                vbox.setPadding(new Insets(20, 20, 20, 20));
+                Text title = new Text(c.getCategoryName());
+                title.getStyleClass().add("heading3");
+                title.getStyleClass().add("secondary");
+
+                Text author = new Text("Course by " + c.getCreator().getFullName());
+                VBox header = new VBox();
+                header.getChildren().addAll(title, author);
+
+                vbox.getChildren().add(header);
+
+                List<StudyMaterial> creatorMaterials = repo.findMaterialsByUserInCategory(c.getCreator(), c);
+                if (creatorMaterials != null) {
+                    Text text = new Text("Materials from " + c.getCreator().getFullName());
+                    text.getStyleClass().add("heading4");
+                    text.getStyleClass().add("secondary");
+
+                    vbox.getChildren().addAll(
+                            text,
+                            MaterialCard.materialCardScrollHBox(creatorMaterials));
+                }
+
+                List<StudyMaterial> otherMaterials = repo.findMaterialsExceptUserInCategory(c.getCreator(), c);
+                if (otherMaterials != null) {
+                    GUILogger.info(String.valueOf(otherMaterials.size()));
+                    Text text = new Text("Materials from others");
+                    text.getStyleClass().add("heading4");
+                    text.getStyleClass().add("secondary");
+
+                    vbox.getChildren().addAll(
+                            text,
+                            MaterialCard.materialCardScrollHBox(otherMaterials));
+                }
+
+                instance.current.setCenter(vbox);
+            }
+        }
+    }
+
+    public void displayErrorPage(String errorText, Screen redirectScreen, String redirectLabel) {
+        VBox vbox = new VBox();
+        vbox.setSpacing(12);
+        vbox.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+
+        Text title = new Text(":(");
+        title.getStyleClass().add("heading3");
+
+        Text label = new Text(errorText);
+
+        Hyperlink link = new Hyperlink(redirectLabel);
+        link.setOnAction(event -> {
+            try {
+                setScreen(redirectScreen);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        vbox.setPadding(new Insets(20, 20, 20, 20));
+
+        vbox.getChildren().addAll(title, label, link);
+        instance.current.setCenter(vbox);
+    }
+
     public void setScreen(Screen screen) throws IOException {
         if (!instance.logged){
             instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(screen == SCREEN_SIGNUP ? "/fxml/signup.fxml" : "/fxml/login.fxml")));
-
         } else {
             BorderPane bp = new BorderPane();
             bp.setTop(instance.header);
