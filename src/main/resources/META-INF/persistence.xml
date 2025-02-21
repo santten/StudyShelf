@@ -13,10 +13,9 @@
         <class>domain.model.Permission</class>
         <properties>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/StudyShelf"/>
-<!--            <property name="jakarta.persistence.jdbc.user" value="appuser"/>-->
-<!--            <property name="jakarta.persistence.jdbc.password" value="password"/>-->
-            <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="qwq123QwQ321"/>
+           <property name="jakarta.persistence.jdbc.user" value="appuser"/>
+           <property name="jakarta.persistence.jdbc.password" value="password"/>
+
             <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
             <property name="hibernate.show_sql" value="true"/>

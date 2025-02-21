@@ -6,8 +6,7 @@ import jakarta.persistence.*;
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ratingId;
-    private int ratingScore;
+    private Integer ratingId;
     @ManyToOne
     @JoinColumn(name = "materialId")
     private StudyMaterial studyMaterial;
@@ -15,6 +14,9 @@ public class Rating {
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    @Column(name = "ratingScore")
+    private int ratingScore;
 
     //Default constructor
     public Rating() {}
