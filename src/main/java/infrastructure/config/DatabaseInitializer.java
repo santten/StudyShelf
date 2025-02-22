@@ -32,23 +32,16 @@ public class DatabaseInitializer {
                 Map<PermissionType, Permission> savedPermissions = new HashMap<>();
 
                 for (PermissionType type : PermissionType.values()) {
-                    Permission existingPermission = permissionRepository.findByType(type);
-                    if (existingPermission == null) {
-                        Permission permission = new Permission(type);
-                        savedPermissions.put(type, em.merge(permission));
-                    } else {
-                        savedPermissions.put(type, existingPermission);
-                    }
+                    Permission permission = new Permission(type);
+                    em.persist(permission);
+                    savedPermissions.put(type, permission);
                 }
 
                 Role adminRole = new Role(RoleType.ADMIN);
                 Role teacherRole = new Role(RoleType.TEACHER);
                 Role studentRole = new Role(RoleType.STUDENT);
 
-                // Admin all permissions
                 adminRole.getPermissions().addAll(savedPermissions.values());
-
-                // Teacher permissions
                 teacherRole.getPermissions().addAll(Arrays.asList(
                         savedPermissions.get(PermissionType.CREATE_RESOURCE),
                         savedPermissions.get(PermissionType.UPDATE_OWN_RESOURCE),
@@ -100,9 +93,10 @@ public class DatabaseInitializer {
                         savedPermissions.get(PermissionType.DELETE_OWN_USER)
                 ));
 
-                roleRepository.save(adminRole);
-                roleRepository.save(teacherRole);
-                roleRepository.save(studentRole);
+                em.persist(adminRole);
+                em.persist(teacherRole);
+                em.persist(studentRole);
+                em.flush();
             }
             tx.commit();
         } catch (Exception e) {
