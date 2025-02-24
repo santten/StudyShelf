@@ -15,6 +15,9 @@ import java.io.IOException;
 
 public class PreviewGeneratorService {
     public byte[] generatePreview(byte[] content, String fileType) throws IOException {
+        if (fileType == null || fileType.isEmpty()) {
+            return generateDefaultPreview();
+        }
         switch(fileType) {
             case "application/pdf":
                 return generatePDFPreview(content);
