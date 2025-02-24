@@ -17,12 +17,16 @@ class UserServiceTest {
     private UserService userService;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private PasswordService passwordService;
+    private JWTService jwtService;
 
     @BeforeEach
     void setUp() {
         userRepository = Mockito.mock(UserRepository.class);
         roleRepository = Mockito.mock(RoleRepository.class);
-        userService = new UserService(userRepository, roleRepository);
+        passwordService = Mockito.mock(PasswordService.class);
+        jwtService = Mockito.mock(JWTService.class);
+        userService = new UserService(userRepository, roleRepository, passwordService, jwtService);
     }
 
     @Test
@@ -61,5 +65,28 @@ class UserServiceTest {
         ArgumentCaptor<Role> roleCaptor = ArgumentCaptor.forClass(Role.class);
         verify(roleRepository, times(1)).save(roleCaptor.capture());
         assertEquals(RoleType.ADMIN, roleCaptor.getValue().getName());
+    }
+
+    @Test
+    void testHashPassword() {
+        String rawPassword = "TESTpassword123";
+        String fakeHashedPassword = "$2a$10$ABCDEFG12345678901234abcdef1234567890abcdef1234567890abc";
+        when(passwordService.hashPassword(rawPassword)).thenReturn(fakeHashedPassword);
+        String hashedPassword = passwordService.hashPassword(rawPassword);
+        assertNotNull(hashedPassword);
+        assertNotEquals(rawPassword, hashedPassword);
+    }
+
+    @Test
+    void testCheckPassword() {
+        String rawPassword = "mypassword123";
+        String fakeHashedPassword = "$2a$10$XYZ9876543210ABCDEFabcdef1234567890abcdef1234567890abcdef";
+
+        when(passwordService.hashPassword(rawPassword)).thenReturn(fakeHashedPassword);
+        when(passwordService.checkPassword(rawPassword, fakeHashedPassword)).thenReturn(true);
+        when(passwordService.checkPassword("wrongpassword", fakeHashedPassword)).thenReturn(false);
+
+        assertTrue(passwordService.checkPassword(rawPassword, fakeHashedPassword),"Matching passwords should return true");
+        assertFalse(passwordService.checkPassword("wrongpassword", fakeHashedPassword),"Non-matching passwords should return false");
     }
 }
