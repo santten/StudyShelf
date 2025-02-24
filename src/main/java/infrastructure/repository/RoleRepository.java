@@ -1,5 +1,6 @@
 package infrastructure.repository;
 
+import domain.model.Permission;
 import domain.model.Role;
 import domain.model.RoleType;
 import infrastructure.config.DatabaseConnection;
@@ -9,6 +10,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class RoleRepository  extends BaseRepository<Role> {
@@ -25,15 +28,27 @@ public class RoleRepository  extends BaseRepository<Role> {
 
     public Role save(Role role) {
         EntityManager em = getEntityManager();
-        Role existingRole = findById(role.getId());
-
-        if (existingRole != null) {
-            return existingRole;
-        }
-
         try {
             em.getTransaction().begin();
+
+            Role existingRole = findByName(role.getName());
+            if (existingRole != null) {
+                return existingRole;
+            }
+
+            Set<Permission> mergedPermissions = new HashSet<>();
+            for (Permission permission : role.getPermissions()) {
+                Permission mergedPermission = em.find(Permission.class, permission.getId());
+                if (mergedPermission != null) {
+                    mergedPermissions.add(mergedPermission);
+                }
+            }
+
+            role.getPermissions().clear();
+            role.getPermissions().addAll(mergedPermissions);
+
             em.persist(role);
+            em.flush();
             em.getTransaction().commit();
             return role;
         } catch (Exception e) {

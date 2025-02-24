@@ -28,25 +28,22 @@
 .heading3 {
     -fx-font-family: "Calistoga";
     -fx-font-size: 20;
-    -fx-fill: -primary-light;
 }
 
 .heading4 {
     -fx-font-family: "Calistoga";
     -fx-font-size: 16;
-    -fx-fill: -primary-light;
 }
 
 /* label heading styles */
 
 .label3 {
-    -fx-padding: 20 0 10 0
+    -fx-padding: 10 0 10 0
 }
 
 .label3 .text {
     -fx-font-family: "Calistoga";
     -fx-font-size: 20;
-    -fx-fill: -primary-light;
 }
 
 .label4 {
@@ -56,7 +53,32 @@
 .label4 .text {
     -fx-font-family: "Calistoga";
     -fx-font-size: 16;
+}
+
+/* fill styles */
+.primary {
+    -fx-text-fill: -primary;
+    -fx-fill: -primary;
+}
+
+.primary-light {
+    -fx-text-fill: -primary-light;
     -fx-fill: -primary-light;
+}
+
+.secondary {
+    -fx-text-fill: -secondary;
+    -fx-fill: -secondary;
+}
+
+.secondary-light {
+    -fx-text-fill: -secondary-light;
+    -fx-fill: -secondary-light;
+}
+
+.error {
+    -fx-text-fill: -error;
+    -fx-fill: -error;
 }
 
 /* button styles */
@@ -77,9 +99,43 @@
     -fx-fill: -light;
 }
 
+.btnXS {
+    -fx-background-color: -secondary-light;
+    -fx-padding: 0 8px;
+    -fx-background-radius: 2;
+    -fx-cursor: hand;
+}
+
+.btnXS:hover, btnXS:focused {
+    -fx-background-color: -secondary;
+}
+
+.btnXS .text {
+    -fx-font-size: 10;
+    -fx-fill: -light;
+}
+
+.listItemBtn {
+    -fx-cursor: hand;
+
+    -fx-min-width: 600px;
+    -fx-max-width: 600px;
+
+    -fx-max-height: 48px;
+    -fx-min-height: 48px;
+
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+
+    -fx-padding: 8px;
+}
+
+/* basic */
+
 .hyperlink {
     -fx-text-fill: -primary-light;
     -fx-underline: true;
+    -fx-padding: 0;
 }
 
 .hyperlink:hover {
@@ -90,13 +146,13 @@
     -fx-focus-fill: -primary-light;
 }
 
-.menu-button {
-    -fx-background-color: #ccd7b8;
-}
-
 .context-menu {
     -fx-effect: null;
     -fx-background-radius: 4;
+}
+
+.menu-button {
+    -fx-background-color: #ccd7b8;
 }
 
 .menu-item:focused {
@@ -150,3 +206,13 @@
 .tag:hover {
     -fx-background-color: -primary;
 }
+
+
+.star-filled {
+    -fx-fill: gold;
+}
+
+.star-empty {
+    -fx-fill: #ccc;
+}
+

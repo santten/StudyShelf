@@ -1,6 +1,7 @@
 package infrastructure.repository;
 
 import domain.model.Permission;
+import domain.model.PermissionType;
 import domain.service.PermissionService;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
@@ -9,22 +10,24 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PermissionRepository {
+public class PermissionRepository extends BaseRepository {
     private static final Logger logger = LoggerFactory.getLogger(PermissionService.class);
 
-    public void save(Permission permission) {
+    public Permission save(Permission permission) {
         EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
             em.persist(permission);
             transaction.commit();
+
         } catch (Exception e) {
             transaction.rollback();
             e.printStackTrace();
         } finally {
             em.close();
         }
+        return permission;
     }
 
     public Permission findById(Long id) {
@@ -75,5 +78,13 @@ public class PermissionRepository {
         } finally {
             em.close();
         }
+    }
+    public Permission findByType(PermissionType type) {
+        return getEntityManager()
+                .createQuery("SELECT p FROM Permission p WHERE p.name = :type", Permission.class)
+                .setParameter("type", type)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
     }
 }

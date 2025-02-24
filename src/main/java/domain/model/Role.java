@@ -9,7 +9,7 @@ import java.util.Set;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true, updatable = false)
@@ -45,7 +45,7 @@ public class Role {
     public Role() {}
     public Role(RoleType name) { this.name = name; }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
     public RoleType getName() { return name; }
     public Set<Permission> getPermissions() {return permissions;}
     public Set<User> getUsers() { return users; }
