@@ -1,5 +1,6 @@
 package presentation.view;
 import domain.model.StudyMaterial;
+import domain.service.Session;
 import presentation.components.MaterialCard;
 
 import domain.model.Category;
@@ -9,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import static domain.model.RoleType.STUDENT;
 import static presentation.view.Screen.*;
 
-import presentation.controller.CategoryPageController;
 import presentation.logger.GUILogger;
 
 public class SceneManager {
@@ -138,6 +138,8 @@ public class SceneManager {
     }
 
     public void setScreen(Screen screen) throws IOException {
+        Session session = Session.getInstance();
+
         if (!instance.logged){
             instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(screen == SCREEN_SIGNUP ? "/fxml/signup.fxml" : "/fxml/login.fxml")));
         } else {
