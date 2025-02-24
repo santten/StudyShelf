@@ -60,9 +60,12 @@ public class CoursesController {
 
             List<StudyMaterial> materials  = categoryRepo.findMaterialsByCategory(c);
             GUILogger.info("Loading materials " + materials.size() + " for category " + c.getCategoryName());
-            ScrollPane pane = MaterialCard.materialCardScrollHBox(materials);
+            if (materials.isEmpty()){
+                courseContainer.getChildren().add(new Text ("(This category doesn't have any materials yet.)"));
+            } else {
+                courseContainer.getChildren().add(MaterialCard.materialCardScrollHBox(materials));
+            }
 
-            courseContainer.getChildren().add(pane);
             mainVBoxCourses.getChildren().add(courseContainer);
         }
     }
