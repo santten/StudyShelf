@@ -170,10 +170,10 @@
 }
 
 .materialCardM {
-    -fx-min-width: 200px;
-    -fx-max-width: 200px;
-    -fx-min-height: 110px;
-    -fx-max-height: 110px;
+    -fx-min-width: 224px;
+    -fx-max-width: 224px;
+    -fx-min-height: 108px;
+    -fx-max-height: 108px;
     -fx-spacing: 4;
     -fx-padding: 4;
     -fx-border-radius: 4;
@@ -209,10 +209,11 @@
 
 
 .star-filled {
-    -fx-fill: gold;
+    -fx-fill: -warning;
+    -fx-clip-rule: even-odd;
 }
 
 .star-empty {
-    -fx-fill: #ccc;
+    -fx-fill: -primary-light;
+    -fx-clip-rule: even-odd;
 }
-

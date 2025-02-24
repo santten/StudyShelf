@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="mainVBoxUpload" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.UploadController">
+<VBox fx:id="mainVBoxUpload" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="377.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.UploadController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
@@ -23,20 +23,23 @@
       <styleClass>
          <String fx:value="heading3" />
          <String fx:value="primary-light" />
-      </styleClass></Text>
-   <GridPane hgap="10.0" prefHeight="152.0" prefWidth="560.0" vgap="10.0">
+      </styleClass>
+      <VBox.margin>
+         <Insets bottom="12.0" />
+      </VBox.margin></Text>
+   <GridPane hgap="10.0" prefHeight="327.0" prefWidth="560.0" vgap="10.0">
       <columnConstraints>
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.33331298828125" minWidth="10.0" prefWidth="86.00000762939453" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="473.99999237060547" minWidth="10.0" prefWidth="473.99999237060547" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.33331298828125" minWidth="10.0" prefWidth="86.0" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="473.99999237060547" minWidth="10.0" prefWidth="473.0" />
       </columnConstraints>
       <rowConstraints>
-         <RowConstraints maxHeight="71.33334350585938" minHeight="36.0" prefHeight="36.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="71.33334350585938" minHeight="36.0" prefHeight="36.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="71.33334350585938" minHeight="17.333343505859375" prefHeight="48.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="71.33334350585938" minHeight="20.666656494140625" prefHeight="24.0" vgrow="SOMETIMES" />
          <RowConstraints maxHeight="160.66666666666669" minHeight="64.0" prefHeight="64.0" vgrow="SOMETIMES" />
          <RowConstraints maxHeight="160.66666666666669" minHeight="32.0" prefHeight="36.0" vgrow="SOMETIMES" />
          <RowConstraints maxHeight="119.99997965494794" minHeight="48.0" prefHeight="48.0" vgrow="ALWAYS" />
-         <RowConstraints maxHeight="119.99997965494794" minHeight="24.0" prefHeight="24.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="119.99997965494794" minHeight="32.0" prefHeight="32.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="119.99997965494794" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="119.99997965494794" minHeight="32.0" prefHeight="82.0" vgrow="SOMETIMES" />
       </rowConstraints>
       <Label style="-fx-padding: 4;" text="Title" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BASELINE" />
       <TextField fx:id="field_title" prefHeight="25.0" prefWidth="455.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -50,15 +53,15 @@
       <Label style="-fx-padding: 4;" text="File" GridPane.halignment="RIGHT" GridPane.valignment="BASELINE" />
       <Button fx:id="btn_uploadMaterial" disable="true" mnemonicParsing="false" styleClass="btnS" text="Upload" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <CheckBox fx:id="checkbox_uploadAgreement" mnemonicParsing="false" text="I guarantee that I have the rights to upload this file under my name, and I understand that this material may be deleted without warning if it is inappropriate or doesn't follow the rules of StudyShelf." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
-         <Button fx:id="btn_getFile" maxWidth="90.0" minWidth="90.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="90.0" text="Upload File" />
+      <HBox prefHeight="100.0" prefWidth="469.0" GridPane.columnIndex="1">
+         <Button fx:id="btn_getFile" maxWidth="90.0" minWidth="90.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="90.0" text="Choose File" />
          <Label fx:id="label_fileTitle" style="-fx-text-fill: -primary-light;">
             <padding>
                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
             </padding>
          </Label>
       </HBox>
-      <Label alignment="TOP_LEFT" style="-fx-padding: 4;" text="Category" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BASELINE" />
+      <Label alignment="TOP_LEFT" style="-fx-padding: 4;" text="Course" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BASELINE" />
       <ChoiceBox fx:id="choice_category" prefHeight="23.0" prefWidth="471.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
    </GridPane>
 </VBox>
