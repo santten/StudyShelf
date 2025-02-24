@@ -70,4 +70,16 @@ public class CategoryRepository extends BaseRepository<Category>  {
         query.where(cb.and(userPredicate, categoryPredicate));
         return em.createQuery(query).getResultList();
     }
+
+    public List<Category> findCategoriesByUser(User user) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Category> query = cb.createQuery(Category.class);
+        Root<Category> root = query.from(Category.class);
+
+        Predicate userPredicate = cb.equal(root.get("creator"), user);
+
+        query.where(cb.and(userPredicate));
+        return em.createQuery(query).getResultList();
+    }
 }

@@ -8,4 +8,5 @@ public enum Screen {
     SCREEN_PROFILE,
     SCREEN_FIND,
     SCREEN_UPLOAD,
+    SCREEN_CREATE_COURSE
 }
