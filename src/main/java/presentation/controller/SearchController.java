@@ -60,7 +60,6 @@ public class SearchController {
             }
 
             if (checkbox_includeCategories.isSelected()) {
-                // Search only from category
                 List<Category> categoryResults = searchService.searchCategories(query);
                 categoryResults.forEach(category ->
                         resultsListView.getItems().add(searchResultGraphic(category))

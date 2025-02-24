@@ -22,15 +22,24 @@ import java.io.ByteArrayInputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static javafx.scene.shape.FillRule.EVEN_ODD;
+
 public class MaterialCard {
     public static Button materialCard(StudyMaterial s) {
         Button materialCard = new Button();
-        HBox container = new HBox(10);
-        VBox contentBox = new VBox(5);
-        VBox previewBox = new VBox();
+        HBox wrapper = new HBox();
+        wrapper.setSpacing(12);
+        VBox contentBox = new VBox();
         User uploader = s.getUploader();
-        contentBox.setPadding(new Insets(5, 5, 5, 5));
+        wrapper.setPadding(new Insets(8));
 
+        if (s.getPreviewImage() != null) {
+            ImageView preview = new ImageView(new Image(new ByteArrayInputStream(s.getPreviewImage())));
+            preview.setFitWidth(60);
+            preview.setFitHeight(80);
+            preview.setPreserveRatio(false);
+            wrapper.getChildren().add(preview);
+        }
 
         TextFlow titleArea = new TextFlow();
 
@@ -42,7 +51,7 @@ public class MaterialCard {
         }
 
         svgPath.getStyleClass().add("materialCardIcon");
-        svgPath.setFillRule(FillRule.EVEN_ODD);
+        svgPath.setFillRule(EVEN_ODD);
         titleArea.getChildren().add(svgPath);
 
         Label title = new Label();
@@ -50,7 +59,7 @@ public class MaterialCard {
         title.setWrapText(true);
         title.setTextOverrun(OverrunStyle.ELLIPSIS);
 
-        title.setMaxWidth(160);
+        title.setMaxWidth(110);
         title.setMaxHeight(20);
 
         title.getStyleClass().add("label4");
@@ -61,66 +70,52 @@ public class MaterialCard {
         Text uploaderLabel = new Text(uploader.getFirstName() + " " + uploader.getLastName());
         contentBox.getChildren().add(uploaderLabel);
 
-        Text fileLabel = new Text(s.getFileType());
-        fileLabel.getStyleClass().add("materialCardSubtitle");
-        contentBox.getChildren().add(fileLabel);
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
         String formattedTimestamp = s.getTimestamp().format(formatter);
 
         Text timestamp = new Text(formattedTimestamp);
+        timestamp.getStyleClass().add("materialCardSubtitle");
         contentBox.getChildren().add(timestamp);
 
-        materialCard.setTooltip(new Tooltip("\"" + s.getName() + "\", uploaded by " + uploader.getFirstName() + " " + uploader.getLastName()));
+        HBox ratingBox = new HBox();
+        ratingBox.setPrefWidth(100);
+        ratingBox.setMaxWidth(100);
+        ratingBox.setMinWidth(100);
+        RatingService ratingService = new RatingService(new RatingRepository());
+        double avgRating = ratingService.getAverageRating(s);
 
-        if (s.getPreviewImage() != null) {
-            ImageView preview = new ImageView(new Image(new ByteArrayInputStream(s.getPreviewImage())));
-            preview.setFitWidth(60);
-            preview.setFitHeight(80);
-            preview.setPreserveRatio(false);
+        for (int i = 1; i <= 5; i++) {
+            StackPane starContainer = new StackPane();
 
-            HBox ratingBox = new HBox();
-            ratingBox.setPrefWidth(100);
-            ratingBox.setMaxWidth(100);
-            ratingBox.setMinWidth(100);
-            RatingService ratingService = new RatingService(new RatingRepository());
-            double avgRating = ratingService.getAverageRating(s);
+            SVGPath emptyStar = new SVGPath();
+            emptyStar.setContent("m9.194 5l.351.873l.94.064l3.197.217l-2.46 2.055l-.722.603l.23.914l.782 3.108l-2.714-1.704L8 10.629l-.798.5l-2.714 1.705l.782-3.108l.23-.914l-.723-.603l-2.46-2.055l3.198-.217l.94-.064l.35-.874L8 2.025zm-7.723-.292l3.943-.268L6.886.773C7.29-.231 8.71-.231 9.114.773l1.472 3.667l3.943.268c1.08.073 1.518 1.424.688 2.118L12.185 9.36l.964 3.832c.264 1.05-.886 1.884-1.802 1.31L8 12.4l-3.347 2.101c-.916.575-2.066-.26-1.802-1.309l.964-3.832L.783 6.826c-.83-.694-.391-2.045.688-2.118");
+            emptyStar.setScaleX(0.7);
+            emptyStar.setScaleY(0.7);
+            emptyStar.setFillRule(EVEN_ODD);
+            emptyStar.getStyleClass().add("star-empty");
 
-            for (int i = 1; i <= 5; i++) {
-                StackPane starContainer = new StackPane();
+            SVGPath filledStar = new SVGPath();
+            filledStar.setContent("M6.886.773C7.29-.231 8.71-.231 9.114.773l1.472 3.667l3.943.268c1.08.073 1.518 1.424.688 2.118L12.185 9.36l.964 3.832c.264 1.05-.886 1.884-1.802 1.31L8 12.4l-3.347 2.101c-.916.575-2.066-.26-1.802-1.309l.964-3.832L.783 6.826c-.83-.694-.391-2.045.688-2.118l3.943-.268z");
+            filledStar.setScaleX(0.7);
+            filledStar.setScaleY(0.7);
+            filledStar.setFillRule(EVEN_ODD);
+            filledStar.getStyleClass().add("star-filled");
 
+            double fillPercentage = Math.max(0, Math.min(1, avgRating - (i - 1)));
+            Rectangle clip = new Rectangle();
+            clip.setWidth(filledStar.getBoundsInLocal().getWidth() * fillPercentage);
+            clip.setHeight(filledStar.getBoundsInLocal().getHeight());
+            filledStar.setClip(clip);
 
-                SVGPath emptyStar = new SVGPath();
-                emptyStar.setContent("M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z");
-                emptyStar.setScaleX(0.7);
-                emptyStar.setScaleY(0.7);
-                emptyStar.getStyleClass().add("star-empty");
-
-
-                SVGPath filledStar = new SVGPath();
-                filledStar.setContent("M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z");
-                filledStar.setScaleX(0.7);
-                filledStar.setScaleY(0.7);
-                filledStar.getStyleClass().add("star-filled");
-
-
-                double fillPercentage = Math.max(0, Math.min(1, avgRating - (i - 1)));
-                Rectangle clip = new Rectangle();
-                clip.setWidth(filledStar.getBoundsInLocal().getWidth() * fillPercentage);
-                clip.setHeight(filledStar.getBoundsInLocal().getHeight());
-                filledStar.setClip(clip);
-
-                starContainer.getChildren().addAll(emptyStar, filledStar);
-                ratingBox.getChildren().add(starContainer);
-            }
-
-            previewBox.getChildren().addAll(preview, ratingBox);
-            previewBox.setAlignment(Pos.CENTER);
-            previewBox.setPrefWidth(100);
+            starContainer.getChildren().addAll(emptyStar, filledStar);
+            ratingBox.getChildren().add(starContainer);
         }
 
-        container.getChildren().addAll(contentBox, previewBox);
-        materialCard.setGraphic(container);
+        contentBox.getChildren().add(ratingBox);
+        wrapper.getChildren().add(contentBox);
+
+        materialCard.setTooltip(new Tooltip("\"" + s.getName() + "\", uploaded by " + uploader.getFirstName() + " " + uploader.getLastName()));
+        materialCard.setGraphic(wrapper);
         materialCard.getStyleClass().add("materialCardM");
 
         return materialCard;
