@@ -17,12 +17,16 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import presentation.logger.GUILogger;
+import presentation.view.SceneManager;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static javafx.scene.shape.FillRule.EVEN_ODD;
+import static presentation.view.Screen.SCREEN_HOME;
 
 public class MaterialCard {
     public static Button materialCard(StudyMaterial s) {
@@ -117,7 +121,14 @@ public class MaterialCard {
         materialCard.setTooltip(new Tooltip("\"" + s.getName() + "\", uploaded by " + uploader.getFirstName() + " " + uploader.getLastName()));
         materialCard.setGraphic(wrapper);
         materialCard.getStyleClass().add("materialCardM");
-
+        materialCard.setOnAction(e -> {
+            GUILogger.info("MaterialCard " + s.getName() + " clicked.");
+            try {
+                SceneManager.getInstance().displayMaterialPage(s.getMaterialId());
+            } catch (IOException ex) {
+                SceneManager.getInstance().displayErrorPage("Can't display this material!", SCREEN_HOME, "Go to Home Page");
+            }
+        });
         return materialCard;
     }
 

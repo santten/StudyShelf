@@ -61,7 +61,7 @@ public class CoursesController {
             List<StudyMaterial> materials  = categoryRepo.findMaterialsByCategory(c);
             GUILogger.info("Loading materials " + materials.size() + " for category " + c.getCategoryName());
             if (materials.isEmpty()){
-                courseContainer.getChildren().add(new Text ("(This category doesn't have any materials yet.)"));
+                courseContainer.getChildren().add(new Text ("(This course doesn't contain any materials yet.)"));
             } else {
                 courseContainer.getChildren().add(MaterialCard.materialCardScrollHBox(materials));
             }

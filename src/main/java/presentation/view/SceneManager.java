@@ -1,7 +1,14 @@
 package presentation.view;
 import domain.model.StudyMaterial;
 import domain.service.Session;
+import infrastructure.repository.StudyMaterialRepository;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.TextFlow;
 import presentation.components.MaterialCard;
+import presentation.components.TextLabels;
 
 import domain.model.Category;
 import infrastructure.repository.CategoryRepository;
@@ -18,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -110,6 +118,71 @@ public class SceneManager {
                 instance.current.setCenter(vbox);
             }
         }
+    }
+
+    public void displayMaterialPage(int id) throws IOException {
+        if (!instance.logged){
+            setScreen(SCREEN_LOGIN);
+            return;
+        }
+
+        StudyMaterialRepository repo = new StudyMaterialRepository();
+        StudyMaterial s = repo.findById(id);
+
+        if (s == null) {
+            GUILogger.warn("DNE: Tried to go to material with id " + id);
+            displayErrorPage("This material doesn't exist.", SCREEN_COURSES, "Go to courses page");
+            return;
+        }
+
+        VBox base = new VBox();
+        base.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+        base.setSpacing(12);
+        base.setPadding(new Insets(20, 20, 20, 20));
+
+        HBox main = new HBox();
+
+        VBox left = new VBox();
+        Label title = new Label(s.getName());
+        title.getStyleClass().add("label3");
+        title.getStyleClass().add("primary-light");
+        title.setWrapText(true);
+        title.setMaxWidth(600);
+
+        TextFlow uploaderLabels = new TextFlow();
+        Text author = new Text("Uploaded by " + s.getUploader().getFullName());
+        author.setStyle("-fx-font-size: 1.2em;");
+
+        uploaderLabels.getChildren().addAll(author, new Text("  "), TextLabels.getUserRoleLabel(s.getUploader()), new Text("  "));
+
+        if (s.getUploader() == s.getCategory().getCreator()) {
+            Label categoryOwnerLabel = new Label("Course Owner");
+            categoryOwnerLabel.getStyleClass().add("primaryTagLabel");
+            uploaderLabels.getChildren().add(categoryOwnerLabel);
+        }
+
+        Text fileDetails = new Text(Math.round(s.getFileSize()) + " KB " + s.getFileType());
+
+        Button downloadBtn = new Button("Download");
+        downloadBtn.getStyleClass().add("btnDownload");
+        downloadBtn.setOnAction(event -> GUILogger.info("Pressed button to download " + s.getName()));
+
+        left.getChildren().addAll(title, uploaderLabels, fileDetails, downloadBtn);
+        left.setMinWidth(600);
+        left.setMaxWidth(600);
+        left.setSpacing(8);
+
+        VBox right = new VBox();
+        ImageView preview = new ImageView(new Image(new ByteArrayInputStream(s.getPreviewImage())));
+        preview.setFitWidth(120);
+        preview.setFitHeight(160);
+        preview.setPreserveRatio(false);
+        right.getChildren().add(preview);
+
+        main.setSpacing(20);
+        main.getChildren().addAll(left, right);
+        base.getChildren().add(main);
+        instance.current.setCenter(base);
     }
 
     public void displayErrorPage(String errorText, Screen redirectScreen, String redirectLabel) {
