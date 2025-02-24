@@ -85,7 +85,7 @@ public class SceneManager {
                 vbox.getChildren().add(header);
 
                 List<StudyMaterial> creatorMaterials = repo.findMaterialsByUserInCategory(c.getCreator(), c);
-                if (creatorMaterials != null) {
+                if (!creatorMaterials.isEmpty()) {
                     Text text = new Text("Materials from " + c.getCreator().getFullName());
                     text.getStyleClass().add("heading4");
                     text.getStyleClass().add("secondary");
@@ -96,7 +96,7 @@ public class SceneManager {
                 }
 
                 List<StudyMaterial> otherMaterials = repo.findMaterialsExceptUserInCategory(c.getCreator(), c);
-                if (otherMaterials != null) {
+                if (!otherMaterials.isEmpty()) {
                     GUILogger.info(String.valueOf(otherMaterials.size()));
                     Text text = new Text("Materials from others");
                     text.getStyleClass().add("heading4");
