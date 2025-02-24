@@ -20,7 +20,7 @@ import static presentation.components.ItemType.*;
 
 public class ListItem {
     public static Button searchResultGraphic(StudyMaterial s){
-        return layout(s.getName(), MATERIAL, s.getFileType() + "-file uploaded by " + s.getUploader().getFullName(), 111);
+        return layout(s.getName(), MATERIAL, s.getFileType() + ", uploaded by " + s.getUploader().getFullName(), 111);
     }
 
     public static Button searchResultGraphic(Category c) {
@@ -69,7 +69,7 @@ public class ListItem {
         }
 
         svg.setFillRule(FillRule.EVEN_ODD);
-        svg.setStyle("-fx-scale-y: 1.2; -fx-scale-x: 1.2;" + color);
+        svg.setStyle("-fx-scale-y: 1.2; -fx-scale-x: 1.2;");
         svg.getStyleClass().add(color);
 
         Label label = new Label(text);
