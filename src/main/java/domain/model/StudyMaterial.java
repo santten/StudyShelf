@@ -35,7 +35,7 @@ public class StudyMaterial {
     @Column(name = "FileSize")
     private Float fileSize;
 
-    @Column(name = "FileType", length = 50)
+    @Column(name = "FileType", length = 150)
     private String fileType;
 
     @Column(name = "TimeStamp")

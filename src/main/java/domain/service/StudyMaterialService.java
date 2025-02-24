@@ -22,6 +22,9 @@ public class StudyMaterialService {
 
     public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category) throws IOException {
         String fileType = Files.probeContentType(Path.of(filename));
+        if (fileType == null) {
+            fileType = "application/octet-stream";
+        }
         String fileUrl = driveService.uploadFile(content, filename, fileType);
 
         PreviewGeneratorService previewGenerator = new PreviewGeneratorService();
