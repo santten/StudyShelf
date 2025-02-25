@@ -3,6 +3,7 @@
 * {
     -light: #F4F4F4;
     -light-shadow: #e8e8e8;
+    -light-darker: #bdbdbd;
     -error: #b6281c;
     -warning: #cd7418;
     -secondary: #306c01;
@@ -121,7 +122,7 @@
 
 .btnDownload .text {
     -fx-font-family: "Calistoga";
-    -fx-font-size: 14;
+    -fx-font-size: 16;
     -fx-fill: -light;
 }
 
@@ -201,11 +202,19 @@
     -fx-fill: -primary-light;
 }
 
-.materialCardIcon {
+/* SVG icons */
+.iconPrimaryM {
     -fx-scale-x: 1.5;
     -fx-scale-y: 1.5;
     -fx-fill: -primary-light;
 }
+
+.iconLightM {
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 1.5;
+    -fx-fill: -light;
+}
+
 
 .tag {
     -fx-padding: 3;
@@ -239,6 +248,6 @@
 }
 
 .star-empty {
-    -fx-fill: -primary-light;
+    -fx-fill: -light-darker;
     -fx-clip-rule: even-odd;
 }

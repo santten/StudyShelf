@@ -1,13 +1,18 @@
 package presentation.view;
 import domain.model.StudyMaterial;
+import domain.service.RatingService;
 import domain.service.Session;
+import infrastructure.repository.RatingRepository;
 import infrastructure.repository.StudyMaterialRepository;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.TextFlow;
 import presentation.components.MaterialCard;
+import presentation.components.Stars;
 import presentation.components.TextLabels;
 
 import domain.model.Category;
@@ -135,6 +140,7 @@ public class SceneManager {
             return;
         }
 
+        /* header: preview and file details*/
         VBox base = new VBox();
         base.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
@@ -167,22 +173,49 @@ public class SceneManager {
         downloadBtn.getStyleClass().add("btnDownload");
         downloadBtn.setOnAction(event -> GUILogger.info("Pressed button to download " + s.getName()));
 
-        left.getChildren().addAll(title, uploaderLabels, fileDetails, downloadBtn);
-        left.setMinWidth(600);
-        left.setMaxWidth(600);
+        TextFlow fileDesc = new TextFlow();
+        fileDesc.getChildren().add(new Text(s.getDescription()));
+        fileDesc.setMaxWidth(580);
+
+        left.getChildren().addAll(title, uploaderLabels, fileDetails, downloadBtn,
+                                    fileDesc);
+        left.setMinWidth(580);
+        left.setMaxWidth(580);
         left.setSpacing(8);
 
         VBox right = new VBox();
         ImageView preview = new ImageView(new Image(new ByteArrayInputStream(s.getPreviewImage())));
-        preview.setFitWidth(120);
-        preview.setFitHeight(160);
+        preview.setFitWidth(141);
+        preview.setFitHeight(188);
         preview.setPreserveRatio(false);
         right.getChildren().add(preview);
 
         main.setSpacing(20);
         main.getChildren().addAll(left, right);
-        base.getChildren().add(main);
-        instance.current.setCenter(base);
+
+        /* under header: review section*/
+        VBox reviews = new VBox();
+        HBox reviewHeading = new HBox();
+
+        Label reviewTitle = new Label("Ratings");
+        reviewTitle.getStyleClass().add("label3");
+        reviewTitle.getStyleClass().add("error");
+
+        double avgRating = new RatingService(new RatingRepository()).getAverageRating(s);
+        Text avgRatingText = new Text(avgRating > 0 ? String.format("(%.1f)", avgRating) : "(No ratings yet)");
+
+        avgRatingText.setStyle("-fx-font-size: 1.2em;");
+        reviewHeading.getChildren().addAll(reviewTitle, Stars.StarRow(avgRating, 1.2, 5), avgRatingText);
+        reviewHeading.setSpacing(10);
+        reviewHeading.setAlignment(Pos.CENTER_LEFT);
+
+        reviews.getChildren().addAll(reviewHeading);
+
+        base.getChildren().addAll(main, reviews);
+        ScrollPane wrapper = new ScrollPane(base);
+        wrapper.setFitToHeight(true);
+        wrapper.setFitToWidth(true);
+        instance.current.setCenter(wrapper);
     }
 
     public void displayErrorPage(String errorText, Screen redirectScreen, String redirectLabel) {
@@ -211,8 +244,6 @@ public class SceneManager {
     }
 
     public void setScreen(Screen screen) throws IOException {
-        Session session = Session.getInstance();
-
         if (!instance.logged){
             instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(screen == SCREEN_SIGNUP ? "/fxml/signup.fxml" : "/fxml/login.fxml")));
         } else {
