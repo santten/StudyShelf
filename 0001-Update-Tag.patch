@@ -1,0 +1,59 @@
+From 5c3dcf799672830b462462a7ddc986fe8a60f908 Mon Sep 17 00:00:00 2001
+From: jiayuez <Jiayue.Zheng@metropolia.fi>
+Date: Fri, 21 Feb 2025 11:38:17 +0200
+Subject: [PATCH] Update Tag
+
+---
+ src/main/java/domain/model/StudyMaterial.java      |  3 +++
+ .../infrastructure/repository/TagRepository.java   | 14 ++++++++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/src/main/java/domain/model/StudyMaterial.java b/src/main/java/domain/model/StudyMaterial.java
+index 9873b77..a3c5fe5 100644
+--- a/src/main/java/domain/model/StudyMaterial.java
++++ b/src/main/java/domain/model/StudyMaterial.java
+@@ -44,6 +44,7 @@ public class StudyMaterial {
+     @Enumerated(EnumType.STRING)
+     @Column(name = "Status")
+     private MaterialStatus status;
++
+     @ManyToMany
+     @JoinTable(
+             name = "MaterialTag",
+@@ -51,8 +52,10 @@ public class StudyMaterial {
+             inverseJoinColumns = @JoinColumn(name = "TagId")
+     )
+     private Set<Tag> tags = new HashSet<>();
++
+     @OneToMany(mappedBy = "studyMaterial")
+     private Set<Rating> ratings = new HashSet<>();
++
+     @OneToMany(mappedBy = "studyMaterial")
+     private Set<Review> reviews = new HashSet<>();
+ 
+diff --git a/src/main/java/infrastructure/repository/TagRepository.java b/src/main/java/infrastructure/repository/TagRepository.java
+index f728122..69fc76f 100644
+--- a/src/main/java/infrastructure/repository/TagRepository.java
++++ b/src/main/java/infrastructure/repository/TagRepository.java
+@@ -15,4 +15,18 @@ public class TagRepository extends BaseRepository<Tag> {
+         }
+     }
+ 
++    public Tag findByName(String tagName) {
++        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
++        try {
++            return em.createQuery("SELECT t FROM Tag t WHERE t.tagName = :tagName", Tag.class)
++                    .setParameter("tagName", tagName)
++                    .getSingleResult();
++        } catch (Exception e) {
++            return null;
++        } finally {
++            em.close();
++        }
++    }
++
++
+ }
+-- 
+2.47.1.windows.2
+
