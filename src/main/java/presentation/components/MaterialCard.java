@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import presentation.logger.GUILogger;
+import presentation.GUILogger;
 import presentation.view.SceneManager;
 
 import java.io.ByteArrayInputStream;

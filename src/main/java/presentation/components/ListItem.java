@@ -4,7 +4,6 @@ import domain.model.Category;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -12,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
-import presentation.logger.GUILogger;
+import presentation.GUILogger;
 import presentation.view.SceneManager;
 
 import java.io.IOException;

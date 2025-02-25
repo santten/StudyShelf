@@ -6,12 +6,11 @@ import infrastructure.repository.CategoryRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
-import presentation.logger.GUILogger;
+import presentation.GUILogger;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
