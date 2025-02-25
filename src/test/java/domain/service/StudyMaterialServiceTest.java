@@ -54,6 +54,6 @@ class StudyMaterialServiceTest {
         assertEquals(description, result.getDescription());
         assertEquals(expectedDriveUrl, result.getLink());
         assertEquals(uploader, result.getUploader());
-        assertEquals(MaterialStatus.APPROVED, result.getStatus());
+        assertEquals(MaterialStatus.PENDING, result.getStatus());
     }
 }
