@@ -4,30 +4,32 @@ import domain.model.Category;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
 import presentation.logger.GUILogger;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
+import java.util.List;
 
 import static presentation.components.ItemType.*;
 
 public class ListItem {
-    public static Button searchResultGraphic(StudyMaterial s){
+    public static Button listItemGraphic(StudyMaterial s){
         return layout(s.getName(), MATERIAL, s.getFileType() + ", uploaded by " + s.getUploader().getFullName(), s.getMaterialId());
     }
 
-    public static Button searchResultGraphic(Category c) {
+    public static Button listItemGraphic(Category c) {
         return layout(c.getCategoryName(), CATEGORY, "Course by " + c.getCreator().getFullName(), c.getCategoryId());
     }
 
-    public static Button searchResultGraphic(User u) {
+    public static Button listItemGraphic(User u) {
         return layout(u.getFullName(), USER, "girl whatever", 21);
     }
 
@@ -62,7 +64,7 @@ public class ListItem {
                 color = "primary-light";
                 btn.setOnAction(e -> {
                     try {
-                        sm.displayMaterialPage(id);
+                        sm.displayMaterial(id);
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -94,5 +96,20 @@ public class ListItem {
         btn.setGraphic(graphic);
 
         return btn;
+    }
+
+    public static ListView<Button> toListView(List<Button> list) {
+        return toListView(list, 200);
+    }
+
+    public static ListView<Button> toListView(List<Button> list, int height) {
+        ListView<Button> view = new ListView<>();
+
+        list.forEach(btn -> {
+            view.getItems().add(btn);
+        });
+
+        view.setMaxHeight(height);
+        return view;
     }
 }

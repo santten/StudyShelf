@@ -5,15 +5,11 @@ import domain.model.User;
 import domain.service.RatingService;
 import infrastructure.repository.RatingRepository;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.FillRule;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -102,7 +98,7 @@ public class MaterialCard {
         materialCard.setOnAction(e -> {
             GUILogger.info("MaterialCard " + s.getName() + " clicked.");
             try {
-                SceneManager.getInstance().displayMaterialPage(s.getMaterialId());
+                SceneManager.getInstance().displayMaterial(s.getMaterialId());
             } catch (IOException ex) {
                 SceneManager.getInstance().displayErrorPage("Can't display this material!", SCREEN_HOME, "Go to Home Page");
             }

@@ -237,10 +237,27 @@
 .secondaryTagLabel {
     -fx-padding: 4;
     -fx-text-fill: -light;
+    -fx-background-color: -secondary;
+    -fx-background-radius: 6;
+    -fx-font-weight: 800;
+}
+
+.errorTagLabel {
+    -fx-padding: 4;
+    -fx-text-fill: -light;
     -fx-background-color: -error;
     -fx-background-radius: 6;
     -fx-font-weight: 800;
 }
+
+.warningTagLabel {
+    -fx-padding: 4;
+    -fx-text-fill: -light;
+    -fx-background-color: -warning;
+    -fx-background-radius: 6;
+    -fx-font-weight: 800;
+}
+
 
 .star-filled {
     -fx-fill: -warning;

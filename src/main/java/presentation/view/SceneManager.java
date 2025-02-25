@@ -1,13 +1,12 @@
 package presentation.view;
 import domain.model.StudyMaterial;
+import domain.model.User;
 import domain.service.RatingService;
-import domain.service.Session;
 import infrastructure.repository.RatingRepository;
 import infrastructure.repository.StudyMaterialRepository;
+import infrastructure.repository.UserRepository;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.TextFlow;
@@ -21,8 +20,6 @@ import infrastructure.repository.CategoryRepository;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -32,12 +29,14 @@ import javafx.stage.Stage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static domain.model.RoleType.STUDENT;
+import static presentation.components.ListItem.listItemGraphic;
 import static presentation.view.Screen.*;
-
+import presentation.components.ListItem;
 import presentation.logger.GUILogger;
 
 public class SceneManager {
@@ -46,7 +45,6 @@ public class SceneManager {
     private GridPane header;
     private HBox footer;
     private boolean logged;
-    private ScrollPane scrollpane;
     private Stage primaryStage;
 
     private SceneManager(){
@@ -125,7 +123,7 @@ public class SceneManager {
         }
     }
 
-    public void displayMaterialPage(int id) throws IOException {
+    public void displayMaterial(int id) throws IOException {
         if (!instance.logged){
             setScreen(SCREEN_LOGIN);
             return;
@@ -156,10 +154,20 @@ public class SceneManager {
         title.setMaxWidth(600);
 
         TextFlow uploaderLabels = new TextFlow();
-        Text author = new Text("Uploaded by " + s.getUploader().getFullName());
+        Text author = new Text("Uploaded by ");
         author.setStyle("-fx-font-size: 1.2em;");
 
-        uploaderLabels.getChildren().addAll(author, new Text("  "), TextLabels.getUserRoleLabel(s.getUploader()), new Text("  "));
+        Hyperlink authorLink = new Hyperlink(s.getUploader().getFullName());
+        authorLink.setStyle("-fx-font-size: 1.2em; -fx-underline: false;");
+        authorLink.setOnAction(e -> {
+            try {
+                displayProfile(s.getUploader().getUserId());
+            } catch (IOException ex) {
+                displayErrorPage("User not found.", SCREEN_HOME, "Go to Home");
+            }
+        });
+
+        uploaderLabels.getChildren().addAll(author, authorLink, new Text("  "), TextLabels.getUserRoleLabel(s.getUploader()), new Text("  "));
 
         if (s.getUploader() == s.getCategory().getCreator()) {
             Label categoryOwnerLabel = new Label("Course Owner");
@@ -177,8 +185,14 @@ public class SceneManager {
         fileDesc.getChildren().add(new Text(s.getDescription()));
         fileDesc.setMaxWidth(580);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+        String formattedTimestamp = s.getTimestamp().format(formatter);
+
+        Text course = new Text("Uploaded under course " + s.getCategory().getCategoryName() + " on " + formattedTimestamp);
+        course.getStyleClass().add("primary");
+
         left.getChildren().addAll(title, uploaderLabels, fileDetails, downloadBtn,
-                                    fileDesc);
+                                    course, fileDesc);
         left.setMinWidth(580);
         left.setMaxWidth(580);
         left.setSpacing(8);
@@ -216,6 +230,70 @@ public class SceneManager {
         wrapper.setFitToHeight(true);
         wrapper.setFitToWidth(true);
         instance.current.setCenter(wrapper);
+    }
+
+    public void displayProfile(int id) throws IOException {
+        if (!instance.logged){
+            setScreen(SCREEN_LOGIN);
+            return;
+        }
+
+        UserRepository uRepo = new UserRepository();
+        User u = uRepo.findById(id);
+
+        if (u == null) {
+            GUILogger.warn("DNE: Tried to go to user with id " + id);
+            displayErrorPage("This user doesn't exist.", SCREEN_HOME, "Go to home page");
+            return;
+        }
+
+        VBox base = new VBox();
+        base.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+        base.setSpacing(12);
+        base.setPadding(new Insets(20, 20, 20, 20));
+
+        Label title = new Label(u.getFullName());
+        title.getStyleClass().add("label3");
+        title.getStyleClass().add("error");
+        title.setWrapText(true);
+        title.setMaxWidth(600);
+
+        base.getChildren().addAll(title, TextLabels.getUserRoleLabel(u));
+
+        CategoryRepository cRepo = new CategoryRepository();
+        List<Category> userCategories = cRepo.findCategoriesByUser(u);
+
+        if (!userCategories.isEmpty()) {
+            Label cTitle = new Label("Courses");
+            cTitle.getStyleClass().add("label4");
+            cTitle.getStyleClass().add("secondary");
+
+            List<Category> categoryList = cRepo.findCategoriesByUser(u);
+            List<Button> buttonList = new ArrayList<>();
+
+            categoryList.forEach(c -> buttonList.add(listItemGraphic(c)));
+            ListView<Button> cView = ListItem.toListView(buttonList);
+
+            base.getChildren().addAll(cTitle, cView);
+        }
+
+        StudyMaterialRepository sRepo = new StudyMaterialRepository();
+        List<StudyMaterial> userMaterials = sRepo.findByUser(u);
+
+        if (!userMaterials.isEmpty()) {
+            Label mTitle = new Label("Materials");
+            mTitle.getStyleClass().add("label4");
+            mTitle.getStyleClass().add("primary-light");
+
+            List<Button> buttonList = new ArrayList<>();
+
+            userMaterials.forEach(m -> buttonList.add(listItemGraphic(m)));
+            ListView<Button> mView = ListItem.toListView(buttonList);
+
+            base.getChildren().addAll(mTitle, mView);
+        }
+
+        instance.current.setCenter(base);
     }
 
     public void displayErrorPage(String errorText, Screen redirectScreen, String redirectLabel) {
