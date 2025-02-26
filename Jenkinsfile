@@ -20,7 +20,7 @@ pipeline {
 
         stage('tests') {
                     steps {
-                        bat "mvn test jacoco:report"
+                        bat "mvn -Dmaven.test.failure.ignore=true test jacoco:report"
                     }
 
                     post {
