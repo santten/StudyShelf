@@ -3,8 +3,9 @@
 * {
     -light: #F4F4F4;
     -light-shadow: #e8e8e8;
-    -error: #e42513;
-    -warning: #e47b13;
+    -light-darker: #bdbdbd;
+    -error: #b6281c;
+    -warning: #cd7418;
     -secondary: #306c01;
     -secondary-light: #568105;
     -primary: #113f79;
@@ -37,17 +38,9 @@
 
 /* label heading styles */
 
-.label3 {
-    -fx-padding: 10 0 10 0
-}
-
 .label3 .text {
     -fx-font-family: "Calistoga";
     -fx-font-size: 20;
-}
-
-.label4 {
-    -fx-padding: 4 0 4 0
 }
 
 .label4 .text {
@@ -87,9 +80,10 @@
     -fx-background-color: -primary;
     -fx-padding: 4px 8px;
     -fx-background-radius: 8;
+    -fx-cursor: hand;
 }
 
-.btnS:hover, btnS:focused {
+.btnS:hover, .btnS:focused {
     -fx-background-color: -secondary;
 }
 
@@ -106,12 +100,29 @@
     -fx-cursor: hand;
 }
 
-.btnXS:hover, btnXS:focused {
+.btnXS:hover, .btnXS:focused {
     -fx-background-color: -secondary;
 }
 
 .btnXS .text {
     -fx-font-size: 10;
+    -fx-fill: -light;
+}
+
+.btnDownload {
+    -fx-background-color: -secondary;
+    -fx-padding: 4px 8px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.btnDownload:hover, .btnDownload:focused {
+    -fx-background-color: -secondary-light;
+}
+
+.btnDownload .text {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 16;
     -fx-fill: -light;
 }
 
@@ -191,11 +202,19 @@
     -fx-fill: -primary-light;
 }
 
-.materialCardIcon {
+/* SVG icons */
+.iconPrimaryM {
     -fx-scale-x: 1.5;
     -fx-scale-y: 1.5;
     -fx-fill: -primary-light;
 }
+
+.iconLightM {
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 1.5;
+    -fx-fill: -light;
+}
+
 
 .tag {
     -fx-padding: 3;
@@ -207,6 +226,38 @@
     -fx-background-color: -primary;
 }
 
+.primaryTagLabel {
+    -fx-padding: 4;
+    -fx-text-fill: -light;
+    -fx-background-color: -primary;
+    -fx-background-radius: 6;
+    -fx-font-weight: 800;
+}
+
+.secondaryTagLabel {
+    -fx-padding: 4;
+    -fx-text-fill: -light;
+    -fx-background-color: -secondary;
+    -fx-background-radius: 6;
+    -fx-font-weight: 800;
+}
+
+.errorTagLabel {
+    -fx-padding: 4;
+    -fx-text-fill: -light;
+    -fx-background-color: -error;
+    -fx-background-radius: 6;
+    -fx-font-weight: 800;
+}
+
+.warningTagLabel {
+    -fx-padding: 4;
+    -fx-text-fill: -light;
+    -fx-background-color: -warning;
+    -fx-background-radius: 6;
+    -fx-font-weight: 800;
+}
+
 
 .star-filled {
     -fx-fill: -warning;
@@ -214,6 +265,6 @@
 }
 
 .star-empty {
-    -fx-fill: -primary-light;
+    -fx-fill: -light-darker;
     -fx-clip-rule: even-odd;
 }
