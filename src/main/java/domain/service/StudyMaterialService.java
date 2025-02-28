@@ -6,6 +6,7 @@ import domain.model.StudyMaterial;
 import domain.model.User;
 import infrastructure.repository.StudyMaterialRepository;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,4 +46,9 @@ public class StudyMaterialService {
 
         return repository.save(material);
     }
+    public void downloadMaterial(StudyMaterial material, File saveLocation) throws IOException {
+        byte[] content = driveService.downloadFile(material.getLink());
+        Files.write(saveLocation.toPath(), content);
+    }
+
 }

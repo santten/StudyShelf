@@ -1,8 +1,12 @@
 package presentation.components;
 
 import domain.model.StudyMaterial;
+import domain.service.GoogleDriveService;
+import domain.service.StudyMaterialService;
+import infrastructure.repository.StudyMaterialRepository;
 import domain.service.RatingService;
 import infrastructure.repository.RatingRepository;
+import domain.service.Session;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,10 +19,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
 import presentation.GUILogger;
 import presentation.view.SceneManager;
 
+
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -26,8 +33,11 @@ import java.util.Objects;
 import static presentation.view.Screen.SCREEN_HOME;
 
 public class MaterialPage {
+    private static HBox reviewHeading;
+
     public static void setPage(StudyMaterial s){
         /* header: preview and file details*/
+        reviewHeading = new HBox();
         VBox base = new VBox();
         base.getStylesheets().add(Objects.requireNonNull(MaterialPage.class.getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
@@ -68,7 +78,24 @@ public class MaterialPage {
 
         Button downloadBtn = new Button("Download");
         downloadBtn.getStyleClass().add("btnDownload");
-        downloadBtn.setOnAction(event -> GUILogger.info("Pressed button to download " + s.getName()));
+        downloadBtn.setOnAction(event -> {
+            try {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialFileName(s.getName() + "." + s.getFileExtension());
+                File saveLocation = fileChooser.showSaveDialog(null);
+
+                if (saveLocation != null) {
+                    StudyMaterialService materialService = new StudyMaterialService(
+                            new GoogleDriveService(),
+                            new StudyMaterialRepository()
+                    );
+                    materialService.downloadMaterial(s, saveLocation);
+                    GUILogger.info("Successfully downloaded " + s.getName());
+                }
+            } catch (IOException e) {
+                GUILogger.warn("Failed to download file: " + e.getMessage());
+            }
+        });
 
         TextFlow fileDesc = new TextFlow();
         fileDesc.getChildren().add(new Text(s.getDescription()));
@@ -98,21 +125,21 @@ public class MaterialPage {
 
         /* under header: review section*/
         VBox reviews = new VBox();
-        HBox reviewHeading = new HBox();
 
-        Label reviewTitle = new Label("Ratings");
-        reviewTitle.getStyleClass().add("label3");
-        reviewTitle.getStyleClass().add("error");
 
-        double avgRating = new RatingService(new RatingRepository()).getAverageRating(s);
-        Text avgRatingText = new Text(avgRating > 0 ? String.format("(%.1f)", avgRating) : "(No ratings yet)");
+        HBox userRating = new HBox();
+        userRating.setSpacing(10);
+        userRating.setAlignment(Pos.CENTER_LEFT);
 
-        avgRatingText.setStyle("-fx-font-size: 1.2em;");
-        reviewHeading.getChildren().addAll(reviewTitle, Stars.StarRow(avgRating, 1.2, 5), avgRatingText);
-        reviewHeading.setSpacing(10);
-        reviewHeading.setAlignment(Pos.CENTER_LEFT);
+        HBox stars = Stars.StarRow(0, 1.2, 5, rating -> {
+            RatingService ratingService = new RatingService(new RatingRepository());
+            ratingService.rateMaterial(rating, s, Session.getInstance().getCurrentUser());
+            refreshRatings(s);
+        });
+        userRating.getChildren().add(stars);
 
-        reviews.getChildren().addAll(reviewHeading);
+        reviews.getChildren().addAll(reviewHeading, userRating);
+
 
         base.getChildren().addAll(main, reviews);
         ScrollPane wrapper = new ScrollPane(base);
@@ -120,5 +147,32 @@ public class MaterialPage {
         wrapper.setFitToWidth(true);
 
         SceneManager.getInstance().setCenter(wrapper);
+        updateRatingDisplay(s);
+    }
+    private static void refreshRatings(StudyMaterial s) {
+        updateRatingDisplay(s);
+    }
+    private static void updateRatingDisplay(StudyMaterial s) {
+        double avgRating = new RatingService(new RatingRepository()).getAverageRating(s);
+        reviewHeading.getChildren().clear();
+
+        Label reviewTitle = new Label("Ratings");
+        reviewTitle.getStyleClass().add("label3");
+        reviewTitle.getStyleClass().add("error");
+
+        Text avgRatingText = new Text(avgRating > 0 ? String.format("(%.1f)", avgRating) : "(No ratings yet)");
+        avgRatingText.setStyle("-fx-font-size: 1.2em;");
+
+        reviewHeading.getChildren().addAll(
+                reviewTitle,
+                Stars.StarRow(avgRating, 1.2, 5, rating -> {
+                    RatingService ratingService = new RatingService(new RatingRepository());
+                    ratingService.rateMaterial(rating, s, Session.getInstance().getCurrentUser());
+                    refreshRatings(s);
+                }),
+                avgRatingText
+        );
+        reviewHeading.setSpacing(10);
+        reviewHeading.setAlignment(Pos.CENTER_LEFT);
     }
 }

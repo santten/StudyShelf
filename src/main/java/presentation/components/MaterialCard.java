@@ -85,7 +85,7 @@ public class MaterialCard {
         double avgRating = ratingService.getAverageRating(s);
 
         if (avgRating > 0.0) {
-            HBox starContainer = Stars.StarRow(avgRating, 0.7);
+            HBox starContainer = Stars.StarRow(avgRating, 0.7, 5, null);
             ratingBox.getChildren().add(starContainer);
         }
 

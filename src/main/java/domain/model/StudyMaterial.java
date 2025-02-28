@@ -168,5 +168,16 @@ public class StudyMaterial {
     public void setPreviewImage(byte[] previewImage) {
         this.previewImage = previewImage;
     }
+    public String getFileExtension() {
+        switch (fileType) {
+            case "application/pdf": return "pdf";
+            case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": return "xlsx";
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": return "docx";
+            case "image/jpeg": return "jpg";
+            case "image/png": return "png";
+            default: return fileType.split("/")[1];
+        }
+    }
+
 
 }

@@ -15,6 +15,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
@@ -62,4 +63,20 @@ public class GoogleDriveService {
 
         return uploadedFile.getWebViewLink();
     }
+
+    public byte[] downloadFile(String fileUrl) throws IOException {
+        String fileId = extractFileIdFromUrl(fileUrl);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        driveService.files().get(fileId)
+                .executeMediaAndDownloadTo(outputStream);
+        return outputStream.toByteArray();
+    }
+
+    private String extractFileIdFromUrl(String url) {
+        String[] parts = url.split("/");
+        return parts[5];
+    }
+
+
 }
