@@ -40,12 +40,13 @@ class StudyMaterialServiceTest {
         String name = "Test Material";
         String description = "Test Description";
         String expectedDriveUrl = "https://drive.google.com/file/test";
+        Category category = new Category("Java Programming", uploader);
 
         when(driveService.uploadFile(content, filename, "text/plain")).thenReturn(expectedDriveUrl);
         when(materialRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
 
         // Execute
-        StudyMaterial result = materialService.uploadMaterial(content, filename, uploader, name, description);
+        StudyMaterial result = materialService.uploadMaterial(content, filename, uploader, name, description, category);
 
         // Verify
         assertNotNull(result);
