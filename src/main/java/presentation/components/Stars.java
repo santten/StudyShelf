@@ -1,5 +1,6 @@
 package presentation.components;
 
+import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -8,12 +9,20 @@ import javafx.scene.shape.SVGPath;
 import static javafx.scene.shape.FillRule.EVEN_ODD;
 
 public class Stars {
-    public static HBox StarRow(double fillAmount, double scale){
-        return StarRow(fillAmount, scale, 0);
-    }
 
-    public static HBox StarRow(double fillAmount, double scale, int spacing){
+    public static HBox StarRow(double fillAmount, double scale, int spacing, RatingCallback callback){
         HBox base = new HBox();
+        base.setOnMouseClicked(e -> {
+            Node source = (Node) e.getSource();
+            double width = source.getBoundsInLocal().getWidth();
+            double x = e.getX();
+            int rating = (int) Math.ceil((x / width) * 5);
+            updateStarFill(base, rating);
+
+            if (callback != null) {
+                callback.onRatingSelected(rating);
+            }
+        });
         for (int i = 1; i <= 5; i++) {
             StackPane starContainer = new StackPane();
             SVGPath emptyStar = new SVGPath();
@@ -41,5 +50,20 @@ public class Stars {
         }
         base.setSpacing(spacing);
         return base;
+    }
+    public interface RatingCallback {
+        void onRatingSelected(int rating);
+    }
+    private static void updateStarFill(HBox starContainer, int rating) {
+        for (int i = 0; i < starContainer.getChildren().size(); i++) {
+            StackPane starPane = (StackPane) starContainer.getChildren().get(i);
+            SVGPath filledStar = (SVGPath) starPane.getChildren().get(1);
+
+            Rectangle clip = new Rectangle();
+            double fillPercentage = Math.max(0, Math.min(1, rating - i));
+            clip.setWidth(filledStar.getBoundsInLocal().getWidth() * fillPercentage);
+            clip.setHeight(filledStar.getBoundsInLocal().getHeight());
+            filledStar.setClip(clip);
+        }
     }
 }
