@@ -178,6 +178,23 @@ public class StudyMaterial {
             case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": return "docx";
             case "image/jpeg": return "jpg";
             case "image/png": return "png";
+            case "application/zip": return "zip";
+            case "application/x-rar-compressed": return "rar";
+            case "application/x-7z-compressed": return "7z";
+            case "application/x-tar": return "tar";
+            case "application/gzip": return "gz";
+            case "application/x-bzip2": return "bz2";
+            case "text/plain": return "txt";
+            case "text/csv": return "csv";
+            case "application/vnd.ms-powerpoint": return "ppt";
+            case "application/vnd.openxmlformats-officedocument.presentationml.presentation": return "pptx";
+            case "application/vnd.ms-excel": return "xls";
+            case "image/gif": return "gif";
+            case "video/mp4": return "mp4";
+            case "video/x-msvideo": return "avi";
+            case "video/quicktime": return "mov";
+            case "audio/mpeg": return "mp3";
+            case "application/java-archive": return "jar";
             default: return fileType.split("/")[1];
         }
     }
