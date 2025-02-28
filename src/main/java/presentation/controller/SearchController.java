@@ -8,9 +8,11 @@ import infrastructure.repository.StudyMaterialRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import presentation.components.ListItem;
+
 import java.util.List;
 
-import static presentation.components.ListItem.searchResultGraphic;
+import static presentation.components.ListItem.listItemGraphic;
 
 public class SearchController {
 
@@ -56,13 +58,13 @@ public class SearchController {
 
             if (checkbox_includeMaterials.isSelected()) {
                 List<StudyMaterial> materialResults = searchService.searchMaterials(query);
-                materialResults.forEach(material -> resultsListView.getItems().add(searchResultGraphic(material)));
+                materialResults.forEach(material -> resultsListView.getItems().add(ListItem.listItemGraphic(material)));
             }
 
             if (checkbox_includeCategories.isSelected()) {
                 List<Category> categoryResults = searchService.searchCategories(query);
                 categoryResults.forEach(category ->
-                        resultsListView.getItems().add(searchResultGraphic(category))
+                        resultsListView.getItems().add(ListItem.listItemGraphic(category))
                 );
             }
         }

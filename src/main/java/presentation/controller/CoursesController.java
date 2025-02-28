@@ -6,12 +6,11 @@ import infrastructure.repository.CategoryRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
-import presentation.logger.GUILogger;
+import presentation.GUILogger;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
@@ -61,7 +60,7 @@ public class CoursesController {
             List<StudyMaterial> materials  = categoryRepo.findMaterialsByCategory(c);
             GUILogger.info("Loading materials " + materials.size() + " for category " + c.getCategoryName());
             if (materials.isEmpty()){
-                courseContainer.getChildren().add(new Text ("(This category doesn't have any materials yet.)"));
+                courseContainer.getChildren().add(new Text ("(This course doesn't contain any materials yet.)"));
             } else {
                 courseContainer.getChildren().add(MaterialCard.materialCardScrollHBox(materials));
             }

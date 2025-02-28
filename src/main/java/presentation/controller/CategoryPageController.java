@@ -1,17 +1,10 @@
 package presentation.controller;
 
 import domain.model.Category;
-import domain.model.StudyMaterial;
-import infrastructure.repository.CategoryRepository;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import presentation.components.MaterialCard;
-import presentation.logger.GUILogger;
-
-import java.util.List;
+import presentation.GUILogger;
 
 public class CategoryPageController {
     @FXML public Text txt_courseTitle;

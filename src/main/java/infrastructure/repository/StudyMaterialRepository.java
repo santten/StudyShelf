@@ -1,6 +1,8 @@
 package infrastructure.repository;
 
+import domain.model.Category;
 import domain.model.StudyMaterial;
+import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -34,6 +36,7 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
         cq.where(cb.or(namePredicate, descPredicate));
         return em.createQuery(cq).getResultList();
     }
+
     public List<StudyMaterial> findAllStudyMaterials() {
         EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
         try {
@@ -42,5 +45,17 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
         } finally {
             em.close();
         }
+    }
+
+    public List<StudyMaterial> findByUser(User user) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<StudyMaterial> query = cb.createQuery(StudyMaterial.class);
+        Root<StudyMaterial> root = query.from(StudyMaterial.class);
+
+        Predicate userPredicate = cb.equal(root.get("uploader"), user);
+
+        query.where(cb.and(userPredicate));
+        return em.createQuery(query).getResultList();
     }
 }

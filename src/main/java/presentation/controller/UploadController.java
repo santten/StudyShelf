@@ -21,14 +21,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
-import presentation.logger.GUILogger;
+import presentation.GUILogger;
 import presentation.view.SceneManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Optional;
+// <<<<<<< jiayue-branch
+// import java.util.Optional;
+// =======
+// >>>>>>> main
 import java.util.stream.Stream;
 
 import static domain.model.RoleType.STUDENT;
