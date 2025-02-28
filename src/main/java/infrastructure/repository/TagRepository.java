@@ -15,4 +15,18 @@ public class TagRepository extends BaseRepository<Tag> {
         }
     }
 
+    public Tag findByName(String tagName) {
+        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        try {
+            return em.createQuery("SELECT t FROM Tag t WHERE t.tagName = :tagName", Tag.class)
+                    .setParameter("tagName", tagName)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+
 }
