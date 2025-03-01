@@ -74,6 +74,16 @@
     -fx-fill: -error;
 }
 
+.light {
+    -fx-text-fill: -light;
+    -fx-fill: -light;
+}
+
+.warning {
+    -fx-text-fill: -warning;
+    -fx-fill: -warning;
+}
+
 /* button styles */
 
 .btnS {
@@ -141,6 +151,12 @@
     -fx-padding: 8px;
 }
 
+.buttonEmpty {
+    -fx-cursor: hand;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
 /* basic */
 
 .hyperlink {
@@ -179,6 +195,19 @@
     -fx-border-color: transparent;
     -fx-border-width: 0;
 }
+
+.list-view {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-border-color: transparent;
+}
+
+.list-cell {
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+
 
 .materialCardM {
     -fx-min-width: 224px;
