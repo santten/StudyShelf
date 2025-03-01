@@ -246,7 +246,8 @@
 
 
 .tag {
-    -fx-padding: 3;
+    -fx-padding: 4;
+    -fx-background-radius: 4;
     -fx-text-fill: -light;
     -fx-background-color: -primary-light;
     -fx-cursor: hand;
@@ -254,6 +255,24 @@
 
 .tag:hover {
     -fx-background-color: -primary;
+}
+
+.tagNotClickable {
+    -fx-padding: 4;
+    -fx-background-radius: 4;
+    -fx-background-color: -secondary;
+    -fx-text-fill: -light;
+    -fx-fill: -light;
+    -fx-margin: 4;
+}
+
+.tagRemoveBtn {
+    -fx-cursor: hand;
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-text-fill: -light;
+    -fx-margin: 0, 0, 0, 4;
+    -fx-padding: 0;
 }
 
 .primaryTagLabel {

@@ -186,7 +186,7 @@ public class SceneManager {
         vbox.setPadding(new Insets(20, 20, 20, 20));
         vbox.setSpacing(12);
 
-        Label title = new Label("Materials with tag " + tag.getTagName());
+        Label title = new Label("Materials tagged \"" + tag.getTagName() + "\"");
         title.getStyleClass().addAll("label3", "primary-light");
         vbox.getChildren().add(title);
 

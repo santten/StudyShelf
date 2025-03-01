@@ -116,9 +116,8 @@ public class MaterialPage {
 
         TextFlow tagContainer = new TextFlow();
         Set<Tag> tags = s.getTags();
+        tagContainer.setLineSpacing(10);
         tags.forEach(tag -> tagContainer.getChildren().addAll(TagButton.getBtn(tag), new Text("  ")));
-
-        GUILogger.info("tag amt: " + tags.size());
 
         left.getChildren().addAll(title, uploaderLabels, fileDetails, downloadBtn,
                 course, fileDesc, tagContainer);
