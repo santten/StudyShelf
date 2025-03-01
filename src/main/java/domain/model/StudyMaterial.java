@@ -178,7 +178,7 @@ public class StudyMaterial {
             case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": return "docx";
             case "image/jpeg": return "jpg";
             case "image/png": return "png";
-            case "application/zip": return "zip";
+            case "application/x-zip-compressed": return "zip";
             case "application/x-rar-compressed": return "rar";
             case "application/x-7z-compressed": return "7z";
             case "application/x-tar": return "tar";
@@ -195,6 +195,7 @@ public class StudyMaterial {
             case "video/quicktime": return "mov";
             case "audio/mpeg": return "mp3";
             case "application/java-archive": return "jar";
+            case "application/x-msdownload": return "exe";
             default: return fileType.split("/")[1];
         }
     }
