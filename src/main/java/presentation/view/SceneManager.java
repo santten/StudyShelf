@@ -8,6 +8,7 @@ import domain.model.StudyMaterial;
 import domain.model.User;
 import domain.model.Category;
 
+import domain.service.Session;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.UserRepository;
 import infrastructure.repository.CategoryRepository;
