@@ -1,10 +1,6 @@
 package presentation.view;
-// import domain.model.StudyMaterial;
-// import domain.service.Session;
-// import presentation.components.MaterialCard;
-
-
 import domain.model.StudyMaterial;
+
 import domain.model.User;
 import domain.model.Category;
 
@@ -20,22 +16,14 @@ import javafx.scene.layout.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-// import javafx.scene.control.Hyperlink;
-// import javafx.scene.control.ScrollPane;
-// import javafx.scene.layout.BorderPane;
-// import javafx.scene.layout.GridPane;
-// import javafx.scene.layout.HBox;
-// import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
 
-import static domain.model.RoleType.STUDENT;
 import static presentation.view.Screen.*;
 
-// import presentation.logger.GUILogger;
 import presentation.components.CategoryPage;
 import presentation.components.MaterialPage;
 import presentation.components.ProfilePage;
@@ -188,8 +176,6 @@ public class SceneManager {
     }
 
     public void setScreen(Screen screen) throws IOException {
-        Session session = Session.getInstance();
-
         if (!instance.logged){
             instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(screen == SCREEN_SIGNUP ? "/fxml/signup.fxml" : "/fxml/login.fxml")));
         } else {
