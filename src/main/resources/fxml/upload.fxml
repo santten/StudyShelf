@@ -16,6 +16,7 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.FlowPane?>
 <VBox fx:id="mainVBoxUpload" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="377.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.UploadController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -37,7 +38,7 @@
          <RowConstraints maxHeight="71.33334350585938" minHeight="17.333343505859375" prefHeight="48.0" vgrow="SOMETIMES" />
          <RowConstraints maxHeight="71.33334350585938" minHeight="20.666656494140625" prefHeight="24.0" vgrow="SOMETIMES" />
          <RowConstraints maxHeight="160.66666666666669" minHeight="64.0" prefHeight="64.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="160.66666666666669" minHeight="32.0" prefHeight="36.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="160.0" minHeight="160.0" prefHeight="160.0" vgrow="SOMETIMES" />
          <RowConstraints maxHeight="119.99997965494794" minHeight="48.0" prefHeight="48.0" vgrow="ALWAYS" />
          <RowConstraints maxHeight="119.99997965494794" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
          <RowConstraints maxHeight="119.99997965494794" minHeight="32.0" prefHeight="82.0" vgrow="SOMETIMES" />
@@ -62,10 +63,19 @@
             </padding>
          </Label>
       </HBox>
-      <Label style="-fx-padding: 4;" text="Tags" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BASELINE" />
-      <ComboBox fx:id="comboTags" prefHeight="23.0" prefWidth="471.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-      <Label alignment="TOP_LEFT" style="-fx-padding: 4;" text="Course" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BASELINE" />
-      <ChoiceBox fx:id="choice_category" prefHeight="23.0" prefWidth="471.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Label text="Tags" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+      <VBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <padding><Insets top="5" bottom="5"/></padding>
+         <Label text="Select existing tag:"/>
+         <ChoiceBox fx:id="tagChoice" prefWidth="400"/>
+         <Label text="Or enter new tag:"/>
+         <TextField fx:id="manualTagInput" prefWidth="400" promptText="Type a tag and press Enter"/>
+         <Label text="Selected tags:"/>
+         <FlowPane fx:id="tagChips" hgap="5" vgap="5" prefWrapLength="400">
+            <padding><Insets top="5" bottom="5"/></padding>
+         </FlowPane>
+      </VBox>
+      <Label style="-fx-padding: 4;" text="Course" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+      <ChoiceBox fx:id="choice_category" prefWidth="471.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
    </GridPane>
 </VBox>

@@ -8,16 +8,16 @@ import domain.service.TagService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.TagRepository;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
@@ -50,7 +50,9 @@ public class UploadController {
 
     @FXML public Button btn_createCourse;
     @FXML public TextField field_courseName;
-    @FXML public ComboBox<Tag> comboTags;
+    @FXML private TextField manualTagInput;
+    @FXML private FlowPane tagChips;
+    @FXML private ChoiceBox<Tag> tagChoice;
     private TagService tagService;
     private Set<String> pendingTags = new HashSet<>();
     File currentFile;
@@ -233,10 +235,8 @@ public class UploadController {
 
     }
     private void setupTagInput() {
-        comboTags.setEditable(true);
-        comboTags.getItems().addAll(tagService.getAllTags());
-
-        comboTags.setConverter(new StringConverter<>() {
+        tagChoice.setItems(FXCollections.observableArrayList(tagService.getAllTags()));
+        tagChoice.setConverter(new StringConverter<>() {
             @Override
             public String toString(Tag tag) {
                 return tag != null ? tag.getTagName() : "";
@@ -244,15 +244,50 @@ public class UploadController {
 
             @Override
             public Tag fromString(String string) {
-                Arrays.stream(string.split(","))
-                        .map(String::trim)
-                        .filter(s -> !s.isEmpty())
-                        .forEach(tagName -> pendingTags.add(tagName.toLowerCase()));
-
-                return null;
+                return null; // Not used
             }
         });
 
-        comboTags.setPromptText("Enter tags separated by commas");
+        manualTagInput.setOnAction(e -> {
+            String tagText = manualTagInput.getText().trim();
+            if (!tagText.isEmpty() && !pendingTags.contains(tagText.toLowerCase())) {
+                addTagChip(tagText);
+                manualTagInput.clear();
+            }
+        });
+
+        tagChoice.getSelectionModel().selectedItemProperty().addListener((obs, old, newTag) -> {
+            if (newTag != null) {
+                String tagName = newTag.getTagName();
+                if (!pendingTags.contains(tagName.toLowerCase())) {
+                    addTagChip(tagName);
+                }
+                Platform.runLater(() -> tagChoice.getSelectionModel().clearSelection());
+            }
+        });
     }
+
+    private void addTagChip(String tagName) {
+        HBox chip = new HBox(5);
+        chip.setAlignment(Pos.CENTER);
+        chip.setPadding(new Insets(3, 8, 3, 8));
+        chip.setStyle("-fx-background-color: #e0e0e0; -fx-background-radius: 15; -fx-border-radius: 15;");
+
+        Label label = new Label(tagName);
+        Button removeBtn = new Button("×");
+        removeBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 14;");
+
+        removeBtn.setOnAction(e -> {
+            tagChips.getChildren().remove(chip);
+            pendingTags.remove(tagName.toLowerCase());
+        });
+
+        chip.getChildren().addAll(label, removeBtn);
+        tagChips.getChildren().add(chip);
+        pendingTags.add(tagName.toLowerCase());
+    }
+
+
+
+
 }
