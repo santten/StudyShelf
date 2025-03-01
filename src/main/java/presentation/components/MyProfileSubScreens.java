@@ -164,31 +164,12 @@ public class MyProfileSubScreens {
                 buttonL.setGraphic(left);
                 buttonL.setMinWidth(508);
 
-                Button buttonR = new Button();
-
                 SVGPath svgDel = new SVGPath();
                 svgDel.setContent(SVGContents.delete());
                 svgDel.getStyleClass().add("error");
                 svgDel.setFillRule(EVEN_ODD);
                 svgDel.setScaleX(1.5);
                 svgDel.setScaleY(1.5);
-
-                buttonR.setGraphic(svgDel);
-                buttonR.setMinWidth(30);
-                buttonR.setMaxWidth(30);
-                buttonR.setMinHeight(30);
-
-                buttonR.setOnAction(e -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will delete the materials in it. Deletion can not be undone.", ButtonType.YES, ButtonType.NO);
-                    alert.setHeaderText("Are you sure you want to delete your course \"" + c.getCategoryName() + "\"?");
-                    alert.setTitle("Deleting course \"" + c.getCategoryName() + "\"");
-
-                    alert.showAndWait().ifPresent(response -> {
-                        if (response == ButtonType.YES) {
-                            GUILogger.info("User is deleting course " + c.getCategoryName());
-                        }
-                    });
-                });
 
                 buttonL.setOnAction(e -> {
                     SceneManager sm = SceneManager.getInstance();
@@ -200,11 +181,9 @@ public class MyProfileSubScreens {
                 });
 
                 buttonL.setAlignment(Pos.CENTER_LEFT);
-                buttonR.setAlignment(Pos.CENTER);
-                buttonR.getStyleClass().add("buttonEmpty");
                 buttonL.getStyleClass().add("buttonEmpty");
 
-                hboxlist.add(new HBox(buttonL, buttonR));
+                hboxlist.add(new HBox(buttonL));
             });
 
             base.getChildren().add(ListItem.toListView(hboxlist, 420));
