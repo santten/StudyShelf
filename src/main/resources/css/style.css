@@ -249,6 +249,7 @@
     -fx-padding: 3;
     -fx-text-fill: -light;
     -fx-background-color: -primary-light;
+    -fx-cursor: hand;
 }
 
 .tag:hover {
