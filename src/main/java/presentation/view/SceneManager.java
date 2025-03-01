@@ -1,11 +1,13 @@
 package presentation.view;
 import domain.model.StudyMaterial;
 
+import domain.model.Tag;
 import domain.model.User;
 import domain.model.Category;
 
 import domain.service.Session;
 import infrastructure.repository.StudyMaterialRepository;
+import infrastructure.repository.TagRepository;
 import infrastructure.repository.UserRepository;
 import infrastructure.repository.CategoryRepository;
 
@@ -20,11 +22,14 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static presentation.view.Screen.*;
 
 import presentation.components.CategoryPage;
+import presentation.components.ListItem;
 import presentation.components.MaterialPage;
 import presentation.components.ProfilePage;
 import presentation.GUILogger;
@@ -172,6 +177,31 @@ public class SceneManager {
         vbox.setPadding(new Insets(20, 20, 20, 20));
 
         vbox.getChildren().addAll(title, label, link);
+        instance.current.setCenter(vbox);
+    }
+
+    public void showMaterialsWithTag(Tag tag) {
+        VBox vbox = new VBox();
+        vbox.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+        vbox.setPadding(new Insets(20, 20, 20, 20));
+        vbox.setSpacing(12);
+
+        Label title = new Label("Materials tagged \"" + tag.getTagName() + "\"");
+        title.getStyleClass().addAll("label3", "primary-light");
+        vbox.getChildren().add(title);
+
+        StudyMaterialRepository sRepo = new StudyMaterialRepository();
+        List<StudyMaterial> list = sRepo.findByTag(tag);
+        if (!list.isEmpty()){
+            List<Node> buttonList = new ArrayList<>();
+            list.forEach(sm -> {
+                buttonList.add(ListItem.listItemGraphic(sm));
+            });
+            vbox.getChildren().add(ListItem.toListView(buttonList));
+        } else {
+            vbox.getChildren().add(new Text("No materials exist with this tag yet!"));
+        }
+
         instance.current.setCenter(vbox);
     }
 

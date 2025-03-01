@@ -2,6 +2,7 @@ package infrastructure.repository;
 
 import domain.model.Category;
 import domain.model.StudyMaterial;
+import domain.model.Tag;
 import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
@@ -46,6 +47,19 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
             em.close();
         }
     }
+
+    public List<StudyMaterial> findByTag(Tag tag) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<StudyMaterial> cq = cb.createQuery(StudyMaterial.class);
+        Root<StudyMaterial> root = cq.from(StudyMaterial.class);
+
+        Predicate tagPredicate = cb.isMember(tag, root.get("tags"));
+
+        cq.where(cb.or(tagPredicate));
+        return em.createQuery(cq).getResultList();
+    }
+
 
     public List<StudyMaterial> findByUser(User user) {
         EntityManager em = getEntityManager();
