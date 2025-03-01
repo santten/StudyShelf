@@ -9,7 +9,6 @@ import infrastructure.config.DatabaseInitializer;
 
 public class Launcher {
 
-
     private static void testRatings() {
         UserRepository userRepo = new UserRepository();
         StudyMaterialRepository materialRepo = new StudyMaterialRepository();

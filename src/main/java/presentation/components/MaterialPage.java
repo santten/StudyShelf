@@ -7,6 +7,10 @@ import infrastructure.repository.StudyMaterialRepository;
 import domain.service.RatingService;
 import infrastructure.repository.RatingRepository;
 import domain.service.Session;
+import domain.service.ReviewService;
+import infrastructure.repository.ReviewRepository;
+import domain.model.Review;
+import javafx.scene.control.TextArea;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -28,6 +32,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 import static presentation.view.Screen.SCREEN_HOME;
@@ -126,20 +131,7 @@ public class MaterialPage {
         /* under header: review section*/
         VBox reviews = new VBox();
 
-
-        HBox userRating = new HBox();
-        userRating.setSpacing(10);
-        userRating.setAlignment(Pos.CENTER_LEFT);
-
-        HBox stars = Stars.StarRow(0, 1.2, 5, rating -> {
-            RatingService ratingService = new RatingService(new RatingRepository());
-            ratingService.rateMaterial(rating, s, Session.getInstance().getCurrentUser());
-            refreshRatings(s);
-        });
-        userRating.getChildren().add(stars);
-
-        reviews.getChildren().addAll(reviewHeading, userRating);
-
+        reviews.getChildren().add(reviewHeading);
 
         base.getChildren().addAll(main, reviews);
         ScrollPane wrapper = new ScrollPane(base);
@@ -148,10 +140,11 @@ public class MaterialPage {
 
         SceneManager.getInstance().setCenter(wrapper);
         updateRatingDisplay(s);
+        VBox reviewSection = new VBox();
+        displayReviews(s, reviewSection);
+        reviews.getChildren().add(reviewSection);
     }
-    private static void refreshRatings(StudyMaterial s) {
-        updateRatingDisplay(s);
-    }
+
     private static void updateRatingDisplay(StudyMaterial s) {
         double avgRating = new RatingService(new RatingRepository()).getAverageRating(s);
         reviewHeading.getChildren().clear();
@@ -168,11 +161,65 @@ public class MaterialPage {
                 Stars.StarRow(avgRating, 1.2, 5, rating -> {
                     RatingService ratingService = new RatingService(new RatingRepository());
                     ratingService.rateMaterial(rating, s, Session.getInstance().getCurrentUser());
-                    refreshRatings(s);
+                    updateRatingDisplay(s);
                 }),
                 avgRatingText
         );
         reviewHeading.setSpacing(10);
         reviewHeading.setAlignment(Pos.CENTER_LEFT);
+    }
+
+
+    private static void displayReviews(StudyMaterial material, VBox container) {
+        ReviewService reviewService = new ReviewService(new ReviewRepository());
+        List<Review> reviews = reviewService.getReviewsForMaterial(material);
+
+        container.getChildren().clear();
+        container.setSpacing(15);
+
+        Label reviewSectionTitle = new Label("Reviews");
+        reviewSectionTitle.getStyleClass().add("label3");
+
+        TextArea newReviewInput = new TextArea();
+        newReviewInput.setPromptText("Write your review...");
+        newReviewInput.setPrefRowCount(3);
+        newReviewInput.setWrapText(true);
+
+        Button submitReview = new Button("Submit Review");
+        submitReview.getStyleClass().add("btnPrimary");
+        submitReview.setOnAction(e -> {
+            String reviewText = newReviewInput.getText().trim();
+            if (!reviewText.isEmpty()) {
+                reviewService.addReview(
+                        Session.getInstance().getCurrentUser(),
+                        material,
+                        reviewText
+                );
+                newReviewInput.clear();
+                displayReviews(material, container);
+            }
+        });
+
+        container.getChildren().addAll(reviewSectionTitle, newReviewInput, submitReview);
+
+        for (Review review : reviews) {
+            VBox reviewBox = new VBox(5);
+            reviewBox.getStyleClass().add("reviewBox");
+
+            Hyperlink reviewerName = new Hyperlink(review.getUser().getFullName());
+            reviewerName.setOnAction(e -> {
+                try {
+                    SceneManager.getInstance().displayProfile(review.getUser().getUserId());
+                } catch (IOException ex) {
+                    SceneManager.getInstance().displayErrorPage("User not found.", SCREEN_HOME, "Go to Home");
+                }
+            });
+
+            Text reviewText = new Text(review.getReviewText());
+            reviewText.setWrappingWidth(500);
+
+            reviewBox.getChildren().addAll(reviewerName, reviewText);
+            container.getChildren().add(reviewBox);
+        }
     }
 }

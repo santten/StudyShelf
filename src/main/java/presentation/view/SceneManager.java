@@ -1,4 +1,8 @@
 package presentation.view;
+// import domain.model.StudyMaterial;
+// import domain.service.Session;
+// import presentation.components.MaterialCard;
+
 
 import domain.model.StudyMaterial;
 import domain.model.User;
@@ -15,14 +19,22 @@ import javafx.scene.layout.*;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+// import javafx.scene.control.Hyperlink;
+// import javafx.scene.control.ScrollPane;
+// import javafx.scene.layout.BorderPane;
+// import javafx.scene.layout.GridPane;
+// import javafx.scene.layout.HBox;
+// import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
 
+import static domain.model.RoleType.STUDENT;
 import static presentation.view.Screen.*;
 
+// import presentation.logger.GUILogger;
 import presentation.components.CategoryPage;
 import presentation.components.MaterialPage;
 import presentation.components.ProfilePage;
@@ -69,6 +81,45 @@ public class SceneManager {
                 GUILogger.warn("DNE: Tried to go to category with id " + id);
                 displayErrorPage("This category does not exist.", SCREEN_HOME, "Go to home page");
             } else {
+//                 VBox vbox = new VBox();
+
+//                 vbox.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
+//                 vbox.setSpacing(12);
+//                 vbox.setPadding(new Insets(20, 20, 20, 20));
+//                 Text title = new Text(c.getCategoryName());
+//                 title.getStyleClass().add("heading3");
+//                 title.getStyleClass().add("secondary");
+
+//                 Text author = new Text("Course by " + c.getCreator().getFullName());
+//                 VBox header = new VBox();
+//                 header.getChildren().addAll(title, author);
+
+//                 vbox.getChildren().add(header);
+
+//                 List<StudyMaterial> creatorMaterials = repo.findMaterialsByUserInCategory(c.getCreator(), c);
+//                 if (!creatorMaterials.isEmpty()) {
+//                     Text text = new Text("Materials from " + c.getCreator().getFullName());
+//                     text.getStyleClass().add("heading4");
+//                     text.getStyleClass().add("secondary");
+
+//                     vbox.getChildren().addAll(
+//                             text,
+//                             MaterialCard.materialCardScrollHBox(creatorMaterials));
+//                 }
+
+//                 List<StudyMaterial> otherMaterials = repo.findMaterialsExceptUserInCategory(c.getCreator(), c);
+//                 if (!otherMaterials.isEmpty()) {
+//                     GUILogger.info(String.valueOf(otherMaterials.size()));
+//                     Text text = new Text("Materials from others");
+//                     text.getStyleClass().add("heading4");
+//                     text.getStyleClass().add("secondary");
+
+//                     vbox.getChildren().addAll(
+//                             text,
+//                             MaterialCard.materialCardScrollHBox(otherMaterials));
+//                 }
+
+//                 instance.current.setCenter(vbox);
                 CategoryPage.setPage(c);
             }
         }
@@ -136,6 +187,8 @@ public class SceneManager {
     }
 
     public void setScreen(Screen screen) throws IOException {
+        Session session = Session.getInstance();
+
         if (!instance.logged){
             instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(screen == SCREEN_SIGNUP ? "/fxml/signup.fxml" : "/fxml/login.fxml")));
         } else {

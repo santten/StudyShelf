@@ -31,6 +31,7 @@ build/
 
 ### google cloud storage credentials###
 src/main/resources/credentials/
+src/main/resources/META-INF/
 *.json
 
 tokens/
