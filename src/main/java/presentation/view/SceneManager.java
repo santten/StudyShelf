@@ -1,7 +1,7 @@
 package presentation.view;
-// import domain.model.StudyMaterial;
-// import domain.service.Session;
-// import presentation.components.MaterialCard;
+import domain.model.StudyMaterial;
+import domain.service.Session;
+import presentation.components.MaterialCard;
 
 
 import domain.model.StudyMaterial;
@@ -187,8 +187,6 @@ public class SceneManager {
     }
 
     public void setScreen(Screen screen) throws IOException {
-        Session session = Session.getInstance();
-
         if (!instance.logged){
             instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(screen == SCREEN_SIGNUP ? "/fxml/signup.fxml" : "/fxml/login.fxml")));
         } else {

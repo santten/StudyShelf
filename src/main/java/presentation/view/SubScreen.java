@@ -1,6 +1,8 @@
 package presentation.view;
 
 public enum SubScreen {
-    PROFILE_PROFILE,
-    PROFILE_UPLOADED
+    PROFILE_FILES,
+    PROFILE_COURSES,
+    PROFILE_REVIEWS,
+    PROFILE_SETTINGS
 }

@@ -6,6 +6,7 @@ import domain.model.User;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -42,10 +43,10 @@ public class ProfilePage {
             cTitle.getStyleClass().add("secondary");
 
             List<Category> categoryList = cRepo.findCategoriesByUser(u);
-            List<Button> buttonList = new ArrayList<>();
+            List<Node> buttonList = new ArrayList<>();
 
             categoryList.forEach(c -> buttonList.add(listItemGraphic(c)));
-            ListView<Button> cView = ListItem.toListView(buttonList);
+            ListView<Node> cView = ListItem.toListView(buttonList);
 
             base.getChildren().addAll(cTitle, cView);
         }
@@ -58,10 +59,10 @@ public class ProfilePage {
             mTitle.getStyleClass().add("label4");
             mTitle.getStyleClass().add("primary-light");
 
-            List<Button> buttonList = new ArrayList<>();
+            List<Node> buttonList = new ArrayList<>();
 
             userMaterials.forEach(m -> buttonList.add(listItemGraphic(m)));
-            ListView<Button> mView = ListItem.toListView(buttonList);
+            ListView<Node> mView = ListItem.toListView(buttonList);
 
             base.getChildren().addAll(mTitle, mView);
         }
