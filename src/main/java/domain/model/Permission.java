@@ -31,13 +31,10 @@ public class Permission {
     public Permission(PermissionType name) {
         this.name = name;
     }
-
     public int getId() { return id; }
     public PermissionType getName() { return name; }
-
     public void setName(PermissionType name) {
         this.name = name;
     }
-
     public Set<Role> getRoles() { return roles; }
 }

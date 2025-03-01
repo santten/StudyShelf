@@ -60,12 +60,30 @@ public class User {
 
 
     // Checks if user has permission
+//    public boolean hasPermission(PermissionType permissionType) {
+//        if (role == null) {
+//            return false;
+//        }
+//        return role.getPermissions().stream()
+//                .anyMatch(permission -> permission.getName().equals(permissionType));
+//    }
     public boolean hasPermission(PermissionType permissionType) {
-        if (role == null) {
+        if (role == null || role.getPermissions() == null) {
             return false;
         }
-        return role.getPermissions().stream()
-                .anyMatch(permission -> permission.getName().equals(permissionType));
+        return role.getPermissions().contains(permissionType);
+    }
+
+    public boolean isAdmin() {
+        return role != null && role.getName() == RoleType.ADMIN;
+    }
+
+    public boolean isTeacher() {
+        return role != null && role.getName() == RoleType.TEACHER;
+    }
+
+    public boolean isStudent() {
+        return role != null && role.getName() == RoleType.STUDENT;
     }
 
 
