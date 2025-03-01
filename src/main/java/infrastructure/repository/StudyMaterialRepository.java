@@ -58,4 +58,20 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
         query.where(cb.and(userPredicate));
         return em.createQuery(query).getResultList();
     }
+    public StudyMaterial update(StudyMaterial material) {
+        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            StudyMaterial managedMaterial = em.find(StudyMaterial.class, material.getMaterialId());
+
+            managedMaterial.getTags().clear();
+            managedMaterial.getTags().addAll(material.getTags());
+
+            em.getTransaction().commit();
+            return managedMaterial;
+        } finally {
+            em.close();
+        }
+    }
 }

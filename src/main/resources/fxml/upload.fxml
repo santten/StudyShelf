@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.ComboBox?>
 <VBox fx:id="mainVBoxUpload" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="377.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.UploadController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -49,10 +50,10 @@
       </TextField>
       <Label alignment="TOP_LEFT" style="-fx-padding: 4;" text="Description" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BASELINE" />
       <TextArea fx:id="field_desc" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Label fx:id="text_uploadingAs" style="-fx-text-fill: -primary-light;" text="Uploading as Santtu Saaranen" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <Label fx:id="text_uploadingAs" style="-fx-text-fill: -primary-light;" text="Uploading as Santtu Saaranen" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <Label style="-fx-padding: 4;" text="File" GridPane.halignment="RIGHT" GridPane.valignment="BASELINE" />
-      <Button fx:id="btn_uploadMaterial" disable="true" mnemonicParsing="false" styleClass="btnS" text="Upload" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <CheckBox fx:id="checkbox_uploadAgreement" mnemonicParsing="false" text="I guarantee that I have the rights to upload this file under my name, and I understand that this material may be deleted without warning if it is inappropriate or doesn't follow the rules of StudyShelf." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Button fx:id="btn_uploadMaterial" disable="true" mnemonicParsing="false" styleClass="btnS" text="Upload" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <CheckBox fx:id="checkbox_uploadAgreement" mnemonicParsing="false" text="I guarantee that I have the rights to upload this file under my name, and I understand that this material may be deleted without warning if it is inappropriate or doesn't follow the rules of StudyShelf." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <HBox prefHeight="100.0" prefWidth="469.0" GridPane.columnIndex="1">
          <Button fx:id="btn_getFile" maxWidth="90.0" minWidth="90.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="90.0" text="Choose File" />
          <Label fx:id="label_fileTitle" style="-fx-text-fill: -primary-light;">
@@ -61,7 +62,10 @@
             </padding>
          </Label>
       </HBox>
-      <Label alignment="TOP_LEFT" style="-fx-padding: 4;" text="Course" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BASELINE" />
-      <ChoiceBox fx:id="choice_category" prefHeight="23.0" prefWidth="471.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Label style="-fx-padding: 4;" text="Tags" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="BASELINE" />
+      <ComboBox fx:id="comboTags" prefHeight="23.0" prefWidth="471.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+      <Label alignment="TOP_LEFT" style="-fx-padding: 4;" text="Course" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="BASELINE" />
+      <ChoiceBox fx:id="choice_category" prefHeight="23.0" prefWidth="471.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
    </GridPane>
 </VBox>

@@ -1,13 +1,13 @@
 package presentation.controller;
 
-import domain.model.Category;
-import domain.model.RoleType;
-import domain.model.User;
+import domain.model.*;
 import domain.service.GoogleDriveService;
 import domain.service.Session;
 import domain.service.StudyMaterialService;
+import domain.service.TagService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
+import infrastructure.repository.TagRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,11 +27,11 @@ import presentation.view.SceneManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-// <<<<<<< jiayue-branch
-// import java.util.Optional;
-// =======
-// >>>>>>> main
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static domain.model.RoleType.STUDENT;
@@ -50,7 +50,9 @@ public class UploadController {
 
     @FXML public Button btn_createCourse;
     @FXML public TextField field_courseName;
-
+    @FXML public ComboBox<Tag> comboTags;
+    private TagService tagService;
+    private Set<String> pendingTags = new HashSet<>();
     File currentFile;
 
     private void setCategoryChoices(){
@@ -74,6 +76,7 @@ public class UploadController {
             }
         });
     }
+
 
     private void setUpFileUpload(){
         User curUser = Session.getInstance().getCurrentUser();
@@ -197,25 +200,59 @@ public class UploadController {
                 String name = field_title.getText();
                 String description = field_desc.getText();
                 Category category = choice_category.getValue();
+                Set<Tag> materialTags = pendingTags.stream()
+                        .map(tagName -> tagService.createTag(tagName, uploader))
+                        .collect(Collectors.toSet());
 
                 StudyMaterialService materialService = new StudyMaterialService(
                         new GoogleDriveService(),
                         new StudyMaterialRepository()
                 );
 
-                materialService.uploadMaterial(
+                StudyMaterial material = materialService.uploadMaterial(
                         content,
                         filename,
                         uploader,
                         name,
                         description,
-                        category
+                        category,
+                        materialTags
                 );
+
+                material.getTags().addAll(materialTags);
+                materialService.updateMaterial(material);
 
                 SceneManager.getInstance().setScreen(SCREEN_COURSES);
             } catch (IOException ex) {
                 GUILogger.warn("Failed to upload material: " + ex.getMessage());
             }
         });
+
+        tagService = new TagService(new TagRepository());
+        setupTagInput();
+
+    }
+    private void setupTagInput() {
+        comboTags.setEditable(true);
+        comboTags.getItems().addAll(tagService.getAllTags());
+
+        comboTags.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Tag tag) {
+                return tag != null ? tag.getTagName() : "";
+            }
+
+            @Override
+            public Tag fromString(String string) {
+                Arrays.stream(string.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .forEach(tagName -> pendingTags.add(tagName.toLowerCase()));
+
+                return null;
+            }
+        });
+
+        comboTags.setPromptText("Enter tags separated by commas");
     }
 }

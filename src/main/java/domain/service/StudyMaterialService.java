@@ -1,9 +1,6 @@
 package domain.service;
 
-import domain.model.Category;
-import domain.model.MaterialStatus;
-import domain.model.StudyMaterial;
-import domain.model.User;
+import domain.model.*;
 import infrastructure.repository.StudyMaterialRepository;
 
 import java.io.File;
@@ -11,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public class StudyMaterialService {
     private final GoogleDriveService driveService;
@@ -21,7 +19,7 @@ public class StudyMaterialService {
         this.repository = repository;
     }
 
-    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category) throws IOException {
+    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category, Set<Tag> tags) throws IOException {
         String fileType = Files.probeContentType(Path.of(filename));
         if (fileType == null) {
             fileType = "application/octet-stream";
@@ -43,12 +41,17 @@ public class StudyMaterialService {
         );
         material.setCategory(category);
         material.setPreviewImage(preview);
+        material.getTags().addAll(tags);
 
         return repository.save(material);
     }
     public void downloadMaterial(StudyMaterial material, File saveLocation) throws IOException {
         byte[] content = driveService.downloadFile(material.getLink());
         Files.write(saveLocation.toPath(), content);
+    }
+
+    public StudyMaterial updateMaterial(StudyMaterial material) {
+        return repository.update(material);
     }
 
 }
