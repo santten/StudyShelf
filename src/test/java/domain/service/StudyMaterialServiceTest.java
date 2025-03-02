@@ -27,7 +27,7 @@ class StudyMaterialServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        materialService = new StudyMaterialService(driveService, materialRepository);
+        materialService = new StudyMaterialService(driveService, materialRepository, null);
     }
 
     @Test

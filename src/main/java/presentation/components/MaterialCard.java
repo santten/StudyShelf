@@ -2,6 +2,7 @@ package presentation.components;
 
 import domain.model.StudyMaterial;
 import domain.model.User;
+import domain.service.PermissionService;
 import domain.service.RatingService;
 import infrastructure.repository.RatingRepository;
 import javafx.geometry.Insets;
@@ -82,7 +83,8 @@ public class MaterialCard {
         ratingBox.setPrefWidth(100);
         ratingBox.setMaxWidth(100);
         ratingBox.setMinWidth(100);
-        RatingService ratingService = new RatingService(new RatingRepository());
+        RatingService ratingService = new RatingService(new RatingRepository(), new PermissionService()
+        );
         double avgRating = ratingService.getAverageRating(s);
 
 //         for (int i = 1; i <= 5; i++) {

@@ -1,13 +1,9 @@
 package presentation.components;
 
 import domain.model.StudyMaterial;
-import domain.service.GoogleDriveService;
-import domain.service.StudyMaterialService;
+import domain.service.*;
 import infrastructure.repository.StudyMaterialRepository;
-import domain.service.RatingService;
 import infrastructure.repository.RatingRepository;
-import domain.service.Session;
-import domain.service.ReviewService;
 import infrastructure.repository.ReviewRepository;
 import domain.model.Review;
 import javafx.scene.control.TextArea;
@@ -92,9 +88,10 @@ public class MaterialPage {
                 if (saveLocation != null) {
                     StudyMaterialService materialService = new StudyMaterialService(
                             new GoogleDriveService(),
-                            new StudyMaterialRepository()
+                            new StudyMaterialRepository(),
+                            new PermissionService()
                     );
-                    materialService.downloadMaterial(s, saveLocation);
+                    materialService.downloadMaterial(Session.getInstance().getCurrentUser(), s, saveLocation);
                     GUILogger.info("Successfully downloaded " + s.getName());
                 }
             } catch (IOException e) {
@@ -146,7 +143,7 @@ public class MaterialPage {
     }
 
     private static void updateRatingDisplay(StudyMaterial s) {
-        double avgRating = new RatingService(new RatingRepository()).getAverageRating(s);
+        double avgRating = new RatingService(new RatingRepository(), new PermissionService()).getAverageRating(s);
         reviewHeading.getChildren().clear();
 
         Label reviewTitle = new Label("Ratings");
@@ -159,7 +156,7 @@ public class MaterialPage {
         reviewHeading.getChildren().addAll(
                 reviewTitle,
                 Stars.StarRow(avgRating, 1.2, 5, rating -> {
-                    RatingService ratingService = new RatingService(new RatingRepository());
+                    RatingService ratingService = new RatingService(new RatingRepository(), new PermissionService());
                     ratingService.rateMaterial(rating, s, Session.getInstance().getCurrentUser());
                     updateRatingDisplay(s);
                 }),
@@ -171,7 +168,7 @@ public class MaterialPage {
 
 
     private static void displayReviews(StudyMaterial material, VBox container) {
-        ReviewService reviewService = new ReviewService(new ReviewRepository());
+        ReviewService reviewService = new ReviewService(new ReviewRepository(), new PermissionService());
         List<Review> reviews = reviewService.getReviewsForMaterial(material);
 
         container.getChildren().clear();

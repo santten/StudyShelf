@@ -20,6 +20,10 @@ class BaseRepositoryTest {
 
 
     private static class TestRepository extends BaseRepository<Category> {
+        public TestRepository() {
+            super(Category.class);
+        }
+
         @Override
         protected EntityManager getEntityManager() {
             return super.getEntityManager();

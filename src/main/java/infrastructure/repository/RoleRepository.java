@@ -15,17 +15,11 @@ import java.util.Set;
 
 
 public class RoleRepository  extends BaseRepository<Role> {
-    public Role findById(int id) {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        try {
-            return em.find(Role.class, id);
-        } finally {
-            em.close();
-        }
+    public RoleRepository() {
+        super(Role.class);
     }
 
-
-
+    @Override
     public Role save(Role role) {
         EntityManager em = getEntityManager();
         try {
@@ -47,10 +41,9 @@ public class RoleRepository  extends BaseRepository<Role> {
             role.getPermissions().clear();
             role.getPermissions().addAll(mergedPermissions);
 
-            em.persist(role);
-            em.flush();
+            Role savedRole = super.save(role);
             em.getTransaction().commit();
-            return role;
+            return savedRole;
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
@@ -62,7 +55,7 @@ public class RoleRepository  extends BaseRepository<Role> {
     }
 
     public Role findByName(RoleType roleType) {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        EntityManager em = getEntityManager();
         try {
             return em.createQuery("SELECT r FROM Role r WHERE r.name = :name", Role.class)
                     .setParameter("name", roleType)
@@ -73,5 +66,4 @@ public class RoleRepository  extends BaseRepository<Role> {
             em.close();
         }
     }
-
 }

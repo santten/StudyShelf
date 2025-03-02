@@ -7,84 +7,50 @@ import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import java.util.List;
+
+import jakarta.persistence.NoResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PermissionRepository extends BaseRepository {
+public class PermissionRepository extends BaseRepository<Permission> {
     private static final Logger logger = LoggerFactory.getLogger(PermissionService.class);
 
-    public Permission save(Permission permission) {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-            em.persist(permission);
-            transaction.commit();
-
-        } catch (Exception e) {
-            transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-        return permission;
+    public PermissionRepository() {
+        super(Permission.class);
     }
 
-    public Permission findById(Long id) {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        try {
-            return em.find(Permission.class, id);
-        } finally {
-            em.close();
-        }
+    public Permission save(Permission permission) {
+        return super.save(permission);
+    }
+
+    public Permission findById(int id) {
+        return super.findById(id);
     }
 
     public List<Permission> findAll() {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        try {
-            return em.createQuery("SELECT p FROM Permission p", Permission.class).getResultList();
-        } finally {
-            em.close();
-        }
+        return super.findAll();
     }
 
-    public void delete(Long id) {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        EntityTransaction transaction = em.getTransaction();
-        try {
-            transaction.begin();
-            Permission permission = em.find(Permission.class, id);
-            if (permission != null) {
-                em.remove(permission);
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
+    public void delete(int id) {
+        Permission permission = findById(id);
+        if (permission != null) {
+            super.delete(permission);
+        } else {
+            logger.warn("Attempted to delete non-existent permission with ID {}", id);
         }
     }
 
     public Permission findByName(String name) {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        EntityManager em = getEntityManager();
         try {
             return em.createQuery("SELECT p FROM Permission p WHERE p.name = :name", Permission.class)
                     .setParameter("name", name)
                     .getSingleResult();
-        } catch (Exception e) {
-            logger.error("Permission {} NOT found: ", name);
+        } catch (NoResultException e) {
+            logger.warn("Permission '{}' NOT found", name);
             return null;
         } finally {
             em.close();
         }
-    }
-    public Permission findByType(PermissionType type) {
-        return getEntityManager()
-                .createQuery("SELECT p FROM Permission p WHERE p.name = :type", Permission.class)
-                .setParameter("type", type)
-                .getResultStream()
-                .findFirst()
-                .orElse(null);
     }
 }

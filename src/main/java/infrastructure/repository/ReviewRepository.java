@@ -10,18 +10,12 @@ import java.util.List;
 
 
 public class ReviewRepository extends BaseRepository<Review> {
-
-    public Review findById(int id) {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        try {
-            return em.find(Review.class, id);
-        } finally {
-            em.close();
-        }
+    public ReviewRepository() {
+        super(Review.class);
     }
 
     public List<Review> findByStudyMaterial(StudyMaterial material) {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        EntityManager em = getEntityManager();
         try {
             TypedQuery<Review> query = em.createQuery(
                     "SELECT r FROM Review r WHERE r.studyMaterial = :material",

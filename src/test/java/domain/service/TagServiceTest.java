@@ -17,7 +17,7 @@ class TagServiceTest {
     @BeforeEach
     void setUp() {
         tagRepository = Mockito.mock(TagRepository.class);
-        tagService = new TagService(tagRepository);
+        tagService = new TagService(tagRepository, null);
     }
 
     @Test

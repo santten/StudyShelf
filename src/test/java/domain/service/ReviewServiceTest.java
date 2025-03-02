@@ -22,7 +22,7 @@ class ReviewServiceTest {
     @BeforeEach
     void setUp() {
         reviewRepository = Mockito.mock(ReviewRepository.class);
-        reviewService = new ReviewService(reviewRepository);
+        reviewService = new ReviewService(reviewRepository, null);
 
         Role studentRole = new Role(RoleType.STUDENT);
         testUser = new User("Bob", "Johnson", "bob@example.com", "securePass", studentRole);

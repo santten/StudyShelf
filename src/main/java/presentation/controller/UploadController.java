@@ -4,6 +4,7 @@ import domain.model.Category;
 import domain.model.RoleType;
 import domain.model.User;
 import domain.service.GoogleDriveService;
+import domain.service.PermissionService;
 import domain.service.Session;
 import domain.service.StudyMaterialService;
 import infrastructure.repository.CategoryRepository;
@@ -200,7 +201,8 @@ public class UploadController {
 
                 StudyMaterialService materialService = new StudyMaterialService(
                         new GoogleDriveService(),
-                        new StudyMaterialRepository()
+                        new StudyMaterialRepository(),
+                        new PermissionService()
                 );
 
                 materialService.uploadMaterial(
