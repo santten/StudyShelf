@@ -34,7 +34,7 @@ public class Role {
 //    )
 //    private Set<Permission> permissions = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_permissions",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
