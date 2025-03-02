@@ -2,6 +2,7 @@ package presentation.controller;
 
 import domain.model.*;
 import domain.service.GoogleDriveService;
+import domain.service.PermissionService;
 import domain.service.Session;
 import domain.service.StudyMaterialService;
 import domain.service.TagService;
@@ -206,7 +207,8 @@ public class UploadController {
 
                 StudyMaterialService materialService = new StudyMaterialService(
                         new GoogleDriveService(),
-                        new StudyMaterialRepository()
+                        new StudyMaterialRepository(),
+                        new PermissionService()
                 );
 
                 StudyMaterial material = materialService.uploadMaterial(
@@ -228,7 +230,7 @@ public class UploadController {
             }
         });
 
-        tagService = new TagService(new TagRepository());
+        tagService = new TagService(new TagRepository(), new PermissionService());
         setupTagInput();
     }
 
