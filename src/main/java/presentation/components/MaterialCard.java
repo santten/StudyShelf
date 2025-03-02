@@ -122,11 +122,7 @@ public class MaterialCard {
         materialCard.getStyleClass().add("materialCardM");
         materialCard.setOnAction(e -> {
             GUILogger.info("MaterialCard " + s.getName() + " clicked.");
-            try {
-                SceneManager.getInstance().displayMaterial(s.getMaterialId());
-            } catch (IOException ex) {
-                SceneManager.getInstance().displayErrorPage("Can't display this material!", SCREEN_HOME, "Go to Home Page");
-            }
+            SceneManager.getInstance().displayMaterial(s.getMaterialId());
         });
         return materialCard;
     }

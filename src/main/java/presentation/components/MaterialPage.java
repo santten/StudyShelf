@@ -66,11 +66,7 @@ public class MaterialPage {
         Hyperlink authorLink = new Hyperlink(s.getUploader().getFullName());
         authorLink.setStyle("-fx-font-size: 1.2em; -fx-underline: false;");
         authorLink.setOnAction(e -> {
-            try {
-                SceneManager.getInstance().displayProfile(s.getUploader().getUserId());
-            } catch (IOException ex) {
-                SceneManager.getInstance().displayErrorPage("User not found.", SCREEN_HOME, "Go to Home");
-            }
+            SceneManager.getInstance().displayProfile(s.getUploader().getUserId());
         });
 
         uploaderLabels.getChildren().addAll(author, authorLink, new Text("  "), TextLabels.getUserRoleLabel(s.getUploader()), new Text("  "));
@@ -215,11 +211,7 @@ public class MaterialPage {
 
             Hyperlink reviewerName = new Hyperlink(review.getUser().getFullName());
             reviewerName.setOnAction(e -> {
-                try {
-                    SceneManager.getInstance().displayProfile(review.getUser().getUserId());
-                } catch (IOException ex) {
-                    SceneManager.getInstance().displayErrorPage("User not found.", SCREEN_HOME, "Go to Home");
-                }
+                SceneManager.getInstance().displayProfile(review.getUser().getUserId());
             });
 
             Text reviewText = new Text(review.getReviewText());

@@ -55,23 +55,13 @@ public class ListItem {
                 svg.setContent(SVGContents.school());
                 color = "secondary";
                 btn.setOnAction(e -> {
-                    try {
-                        sm.displayCategory(id);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    sm.displayCategory(id);
                 });
                 break;
             case MATERIAL:
                 svg.setContent(SVGContents.file());
                 color = "primary-light";
-                btn.setOnAction(e -> {
-                    try {
-                        sm.displayMaterial(id);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
+                btn.setOnAction(e -> sm.displayMaterial(id));
                 break;
             default:
                 color = "error";
