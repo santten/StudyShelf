@@ -8,7 +8,6 @@ import infrastructure.config.DatabaseInitializer;
 
 import java.util.List;
 
-
 public class Launcher {
 
     private static void testRatings() {
@@ -44,9 +43,9 @@ public class Launcher {
 
 
     public static void main(String[] args) {
-        DatabaseInitializer dbInit = new DatabaseInitializer();
-        dbInit.initializeRolesAndPermissions();
-        // testRatings();
+        //DatabaseInitializer dbInit = new DatabaseInitializer();
+        //dbInit.initializeRolesAndPermissions();
+        //testRatings();
 
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }

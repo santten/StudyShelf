@@ -1,6 +1,7 @@
 package presentation.components;
 
 import domain.model.StudyMaterial;
+import domain.model.Tag;
 import domain.service.*;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.RatingRepository;
@@ -30,6 +31,8 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.Set;
 
 import static presentation.view.Screen.SCREEN_HOME;
 
@@ -109,8 +112,13 @@ public class MaterialPage {
         Text course = new Text("Uploaded under course " + s.getCategory().getCategoryName() + " on " + formattedTimestamp);
         course.getStyleClass().add("primary");
 
+        TextFlow tagContainer = new TextFlow();
+        Set<Tag> tags = s.getTags();
+        tagContainer.setLineSpacing(10);
+        tags.forEach(tag -> tagContainer.getChildren().addAll(TagButton.getBtn(tag), new Text("  ")));
+
         left.getChildren().addAll(title, uploaderLabels, fileDetails, downloadBtn,
-                course, fileDesc);
+                course, fileDesc, tagContainer);
         left.setMinWidth(580);
         left.setMaxWidth(580);
         left.setSpacing(8);

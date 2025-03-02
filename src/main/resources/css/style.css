@@ -74,6 +74,16 @@
     -fx-fill: -error;
 }
 
+.light {
+    -fx-text-fill: -light;
+    -fx-fill: -light;
+}
+
+.warning {
+    -fx-text-fill: -warning;
+    -fx-fill: -warning;
+}
+
 /* button styles */
 
 .btnS {
@@ -141,6 +151,12 @@
     -fx-padding: 8px;
 }
 
+.buttonEmpty {
+    -fx-cursor: hand;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
 /* basic */
 
 .hyperlink {
@@ -180,6 +196,19 @@
     -fx-border-width: 0;
 }
 
+.list-view {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
+    -fx-border-color: transparent;
+}
+
+.list-cell {
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+
+
 .materialCardM {
     -fx-min-width: 224px;
     -fx-max-width: 224px;
@@ -217,13 +246,33 @@
 
 
 .tag {
-    -fx-padding: 3;
+    -fx-padding: 4;
+    -fx-background-radius: 4;
     -fx-text-fill: -light;
     -fx-background-color: -primary-light;
+    -fx-cursor: hand;
 }
 
 .tag:hover {
     -fx-background-color: -primary;
+}
+
+.tagNotClickable {
+    -fx-padding: 4;
+    -fx-background-radius: 4;
+    -fx-background-color: -secondary;
+    -fx-text-fill: -light;
+    -fx-fill: -light;
+    -fx-margin: 4;
+}
+
+.tagRemoveBtn {
+    -fx-cursor: hand;
+    -fx-background-color: transparent;
+    -fx-font-size: 14;
+    -fx-text-fill: -light;
+    -fx-margin: 0, 0, 0, 4;
+    -fx-padding: 0;
 }
 
 .primaryTagLabel {

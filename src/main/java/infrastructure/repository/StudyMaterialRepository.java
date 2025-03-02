@@ -3,6 +3,7 @@ package infrastructure.repository;
 import domain.model.Category;
 import domain.model.MaterialStatus;
 import domain.model.StudyMaterial;
+import domain.model.Tag;
 import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
@@ -34,6 +35,18 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
         } finally {
             em.close();
         }
+    }
+
+    public List<StudyMaterial> findByTag(Tag tag) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<StudyMaterial> cq = cb.createQuery(StudyMaterial.class);
+        Root<StudyMaterial> root = cq.from(StudyMaterial.class);
+
+        Predicate tagPredicate = cb.isMember(tag, root.get("tags"));
+
+        cq.where(cb.or(tagPredicate));
+        return em.createQuery(cq).getResultList();
     }
 
 
@@ -96,6 +109,22 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
                     .setParameter("user", user)
                     .setParameter("status", MaterialStatus.PENDING)
                     .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    public StudyMaterial update(StudyMaterial material) {
+        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            StudyMaterial managedMaterial = em.find(StudyMaterial.class, material.getMaterialId());
+
+            managedMaterial.getTags().clear();
+            managedMaterial.getTags().addAll(material.getTags());
+
+            em.getTransaction().commit();
+            return managedMaterial;
         } finally {
             em.close();
         }

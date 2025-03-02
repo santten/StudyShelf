@@ -1,9 +1,6 @@
 package domain.service;
 
-import domain.model.Category;
-import domain.model.MaterialStatus;
-import domain.model.StudyMaterial;
-import domain.model.User;
+import domain.model.*;
 import infrastructure.repository.StudyMaterialRepository;
 import domain.model.PermissionType;
 import org.slf4j.Logger;
@@ -14,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.List;
 
 public class StudyMaterialService {
@@ -30,7 +28,7 @@ public class StudyMaterialService {
     }
 
     // CREATE_RESOURCE
-    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category) throws IOException {
+    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category, Set<Tag> tags) throws IOException {
         if (!permissionService.hasPermission(uploader, PermissionType.CREATE_RESOURCE)) {
             throw new SecurityException("You do not have permission to upload study materials.");
         }
@@ -56,6 +54,7 @@ public class StudyMaterialService {
         );
         material.setCategory(category);
         material.setPreviewImage(preview);
+        material.getTags().addAll(tags);
 
         logger.info("User {} uploaded new study material: {}", uploader.getEmail(), name);
         return repository.save(material);
@@ -183,5 +182,9 @@ public class StudyMaterialService {
         material.setStatus(MaterialStatus.REJECTED);
         repository.save(material);
         logger.info("User {} rejected study material: {}", user.getEmail(), material.getName());
+    }
+
+    public StudyMaterial updateMaterial(StudyMaterial material) {
+        return repository.update(material);
     }
 }

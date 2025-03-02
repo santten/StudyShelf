@@ -1,25 +1,26 @@
 package presentation.controller;
 
-import domain.model.Category;
-import domain.model.RoleType;
-import domain.model.User;
+import domain.model.*;
 import domain.service.GoogleDriveService;
 import domain.service.PermissionService;
 import domain.service.Session;
 import domain.service.StudyMaterialService;
+import domain.service.TagService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
+import infrastructure.repository.TagRepository;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import presentation.GUILogger;
@@ -28,11 +29,10 @@ import presentation.view.SceneManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashSet;
 import java.util.List;
-// <<<<<<< jiayue-branch
-// import java.util.Optional;
-// =======
-// >>>>>>> main
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static domain.model.RoleType.STUDENT;
@@ -48,10 +48,12 @@ public class UploadController {
     @FXML public Button btn_getFile;
     @FXML public CheckBox checkbox_uploadAgreement;
     @FXML public ChoiceBox<Category> choice_category;
+    @FXML private TextFlow tagChips;
 
-    @FXML public Button btn_createCourse;
-    @FXML public TextField field_courseName;
+    @FXML private TextField manualTagInput;
 
+    private TagService tagService;
+    private Set<String> pendingTags = new HashSet<>();
     File currentFile;
 
     private void setCategoryChoices(){
@@ -75,6 +77,7 @@ public class UploadController {
             }
         });
     }
+
 
     private void setUpFileUpload(){
         User curUser = Session.getInstance().getCurrentUser();
@@ -198,6 +201,9 @@ public class UploadController {
                 String name = field_title.getText();
                 String description = field_desc.getText();
                 Category category = choice_category.getValue();
+                Set<Tag> materialTags = pendingTags.stream()
+                        .map(tagName -> tagService.createTag(tagName, uploader))
+                        .collect(Collectors.toSet());
 
                 StudyMaterialService materialService = new StudyMaterialService(
                         new GoogleDriveService(),
@@ -205,19 +211,61 @@ public class UploadController {
                         new PermissionService()
                 );
 
-                materialService.uploadMaterial(
+                StudyMaterial material = materialService.uploadMaterial(
                         content,
                         filename,
                         uploader,
                         name,
                         description,
-                        category
+                        category,
+                        materialTags
                 );
+
+                material.getTags().addAll(materialTags);
+                materialService.updateMaterial(material);
 
                 SceneManager.getInstance().setScreen(SCREEN_COURSES);
             } catch (IOException ex) {
                 GUILogger.warn("Failed to upload material: " + ex.getMessage());
             }
         });
+
+        tagService = new TagService(new TagRepository(), new PermissionService());
+        setupTagInput();
+    }
+
+    private void setupTagInput() {
+        manualTagInput.setOnAction(e -> {
+            String tagText = manualTagInput.getText().trim();
+            if (!tagText.isEmpty() && !pendingTags.contains(tagText.toLowerCase())) {
+                addTagChip(tagText);
+                manualTagInput.clear();
+            }
+        });
+    }
+
+    private void addTagChip(String tagName) {
+        HBox chip = new HBox();
+        chip.setAlignment(Pos.CENTER);
+
+        HBox chipContent = new HBox();
+        chipContent.getStyleClass().add("tagNotClickable");
+
+        Text text = new Text(tagName);
+        text.getStyleClass().add("light");
+
+        Button removeBtn = new Button("×");
+        removeBtn.getStyleClass().add("tagRemoveBtn");
+
+        removeBtn.setOnAction(e -> {
+            tagChips.getChildren().remove(chip);
+            pendingTags.remove(tagName.toLowerCase());
+        });
+
+        chipContent.getChildren().addAll(text, removeBtn);
+        chip.getChildren().addAll(chipContent, new Text(" "));
+
+        tagChips.getChildren().add(0, chip);
+        pendingTags.add(tagName.toLowerCase());
     }
 }
