@@ -16,6 +16,7 @@ public class RatingService {
         this.ratingRepository = ratingRepository;
         this.permissionService = permissionService;
     }
+
     // CREATE_RATING
     public Rating rateMaterial(int ratingScore, StudyMaterial material, User user) {
         if (!permissionService.hasPermission(user, PermissionType.CREATE_RATING)) {

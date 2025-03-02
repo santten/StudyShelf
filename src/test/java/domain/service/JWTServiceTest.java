@@ -1,16 +1,16 @@
 package domain.service;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JWTServiceTest {
-    private JWTService jwtService = new JWTService();
-
-    @BeforeEach
-    void setUp() {
-        jwtService = new JWTService();
-    }
+    private final JWTService jwtService = new JWTService();
 
     @Test
     void testCreateToken() {
@@ -25,15 +25,24 @@ public class JWTServiceTest {
         String email = "test@example.com";
         String token = jwtService.createToken(email);
 
-        String extractedEmail = jwtService.getEmailFromToken(token);
-        assertEquals(email, extractedEmail);
+        assertEquals(email, jwtService.getEmailFromToken(token));
     }
 
     @Test
     void testInvalidToken() {
-        JWTService jwtService = new JWTService();
-        String token = jwtService.createToken("test@example.com");
-        assertThrows(Exception.class, () -> jwtService.getEmailFromToken("wrongtoken"));
+        assertThrows(JwtException.class, () -> jwtService.getEmailFromToken("wrongtoken"));
     }
+
+    @Test
+    void testExpiredToken() {
+        String expiredToken = io.jsonwebtoken.Jwts.builder()
+                .setSubject("expired@example.com")
+                .setIssuedAt(new Date(System.currentTimeMillis() - 10_000))
+                .setExpiration(new Date(System.currentTimeMillis() - 5_000))
+                .signWith(JWTService.getSecretKey())
+                .compact();
+        assertThrows(ExpiredJwtException.class, () -> jwtService.getEmailFromToken(expiredToken));
+    }
+
 }
 

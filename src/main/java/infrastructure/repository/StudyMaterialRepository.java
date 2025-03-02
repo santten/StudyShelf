@@ -100,11 +100,4 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
             em.close();
         }
     }
-
-
-
-
-
-
-
 }

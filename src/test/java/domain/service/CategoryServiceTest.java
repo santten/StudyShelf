@@ -102,8 +102,9 @@ class CategoryServiceTest {
         when(permissionService.hasPermission(teacherUser, PermissionType.UPDATE_COURSE_CATEGORY))
                 .thenReturn(true);
 
-        Category updatedCategory = new Category();
-        updatedCategory.setCategoryName("Updated Category Name");
+//        Category updatedCategory = new Category();
+//        updatedCategory.setCategoryName("Updated Category Name");
+        Category updatedCategory = new Category(testCategory.getCategoryId(), "Updated Category Name", teacherUser);
 
         when(categoryRepository.save(any(Category.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -215,4 +216,20 @@ class CategoryServiceTest {
 
         verify(categoryRepository, never()).delete(any(Category.class));
     }
+
+    @Test
+    @DisplayName("Updating a non-existent category throws RuntimeException")
+    void testUpdateCategory_CategoryNotFound() {
+        when(categoryRepository.findById(anyInt())).thenReturn(null);
+
+        Category updatedCategory = new Category();
+        updatedCategory.setCategoryName("Non-existent Category");
+
+        assertThrows(RuntimeException.class, () -> {
+            categoryService.updateCategory(adminUser, updatedCategory);
+        });
+
+        verify(categoryRepository, never()).save(any(Category.class));
+    }
+
 }

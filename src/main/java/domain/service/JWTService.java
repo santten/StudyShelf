@@ -33,4 +33,8 @@ public class JWTService {
                 .build()
                 .parseClaimsJws(token);
     }
+
+    public static SecretKey getSecretKey() {
+        return secretKey;
+    }
 }

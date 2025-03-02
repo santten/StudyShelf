@@ -40,7 +40,7 @@ public class PermissionRepository extends BaseRepository<Permission> {
         }
     }
 
-    public Permission findByName(String name) {
+    public Permission findByName(PermissionType name) {
         EntityManager em = getEntityManager();
         try {
             return em.createQuery("SELECT p FROM Permission p WHERE p.name = :name", Permission.class)
@@ -53,4 +53,5 @@ public class PermissionRepository extends BaseRepository<Permission> {
             em.close();
         }
     }
+
 }

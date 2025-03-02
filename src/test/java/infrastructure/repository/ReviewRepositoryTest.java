@@ -1,57 +1,35 @@
 package infrastructure.repository;
 
 import domain.model.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ReviewRepositoryTest {
     private ReviewRepository repository;
-    private User user;
-    private StudyMaterial material;
-    private Review review;
     private RoleRepository roleRepo;
     private UserRepository userRepo;
     private CategoryRepository categoryRepo;
     private StudyMaterialRepository materialRepo;
+    private User user;
+    private StudyMaterial material;
+    private Review review;
 
-//    @BeforeEach
-//    void setUp() {
-//        repository = new ReviewRepository();
-//        UserRepository userRepo = new UserRepository();
-//        StudyMaterialRepository materialRepo = new StudyMaterialRepository();
-//        Role testUser = new Role(RoleType.STUDENT);
-//        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password",testUser);
-//        user = userRepo.save(user);
-//        CategoryRepository categoryRepo = new CategoryRepository();
-//        Category category = new Category("Java", user);
-//        category = categoryRepo.save(category);
-//        material = new StudyMaterial(
-//                user,
-//                "Java for dummies",
-//                "Introduction to Java Programming for dummies",
-//                "materials/java-dumb.pdf",
-//                10f,
-//                "PDF",
-//                LocalDateTime.now(),
-//                MaterialStatus.PENDING
-//        );
-//        material.setCategory(category);
-//        material = materialRepo.save(material);
-//        review = new Review("Great!!!", material, user);
-//    }
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    void setupDatabase() {
         repository = new ReviewRepository();
         roleRepo = new RoleRepository();
         userRepo = new UserRepository();
         categoryRepo = new CategoryRepository();
         materialRepo = new StudyMaterialRepository();
+    }
 
+    @BeforeEach
+    void setUp() {
         Role testRole = roleRepo.findByName(RoleType.STUDENT);
         if (testRole == null) {
             testRole = new Role(RoleType.STUDENT);
@@ -74,29 +52,28 @@ class ReviewRepositoryTest {
                 LocalDateTime.now(),
                 MaterialStatus.PENDING
         );
-        material.setCategory(category); // **先设置 Category**
+        material.setCategory(category);
         material = materialRepo.save(material);
 
         review = new Review("Great!!!", material, user);
+        review = repository.save(review);
     }
 
     @Test
-    void save() {
-        Review savedReview = repository.save(review);
-        assertNotNull(savedReview);
-        assertNotNull(savedReview.getReviewId());
-        assertEquals("Great!!!", savedReview.getReviewText());
-        assertEquals(material.getMaterialId(), savedReview.getStudyMaterial().getMaterialId());
-        assertEquals(user.getUserId(), savedReview.getUser().getUserId());
+    void testSave() {
+        assertNotNull(review);
+        assertNotNull(review.getReviewId());
+        assertEquals("Great!!!", review.getReviewText());
+        assertEquals(material.getMaterialId(), review.getStudyMaterial().getMaterialId());
+        assertEquals(user.getUserId(), review.getUser().getUserId());
     }
 
     @Test
-    void findById() {
-        Review savedReview = repository.save(review);
-        Review foundReview = repository.findById(savedReview.getReviewId());
+    void testFindById() {
+        Review foundReview = repository.findById(review.getReviewId());
         assertNotNull(foundReview);
-        assertEquals(savedReview.getReviewId(), foundReview.getReviewId());
-        assertEquals(savedReview.getReviewText(), foundReview.getReviewText());
+        assertEquals(review.getReviewId(), foundReview.getReviewId());
+        assertEquals(review.getReviewText(), foundReview.getReviewText());
         assertEquals(material.getMaterialId(), foundReview.getStudyMaterial().getMaterialId());
         assertEquals(user.getUserId(), foundReview.getUser().getUserId());
     }
@@ -107,8 +84,22 @@ class ReviewRepositoryTest {
         Review review2 = new Review("Good!!!", material, user);
         repository.save(review1);
         repository.save(review2);
+
         List<Review> reviews = repository.findByStudyMaterial(material);
         assertNotNull(reviews);
-        assertEquals(2, reviews.size());
+        assertEquals(3, reviews.size(), "There should be 3 reviews in total");
+
+        for (Review r : reviews) {
+            assertEquals(material.getMaterialId(), r.getStudyMaterial().getMaterialId());
+        }
+    }
+
+    @AfterAll
+    void tearDown() {
+        repository = null;
+        roleRepo = null;
+        userRepo = null;
+        categoryRepo = null;
+        materialRepo = null;
     }
 }
