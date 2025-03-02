@@ -1,9 +1,6 @@
 package domain.service;
 
-import domain.model.Category;
-import domain.model.MaterialStatus;
-import domain.model.StudyMaterial;
-import domain.model.User;
+import domain.model.*;
 import infrastructure.repository.StudyMaterialRepository;
 import domain.model.PermissionType;
 import org.slf4j.Logger;
@@ -15,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class StudyMaterialService {
     private static final Logger logger = LoggerFactory.getLogger(StudyMaterialService.class);
@@ -30,11 +28,11 @@ public class StudyMaterialService {
     }
 
     // CREATE_RESOURCE
-    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category) throws IOException {
+    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category, Set<Tag> tags) throws IOException {
         if (!permissionService.hasPermission(uploader, PermissionType.CREATE_RESOURCE)) {
             throw new SecurityException("You do not have permission to upload study materials.");
         }
-
+      
         String fileType = Files.probeContentType(Path.of(filename));
         if (fileType == null) {
             fileType = "application/octet-stream";
@@ -56,10 +54,15 @@ public class StudyMaterialService {
         );
         material.setCategory(category);
         material.setPreviewImage(preview);
+        material.getTags().addAll(tags);
 
         logger.info("User {} uploaded new study material: {}", uploader.getEmail(), name);
         return repository.save(material);
     }
+  
+//       public StudyMaterial updateMaterial(StudyMaterial material) {
+//         return repository.update(material);
+//     }
 
     // UPDATE_OWN_RESOURCE
     public StudyMaterial updateMaterial(User user, StudyMaterial updatedMaterial) {
@@ -134,7 +137,6 @@ public class StudyMaterialService {
         Files.write(saveLocation.toPath(), content);
         logger.info("User {} downloaded material: {}", user.getEmail(), material.getName());
     }
-
 
     public void deleteMaterial(User user, StudyMaterial material) {
         int ownerId = material.getUploader().getUserId();

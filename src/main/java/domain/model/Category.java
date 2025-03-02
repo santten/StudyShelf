@@ -15,6 +15,7 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "CreatorId")
     private User creator;
+
     @OneToMany(mappedBy = "category")
     private List<StudyMaterial> materials = new ArrayList<>();
 

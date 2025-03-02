@@ -18,6 +18,11 @@ public class TagService {
         this.permissionService = permissionService;
 
     }
+    public Tag createTag(String tagName, User creator) {
+        if (tagName == null || tagName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Tag name cannot be empty");
+        }
+        String normalizedTagName = tagName.trim().toLowerCase();
 
     // CREATE_TAG
     public Tag createTag(String name, User creator) {
@@ -25,12 +30,23 @@ public class TagService {
             throw new SecurityException("You do not have permission to create a tag.");
         }
 
-        Tag existingTag = tagRepository.findByName(name);
+//         Tag existingTag = tagRepository.findByName(name);
+        Tag existingTag = tagRepository.findByName(normalizedTagName);
+
         if (existingTag != null) {
             return existingTag;
         }
-        Tag newTag = new Tag(name, creator);
-        return tagRepository.save(newTag);
+
+        Tag tag = new Tag(normalizedTagName, creator);
+        return tagRepository.save(tag);
+    }
+
+    public List<Tag> getAllTags() {
+        return tagRepository.findAll();
+    }
+
+    public Tag findById(int id) {
+        return tagRepository.findById(id);
     }
 
     public Tag updateTag(Tag tag, String newName, User user) {

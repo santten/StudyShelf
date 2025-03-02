@@ -1,44 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
-
-<HBox prefHeight="309.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.ProfileController">
+<HBox prefHeight="309.0" prefWidth="467.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="presentation.controller.ProfileController">
    <children>
-      <VBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="197.0" prefWidth="147.0" style="-fx-background-color: -dark; -fx-background-radius: 12;">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: -light;" styleClass="heading4" text="My Profile" />
-            <Hyperlink fx:id="link_toProfile" styleClass="profileLink" text="Profile" />
-            <Hyperlink fx:id="link_toUploaded" styleClass="profileLink" text="Uploaded Files" />
-            <Hyperlink fx:id="link_toReviews" styleClass="profileLink" text="Reviews" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: -light;" styleClass="heading4" text="Settings">
-               <VBox.margin>
-                  <Insets top="12.0" />
-               </VBox.margin>
-            </Text>
-            <Hyperlink fx:id="link_toAccountSettings" styleClass="profileLink" text="Account Settings" />
-            <Hyperlink fx:id="link_toDelete" text="Delete Account">
-               <styleClass>
-                  <String fx:value="profileLink" />
-                  <String fx:value="logOutLink" />
-               </styleClass>
-            </Hyperlink>
-            <Hyperlink fx:id="link_toLogOut" layoutX="22.0" layoutY="149.0" text="Log Out">
-               <styleClass>
-                  <String fx:value="profileLink" />
-                  <String fx:value="logOutLink" />
-               </styleClass>
-               <VBox.margin>
-                  <Insets top="12.0" />
-               </VBox.margin>
-            </Hyperlink>
-         </children>
+      <VBox fx:id="vbox_profile_options" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="197.0" prefWidth="144.0" style="-fx-background-color: -dark; -fx-background-radius: 12;">
          <HBox.margin>
             <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
          </HBox.margin>
