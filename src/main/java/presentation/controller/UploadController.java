@@ -2,6 +2,7 @@ package presentation.controller;
 
 import domain.model.*;
 import domain.service.GoogleDriveService;
+import domain.service.PermissionService;
 import domain.service.Session;
 import domain.service.StudyMaterialService;
 import domain.service.TagService;
@@ -19,6 +20,7 @@ import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import presentation.GUILogger;
@@ -27,7 +29,6 @@ import presentation.view.SceneManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,12 +48,10 @@ public class UploadController {
     @FXML public Button btn_getFile;
     @FXML public CheckBox checkbox_uploadAgreement;
     @FXML public ChoiceBox<Category> choice_category;
+    @FXML private TextFlow tagChips;
 
-    @FXML public Button btn_createCourse;
-    @FXML public TextField field_courseName;
     @FXML private TextField manualTagInput;
-    @FXML private FlowPane tagChips;
-    @FXML private ChoiceBox<Tag> tagChoice;
+
     private TagService tagService;
     private Set<String> pendingTags = new HashSet<>();
     File currentFile;
@@ -208,7 +207,8 @@ public class UploadController {
 
                 StudyMaterialService materialService = new StudyMaterialService(
                         new GoogleDriveService(),
-                        new StudyMaterialRepository()
+                        new StudyMaterialRepository(),
+                        new PermissionService()
                 );
 
                 StudyMaterial material = materialService.uploadMaterial(
@@ -230,24 +230,11 @@ public class UploadController {
             }
         });
 
-        tagService = new TagService(new TagRepository());
+        tagService = new TagService(new TagRepository(), new PermissionService());
         setupTagInput();
-
     }
+
     private void setupTagInput() {
-        tagChoice.setItems(FXCollections.observableArrayList(tagService.getAllTags()));
-        tagChoice.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(Tag tag) {
-                return tag != null ? tag.getTagName() : "";
-            }
-
-            @Override
-            public Tag fromString(String string) {
-                return null; // Not used
-            }
-        });
-
         manualTagInput.setOnAction(e -> {
             String tagText = manualTagInput.getText().trim();
             if (!tagText.isEmpty() && !pendingTags.contains(tagText.toLowerCase())) {
@@ -255,39 +242,30 @@ public class UploadController {
                 manualTagInput.clear();
             }
         });
-
-        tagChoice.getSelectionModel().selectedItemProperty().addListener((obs, old, newTag) -> {
-            if (newTag != null) {
-                String tagName = newTag.getTagName();
-                if (!pendingTags.contains(tagName.toLowerCase())) {
-                    addTagChip(tagName);
-                }
-                Platform.runLater(() -> tagChoice.getSelectionModel().clearSelection());
-            }
-        });
     }
 
     private void addTagChip(String tagName) {
-        HBox chip = new HBox(5);
+        HBox chip = new HBox();
         chip.setAlignment(Pos.CENTER);
-        chip.setPadding(new Insets(3, 8, 3, 8));
-        chip.setStyle("-fx-background-color: #e0e0e0; -fx-background-radius: 15; -fx-border-radius: 15;");
 
-        Label label = new Label(tagName);
+        HBox chipContent = new HBox();
+        chipContent.getStyleClass().add("tagNotClickable");
+
+        Text text = new Text(tagName);
+        text.getStyleClass().add("light");
+
         Button removeBtn = new Button("×");
-        removeBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 14;");
+        removeBtn.getStyleClass().add("tagRemoveBtn");
 
         removeBtn.setOnAction(e -> {
             tagChips.getChildren().remove(chip);
             pendingTags.remove(tagName.toLowerCase());
         });
 
-        chip.getChildren().addAll(label, removeBtn);
-        tagChips.getChildren().add(chip);
+        chipContent.getChildren().addAll(text, removeBtn);
+        chip.getChildren().addAll(chipContent, new Text(" "));
+
+        tagChips.getChildren().add(0, chip);
         pendingTags.add(tagName.toLowerCase());
     }
-
-
-
-
 }

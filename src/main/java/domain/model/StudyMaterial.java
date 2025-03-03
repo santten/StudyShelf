@@ -45,7 +45,7 @@ public class StudyMaterial {
     @Column(name = "Status")
     private MaterialStatus status;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "MaterialTag",
             joinColumns = @JoinColumn(name = "MaterialId"),

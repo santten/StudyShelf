@@ -17,7 +17,8 @@ public class PasswordServiceTest {
         String rawPassword = "mytest123password";
         String hashedPassword = passwordService.hashPassword(rawPassword);
 
-        assertNotEquals(rawPassword, hashedPassword);
+        assertNotNull(hashedPassword);
+        assertTrue(hashedPassword.length() > 20);
         assertTrue(passwordService.checkPassword(rawPassword, hashedPassword));
     }
 
@@ -28,6 +29,16 @@ public class PasswordServiceTest {
 
         assertTrue(passwordService.checkPassword(rawPassword, hashedPassword));
         assertFalse(passwordService.checkPassword("wrongpassword", hashedPassword));
+    }
+
+    @Test
+    void testHashPasswordDifferentEachTime() {
+        String password = "samepassword";
+
+        String hash1 = passwordService.hashPassword(password);
+        String hash2 = passwordService.hashPassword(password);
+
+        assertNotEquals(hash1, hash2);
     }
 }
 

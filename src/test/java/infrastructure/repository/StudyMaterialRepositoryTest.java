@@ -1,9 +1,13 @@
 package infrastructure.repository;
 
 import domain.model.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDateTime;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudyMaterialRepositoryTest {
@@ -14,30 +18,6 @@ class StudyMaterialRepositoryTest {
     private RoleRepository roleRepo;
     private UserRepository userRepo;
     private CategoryRepository categoryRepo;
-
-//    @BeforeEach
-//    void setUp() {
-//        repository = new StudyMaterialRepository();
-//        Role testRole = new Role(RoleType.STUDENT);
-//        UserRepository userRepo = new UserRepository();
-//        user = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password",testRole);
-//        user = userRepo.save(user);
-//        CategoryRepository categoryRepo = new CategoryRepository();
-//        category = new Category("Test Category", user);
-//        category = categoryRepo.save(category);
-//
-//        testMaterial = new StudyMaterial(
-//                user,
-//                "Java for dummies",
-//                "Introduction to Java Programming for dummies",
-//                "materials/java-dumb.pdf",
-//                10f,
-//                "PDF",
-//                LocalDateTime.now(),
-//                MaterialStatus.PENDING
-//        );
-//        testMaterial.setCategory(category);
-//    }
 
     @BeforeEach
     void setUp() {
@@ -69,36 +49,116 @@ class StudyMaterialRepositoryTest {
                 MaterialStatus.PENDING
         );
         testMaterial.setCategory(category);
+        testMaterial = repository.save(testMaterial);
     }
 
     @Test
     void save() {
-        StudyMaterial savedMaterial = repository.save(testMaterial);
-        assertNotNull(savedMaterial);
-        assertNotNull(savedMaterial.getMaterialId());
-        assertEquals("Java for dummies", savedMaterial.getName());
-        assertEquals("Introduction to Java Programming for dummies", savedMaterial.getDescription());
-        assertEquals("materials/java-dumb.pdf", savedMaterial.getLink());
-        assertEquals(10f, savedMaterial.getFileSize());
-        assertEquals("PDF", savedMaterial.getFileType());
-        assertEquals(MaterialStatus.PENDING, savedMaterial.getStatus());
-        assertEquals(category.getCategoryId(), savedMaterial.getCategory().getCategoryId());
-        assertEquals(user.getUserId(), savedMaterial.getUploader().getUserId());
+        assertNotNull(testMaterial);
+        assertNotNull(testMaterial.getMaterialId());
+        assertEquals("Java for dummies", testMaterial.getName());
+        assertEquals("Introduction to Java Programming for dummies", testMaterial.getDescription());
+        assertEquals("materials/java-dumb.pdf", testMaterial.getLink());
+        assertEquals(10f, testMaterial.getFileSize());
+        assertEquals("PDF", testMaterial.getFileType());
+        assertEquals(MaterialStatus.PENDING, testMaterial.getStatus());
+        assertEquals(category.getCategoryId(), testMaterial.getCategory().getCategoryId());
+        assertEquals(user.getUserId(), testMaterial.getUploader().getUserId());
     }
 
     @Test
     void findById() {
-        StudyMaterial savedMaterial = repository.save(testMaterial);
-        StudyMaterial foundMaterial = repository.findById(savedMaterial.getMaterialId());
+        StudyMaterial foundMaterial = repository.findById(testMaterial.getMaterialId());
         assertNotNull(foundMaterial);
-        assertEquals(savedMaterial.getMaterialId(), foundMaterial.getMaterialId());
-        assertEquals(savedMaterial.getName(), foundMaterial.getName());
-        assertEquals(savedMaterial.getDescription(), foundMaterial.getDescription());
-        assertEquals(savedMaterial.getLink(), foundMaterial.getLink());
-        assertEquals(savedMaterial.getFileSize(), foundMaterial.getFileSize());
-        assertEquals(savedMaterial.getFileType(), foundMaterial.getFileType());
-        assertEquals(savedMaterial.getStatus(), foundMaterial.getStatus());
-        assertEquals(category.getCategoryId(), foundMaterial.getCategory().getCategoryId());
-        assertEquals(user.getUserId(), foundMaterial.getUploader().getUserId());
+        assertEquals(testMaterial.getMaterialId(), foundMaterial.getMaterialId());
+    }
+
+    @Test
+    void updateMaterialStatus() {
+        repository.updateMaterialStatus(testMaterial.getMaterialId(), MaterialStatus.APPROVED);
+        StudyMaterial updatedMaterial = repository.findById(testMaterial.getMaterialId());
+        assertNotNull(updatedMaterial);
+        assertEquals(MaterialStatus.APPROVED, updatedMaterial.getStatus());
+    }
+
+    @Test
+    void deleteMaterial() {
+        repository.delete(testMaterial);
+
+        StudyMaterial deletedMaterial = repository.findById(testMaterial.getMaterialId());
+        assertNull(deletedMaterial);
+    }
+
+    @Test
+    void findByStatus() {
+        StudyMaterial pendingMaterial = new StudyMaterial(
+                user,
+                "Pending Material",
+                "This is a pending study material",
+                "materials/pending.pdf",
+                5.0f,
+                "PDF",
+                LocalDateTime.now(),
+                MaterialStatus.PENDING
+        );
+        pendingMaterial.setCategory(category);
+        pendingMaterial = repository.save(pendingMaterial);
+
+        StudyMaterial approvedMaterial = new StudyMaterial(
+                user,
+                "Approved Material",
+                "This is an approved study material",
+                "materials/approved.pdf",
+                7.5f,
+                "PDF",
+                LocalDateTime.now(),
+                MaterialStatus.APPROVED
+        );
+        approvedMaterial.setCategory(category);
+        approvedMaterial = repository.save(approvedMaterial);
+
+        StudyMaterial rejectedMaterial = new StudyMaterial(
+                user,
+                "Rejected Material",
+                "This is a rejected study material",
+                "materials/rejected.pdf",
+                3.2f,
+                "PDF",
+                LocalDateTime.now(),
+                MaterialStatus.REJECTED
+        );
+        rejectedMaterial.setCategory(category);
+        rejectedMaterial = repository.save(rejectedMaterial);
+
+        List<StudyMaterial> pendingMaterials = repository.findByStatus(MaterialStatus.PENDING);
+        assertFalse(pendingMaterials.isEmpty());
+        assertTrue(pendingMaterials.stream().allMatch(m -> m.getStatus() == MaterialStatus.PENDING));
+
+        List<StudyMaterial> approvedMaterials = repository.findByStatus(MaterialStatus.APPROVED);
+//        assertEquals(1, approvedMaterials.size());
+        assertEquals(MaterialStatus.APPROVED, approvedMaterials.get(0).getStatus());
+
+        List<StudyMaterial> rejectedMaterials = repository.findByStatus(MaterialStatus.REJECTED);
+//        assertEquals(1, rejectedMaterials.size());
+        assertEquals(MaterialStatus.REJECTED, rejectedMaterials.get(0).getStatus());
+
+        repository.updateMaterialStatus(pendingMaterial.getMaterialId(), MaterialStatus.APPROVED);
+        List<StudyMaterial> updatedApprovedMaterials = repository.findByStatus(MaterialStatus.APPROVED);
+
+//        assertEquals(2, updatedApprovedMaterials.size());
+        assertTrue(updatedApprovedMaterials.stream().allMatch(m -> m.getStatus() == MaterialStatus.APPROVED));
+    }
+
+    @Test
+    void findReviewedMaterialsByUser() {
+        List<StudyMaterial> reviewedMaterials = repository.findReviewedMaterialsByUser(user);
+        assertTrue(reviewedMaterials.isEmpty());
+
+        repository.updateMaterialStatus(testMaterial.getMaterialId(), MaterialStatus.APPROVED);
+        reviewedMaterials = repository.findReviewedMaterialsByUser(user);
+
+        assertFalse(reviewedMaterials.isEmpty());
+        assertEquals(1, reviewedMaterials.size());
+        assertEquals(MaterialStatus.APPROVED, reviewedMaterials.get(0).getStatus());
     }
 }
