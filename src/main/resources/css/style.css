@@ -84,6 +84,11 @@
     -fx-fill: -warning;
 }
 
+.dark {
+    -fx-text-fill: -dark;
+    -fx-fill: -dark;
+}
+
 /* button styles */
 
 .btnS {
@@ -169,6 +174,21 @@
     -fx-text-fill: -primary;
 }
 
+.reviewUserLink {
+    -fx-underline: false;
+}
+
+.reviewUserLink .text {
+    -fx-fill: -primary;
+    -fx-font-size: 18;
+    -fx-font-family: "Calistoga";
+}
+
+.reviewUserLink:hover .text {
+    -fx-fill: -primary-light;
+}
+
+
 .text-field {
     -fx-focus-fill: -primary-light;
 }
@@ -229,6 +249,10 @@
 .materialCardSubtitle {
     -fx-font-size: 12;
     -fx-fill: -primary-light;
+}
+
+.reviewCard {
+    -fx-padding: 10;
 }
 
 /* SVG icons */

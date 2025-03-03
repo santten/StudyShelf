@@ -1,10 +1,6 @@
 package infrastructure.repository;
 
-import domain.model.Category;
-import domain.model.MaterialStatus;
-import domain.model.StudyMaterial;
-import domain.model.Tag;
-import domain.model.User;
+import domain.model.*;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;

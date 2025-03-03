@@ -95,7 +95,8 @@ public class SceneManager {
             return;
         }
 
-        MaterialPage.setPage(s);
+        MaterialPage page = new MaterialPage(s);
+        page.displayPage();
     }
 
     public void displayProfile(int id) {

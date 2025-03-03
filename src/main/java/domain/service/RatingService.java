@@ -5,6 +5,7 @@ import domain.model.Rating;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import infrastructure.repository.RatingRepository;
+import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
@@ -65,5 +66,13 @@ public class RatingService {
             throw new SecurityException("You do not have permission to delete this rating.");
         }
         ratingRepository.delete(rating);
+    }
+
+    public boolean hasUserRatedMaterial(User user, StudyMaterial sm){
+        if (sm.getUploader().getUserId() == user.getUserId()){
+            return false;
+        } else {
+            return ratingRepository.hasUserReviewedMaterial(user, sm);
+        }
     }
 }

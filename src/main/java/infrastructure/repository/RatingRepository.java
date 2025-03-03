@@ -3,6 +3,7 @@ package infrastructure.repository;
 
 import domain.model.Rating;
 import domain.model.StudyMaterial;
+import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -35,6 +36,19 @@ public class RatingRepository extends BaseRepository<Rating> {
                     .getSingleResult();
         } catch (NoResultException e) {
             return 0.0;
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean hasUserReviewedMaterial(User user, StudyMaterial material) {
+        EntityManager em = getEntityManager();
+        try {
+            Long count = em.createQuery("SELECT COUNT(r) FROM Rating r WHERE r.user = :user AND r.studyMaterial = :material", Long.class)
+                    .setParameter("user", user)
+                    .setParameter("material", material)
+                    .getSingleResult();
+            return count > 0;
         } finally {
             em.close();
         }

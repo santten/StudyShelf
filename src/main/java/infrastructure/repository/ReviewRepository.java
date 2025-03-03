@@ -42,4 +42,17 @@ public class ReviewRepository extends BaseRepository<Review> {
             em.close();
         }
     }
+
+    public boolean hasUserReviewedMaterial(User user, StudyMaterial material) {
+        EntityManager em = getEntityManager();
+        try {
+            Long count = em.createQuery("SELECT COUNT(r) FROM Review r WHERE r.user = :user AND r.studyMaterial = :material", Long.class)
+                    .setParameter("user", user)
+                    .setParameter("material", material)
+                    .getSingleResult();
+            return count > 0;
+        } finally {
+            em.close();
+        }
+    }
 }
