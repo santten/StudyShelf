@@ -67,11 +67,18 @@ public class User {
 //        return role.getPermissions().stream()
 //                .anyMatch(permission -> permission.getName().equals(permissionType));
 //    }
+//    public boolean hasPermission(PermissionType permissionType) {
+//        if (role == null || role.getPermissions() == null) {
+//            return false;
+//        }
+//        return role.getPermissions().contains(permissionType);
+//    }
     public boolean hasPermission(PermissionType permissionType) {
         if (role == null || role.getPermissions() == null) {
             return false;
         }
-        return role.getPermissions().contains(permissionType);
+        return role.getPermissions().stream()
+                .anyMatch(permission -> permission.getName().equals(permissionType));
     }
 
     public boolean isAdmin() {

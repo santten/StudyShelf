@@ -24,10 +24,12 @@ class PermissionServiceTest {
         studentRole = new Role(RoleType.STUDENT);
 
         adminRole.getPermissions().add(new Permission(PermissionType.DELETE_ANY_RESOURCE));
+        adminRole.getPermissions().add(new Permission(PermissionType.APPROVE_RESOURCE));
         adminRole.getPermissions().add(new Permission(PermissionType.DELETE_OWN_RESOURCE));
         teacherRole.getPermissions().add(new Permission(PermissionType.DELETE_COURSE_RESOURCE));
+        teacherRole.getPermissions().add(new Permission(PermissionType.CREATE_CATEGORY));
         studentRole.getPermissions().add(new Permission(PermissionType.DELETE_OWN_RESOURCE));
-
+        studentRole.getPermissions().add(new Permission(PermissionType.UPDATE_OWN_TAG));
 
         adminUser = new User(1, "Alice", "Smith", "alice@example.com", "password123", adminRole);
         teacherUser = new User(2, "Charlie", "Brown", "charlie@example.com", "password123", teacherRole);
@@ -44,14 +46,14 @@ class PermissionServiceTest {
 
     @Test
     void testAdminCanDeleteOwnResource() {
-        boolean result = permissionService.hasPermissionOnEntity(adminUser, PermissionType.DELETE_OWN_RESOURCE, 1);
-        assertTrue(result, "Admin should be able to delete their own resource");
+        assertTrue(permissionService.hasPermissionOnEntity(adminUser, PermissionType.DELETE_OWN_RESOURCE, 1),
+                "Admin should be able to delete their own resource");
     }
 
     @Test
     void testStudentCannotDeleteAnyResource() {
-        boolean result = permissionService.hasPermissionOnEntity(studentUser, PermissionType.DELETE_ANY_RESOURCE, 1);
-        assertFalse(result, "Student should not be able to delete any resource");
+        assertFalse(permissionService.hasPermissionOnEntity(studentUser, PermissionType.DELETE_ANY_RESOURCE, 1),
+                "Student should not be able to delete any resource");
     }
 
     @Test
@@ -62,19 +64,43 @@ class PermissionServiceTest {
 
     @Test
     void testStudentCannotDeleteCourseResource() {
-        boolean result = permissionService.hasPermission(studentUser, PermissionType.DELETE_COURSE_RESOURCE);
-        assertFalse(result, "Student should not be able to delete course resources");
+        assertFalse(permissionService.hasPermission(studentUser, PermissionType.DELETE_COURSE_RESOURCE),
+                "Student should not be able to delete course resources");
     }
 
     @Test
     void testAdminCanDeleteAnyResource() {
-        boolean result = permissionService.hasPermission(adminUser, PermissionType.DELETE_ANY_RESOURCE);
-        assertTrue(result, "Admin should be able to delete any resource");
+        assertTrue(permissionService.hasPermission(adminUser, PermissionType.DELETE_ANY_RESOURCE),
+                "Admin should be able to delete any resource");
     }
 
     @Test
     void testNullUserCannotHavePermission() {
-        boolean result = permissionService.hasPermissionOnEntity(null, PermissionType.DELETE_ANY_RESOURCE, adminUser.getUserId());
-        assertFalse(result, "Null user should not have any permissions");
+        assertFalse(permissionService.hasPermissionOnEntity(null, PermissionType.DELETE_ANY_RESOURCE, adminUser.getUserId()),
+                "Null user should not have any permissions");
+    }
+
+    @Test
+    void testTeacherCanCreateCategory() {
+        assertTrue(permissionService.hasPermission(teacherUser, PermissionType.CREATE_CATEGORY),
+                "Teacher should be able to create categories");
+    }
+
+    @Test
+    void testAdminCanApproveResource() {
+        assertTrue(permissionService.hasPermission(adminUser, PermissionType.APPROVE_RESOURCE),
+                "Admin should be able to approve resources");
+    }
+
+    @Test
+    void testStudentCannotApproveResource() {
+        assertFalse(permissionService.hasPermission(studentUser, PermissionType.APPROVE_RESOURCE),
+                "Student should not be able to approve resources");
+    }
+
+    @Test
+    void testUserCanUpdateOwnTag() {
+        assertTrue(permissionService.hasPermissionOnEntity(studentUser, PermissionType.UPDATE_OWN_TAG, studentUser.getUserId()),
+                "User should be able to update their own tag");
     }
 }

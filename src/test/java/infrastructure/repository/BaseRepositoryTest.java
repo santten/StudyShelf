@@ -4,82 +4,110 @@ import domain.model.Category;
 import domain.model.Role;
 import domain.model.RoleType;
 import domain.model.User;
-
-
+import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BaseRepositoryTest {
-    private TestRepository repository;
+    private EntityManager entityManager;
+    private TestRepository categoryRepository;
+    private RoleRepository roleRepository;
+    private UserRepository userRepository;
+
     private User testUser;
+    private Role testRole;
     private Category testCategory;
-    private RoleRepository roleRepo;
-    private UserRepository userRepo;
 
-
+    // Inner class for testing
     private static class TestRepository extends BaseRepository<Category> {
-        @Override
-        protected EntityManager getEntityManager() {
-            return super.getEntityManager();
+        public TestRepository() {
+            super(Category.class);
         }
     }
 
-//    @BeforeEach
-//    void setUp() {
-//        repository = new TestRepository();
-//        Role testRole = new Role(RoleType.TEACHER);
-//        testUser = new User("Matti", "Valovirta", "matti@test.com" + System.currentTimeMillis(), "password",testRole );
-//        testCategory = new Category("Some category", testUser);
-//    }
+    @BeforeAll
+    void setupDatabase() {
+        entityManager = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        categoryRepository = new TestRepository();
+        roleRepository = new RoleRepository();
+        userRepository = new UserRepository();
+    }
+
     @BeforeEach
     void setUp() {
-        repository = new TestRepository();
-        roleRepo = new RoleRepository();
-        userRepo = new UserRepository();
+        entityManager.clear(); // Reset before each test
 
-        Role testRole = roleRepo.findByName(RoleType.TEACHER);
+        testRole = roleRepository.findByName(RoleType.TEACHER);
         if (testRole == null) {
             testRole = new Role(RoleType.TEACHER);
-            testRole = roleRepo.save(testRole);
+            testRole = roleRepository.save(testRole);
         }
 
         testUser = new User("Matti", "Valovirta", "matti" + System.currentTimeMillis() + "@test.com", "password", testRole);
+        testUser = userRepository.save(testUser);
+
         testCategory = new Category("Some category", testUser);
     }
 
     @Test
-    void getEntityManager() {
-        EntityManager em = repository.getEntityManager();
-        assertNotNull(em);
-        assertTrue(em.isOpen());
-        em.close();
-    }
+    void testSave() {
+        Category savedCategory = categoryRepository.save(testCategory);
 
-//    @Test
-//    void save() {
-//        UserRepository userRepo = new UserRepository();
-//        User savedUser = userRepo.save(testUser);
-//        Category savedCategory = repository.save(testCategory);
-//        assertNotNull(savedCategory);
-//        assertNotNull(savedCategory.getCategoryId());
-//        assertEquals("Some category", savedCategory.getCategoryName());
-//        assertEquals(testUser, savedCategory.getCreator());
-//    }
-
-    @Test
-    void save() {
-        User savedUser = userRepo.save(testUser);
-        assertNotNull(savedUser);
-        assertNotNull(savedUser.getUserId());
-
-        testCategory.setCreator(savedUser);
-
-        Category savedCategory = repository.save(testCategory);
         assertNotNull(savedCategory);
         assertNotNull(savedCategory.getCategoryId());
         assertEquals("Some category", savedCategory.getCategoryName());
-        assertEquals(savedUser, savedCategory.getCreator());
+        assertEquals(testUser, savedCategory.getCreator());
+    }
+
+    @Test
+    void testFindById() {
+        Category savedCategory = categoryRepository.save(testCategory);
+        Category foundCategory = categoryRepository.findById(savedCategory.getCategoryId());
+
+        assertNotNull(foundCategory);
+        assertEquals(savedCategory.getCategoryId(), foundCategory.getCategoryId());
+    }
+
+    @Test
+    void testFindAll() {
+        categoryRepository.save(testCategory);
+
+        List<Category> categories = categoryRepository.findAll();
+        assertFalse(categories.isEmpty());
+    }
+
+    @Test
+    void testUpdate() {
+        Category savedCategory = categoryRepository.save(testCategory);
+
+        savedCategory.setCategoryName("Updated Category");
+        Category updatedCategory = categoryRepository.update(savedCategory);
+
+        assertNotNull(updatedCategory);
+        assertEquals("Updated Category", updatedCategory.getCategoryName());
+    }
+
+    @Test
+    void testDelete() {
+        Category savedCategory = categoryRepository.save(testCategory);
+
+        categoryRepository.delete(savedCategory);
+
+        entityManager.clear(); // Ensure fresh query
+        Category deletedCategory = categoryRepository.findById(savedCategory.getCategoryId());
+
+        assertNull(deletedCategory);
+    }
+
+    @AfterAll
+    void tearDown() {
+        if (entityManager.isOpen()) {
+            entityManager.close();
+        }
     }
 }

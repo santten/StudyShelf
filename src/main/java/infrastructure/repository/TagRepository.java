@@ -7,14 +7,8 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 public class TagRepository extends BaseRepository<Tag> {
-
-    public Tag findById(int id) {
-        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        try {
-            return em.find(Tag.class, id);
-        } finally {
-            em.close();
-        }
+    public TagRepository() {
+        super(Tag.class);
     }
 
     public List<Tag> findAll() {

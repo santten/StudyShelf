@@ -47,4 +47,9 @@ public enum PermissionType {
     READ_ALL_USERS, // Read all users by an admin
     DELETE_OWN_USER, // Delete a user created by a student, a teacher, or an admin themselves
     DELETE_ANY_USER, // Delete any user by an admin
+
+    // The following permissions are about review resources
+    APPROVE_RESOURCE, // Approve a resource by a teacher or an admin
+    REJECT_RESOURCE, // Reject a resource by a teacher or an admin
+    REVIEW_PENDING_RESOURCES // Review pending resources by a teacher or an admin
 }

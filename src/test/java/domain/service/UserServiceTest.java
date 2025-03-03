@@ -89,4 +89,21 @@ class UserServiceTest {
         assertTrue(passwordService.checkPassword(rawPassword, fakeHashedPassword),"Matching passwords should return true");
         assertFalse(passwordService.checkPassword("wrongpassword", fakeHashedPassword),"Non-matching passwords should return false");
     }
+
+    @Test
+    void testLoginUser_Success() {
+        String email = "test@example.com";
+        String rawPassword = "mypassword123";
+        String hashedPassword = "hashedpassword";
+        User user = new User("Test", "User", email, hashedPassword, new Role(RoleType.STUDENT));
+
+        when(userRepository.findByEmail(email)).thenReturn(user);
+        when(passwordService.checkPassword(rawPassword, hashedPassword)).thenReturn(true);
+        when(jwtService.createToken(email)).thenReturn("mockJwtToken");
+
+        String token = userService.loginUser(email, rawPassword);
+
+        assertNotNull(token);
+        assertEquals("mockJwtToken", token);
+    }
 }

@@ -1,6 +1,7 @@
 package domain.service;
 
 import domain.model.PermissionType;
+import domain.model.RoleType;
 import domain.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +65,10 @@ public class PermissionService {
                 PermissionType.DELETE_ANY_RATING,
                 PermissionType.READ_ALL_USERS,
                 PermissionType.DELETE_ANY_USER,
-                PermissionType.CREATE_CATEGORY
+                PermissionType.CREATE_CATEGORY,
+                PermissionType.APPROVE_RESOURCE,
+                PermissionType.REJECT_RESOURCE,
+                PermissionType.REVIEW_PENDING_RESOURCES
         );
 
         return adminPermissions.contains(permissionType);
@@ -113,8 +117,18 @@ public class PermissionService {
                 PermissionType.DELETE_COURSE_TAG,
                 PermissionType.UPDATE_COURSE_CATEGORY,
                 PermissionType.DELETE_COURSE_CATEGORY,
-                PermissionType.CREATE_CATEGORY
+                PermissionType.CREATE_CATEGORY,
+                PermissionType.APPROVE_RESOURCE,
+                PermissionType.REJECT_RESOURCE,
+                PermissionType.REVIEW_PENDING_RESOURCES
         );
         return coursePermissions.contains(permissionType);
     }
+
+    public boolean hasApprovalPermission(User user) {
+        RoleType role = user.getRole().getName();
+        return role == RoleType.ADMIN || role == RoleType.TEACHER;
+    }
+
+
 }
