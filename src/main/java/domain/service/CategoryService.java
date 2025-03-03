@@ -24,6 +24,18 @@ public class CategoryService {
         return repository.findMaterialsByCategory(category);
     }
 
+    public List<StudyMaterial> getPendingMaterialsByCategory(User user, Category category) {
+        if (!permissionService.hasPermission(user, PermissionType.APPROVE_RESOURCE)){
+            throw new SecurityException("You do not have permission to view pending materials for this category.");
+        }
+        return repository.findPendingMaterialsByCategory(category);
+    }
+
+
+    public List<StudyMaterial> getApprovedMaterialsByCategory(User currentUser, Category c) {
+        return repository.findApprovedMaterialsByCategory(c);
+    }
+
     // CREATE_CATEGORY
     public Category createCategory(User user, Category category) {
         if (!permissionService.hasPermission(user, PermissionType.CREATE_CATEGORY)) {
@@ -78,6 +90,5 @@ public class CategoryService {
         logger.info("User {} deleted category: {}", user.getEmail(), category.getCategoryName());
         repository.delete(category);
     }
-
 }
 

@@ -12,6 +12,9 @@ import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
+import static domain.model.MaterialStatus.APPROVED;
+import static domain.model.MaterialStatus.PENDING;
+
 public class CategoryRepository extends BaseRepository<Category>  {
     public CategoryRepository() {
         super(Category.class);
@@ -24,6 +27,34 @@ public class CategoryRepository extends BaseRepository<Category>  {
             CriteriaQuery<StudyMaterial> query = cb.createQuery(StudyMaterial.class);
             Root<StudyMaterial> root = query.from(StudyMaterial.class);
             query.where(cb.equal(root.get("category"), category));
+            return em.createQuery(query).getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<StudyMaterial> findPendingMaterialsByCategory(Category category) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<StudyMaterial> query = cb.createQuery(StudyMaterial.class);
+            Root<StudyMaterial> root = query.from(StudyMaterial.class);
+            query.where(cb.equal(root.get("category"), category),
+                    cb.equal(root.get("status"), PENDING));
+            return em.createQuery(query).getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<StudyMaterial> findApprovedMaterialsByCategory(Category category) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<StudyMaterial> query = cb.createQuery(StudyMaterial.class);
+            Root<StudyMaterial> root = query.from(StudyMaterial.class);
+            query.where(cb.equal(root.get("category"), category),
+                    cb.equal(root.get("status"), APPROVED));
             return em.createQuery(query).getResultList();
         } finally {
             em.close();

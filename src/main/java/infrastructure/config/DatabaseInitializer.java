@@ -135,5 +135,10 @@ public class DatabaseInitializer {
             throw e;
         }
     }
+
+    public static void main(String[] args) {
+        DatabaseInitializer dbInit = new DatabaseInitializer();
+        dbInit.initializeRolesAndPermissions();
+    }
 }
 

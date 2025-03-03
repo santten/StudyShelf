@@ -43,9 +43,9 @@ public class Launcher {
 
 
     public static void main(String[] args) {
-        DatabaseInitializer dbInit = new DatabaseInitializer();
-        dbInit.initializeRolesAndPermissions();
-        //testRatings();
+        //DatabaseInitializer dbInit = new DatabaseInitializer();
+        //dbInit.initializeRolesAndPermissions();
+        // testRatings();
 
         StudyShelfApplication.launch(StudyShelfApplication.class);
     }

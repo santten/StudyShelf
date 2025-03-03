@@ -74,7 +74,8 @@ public class SceneManager {
             GUILogger.warn("DNE: Tried to go to category with id " + id);
             displayErrorPage("This category does not exist.", SCREEN_HOME, "Go to home page");
         } else {
-            CategoryPage.setPage(c);
+            CategoryPage page = new CategoryPage();
+            page.setPage(c);
         }
     }
 
