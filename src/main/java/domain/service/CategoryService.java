@@ -8,6 +8,7 @@ import domain.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryService {
@@ -22,6 +23,18 @@ public class CategoryService {
 
     public List<StudyMaterial> getMaterialsByCategory(Category category) {
         return repository.findMaterialsByCategory(category);
+    }
+
+    public List<StudyMaterial> getPendingMaterialsByCategory(User user, Category category) {
+        if (!permissionService.hasPermission(user, PermissionType.APPROVE_RESOURCE)){
+            throw new SecurityException("You do not have permission to view pending materials for this category.");
+        }
+        return repository.findPendingMaterialsByCategory(category);
+    }
+
+
+    public List<StudyMaterial> getApprovedMaterialsByCategory(User currentUser, Category c) {
+        return repository.findApprovedMaterialsByCategory(c);
     }
 
     // CREATE_CATEGORY
@@ -79,5 +92,16 @@ public class CategoryService {
         repository.delete(category);
     }
 
+    public List<Category> getOwnedCategoriesWithPending(User u) {
+        List<Category> allCategories = repository.findCategoriesByUser(u);
+        List<Category> pendingCategories = new ArrayList<>();
+
+        for (Category category : allCategories) {
+            List<StudyMaterial> pending = repository.findPendingMaterialsByCategory(category);
+            if (!pending.isEmpty()) {pendingCategories.add(category);}
+        }
+
+        return pendingCategories;
+    }
 }
 

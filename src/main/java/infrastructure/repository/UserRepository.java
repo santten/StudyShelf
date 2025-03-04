@@ -8,6 +8,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 
+import java.util.List;
+
 
 public class UserRepository extends BaseRepository<User> {
 
@@ -26,6 +28,15 @@ public class UserRepository extends BaseRepository<User> {
             return em.createQuery(query).getSingleResult();
         } catch (NoResultException e) {
             return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<User> findAll() {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT u FROM User u", User.class).getResultList();
         } finally {
             em.close();
         }

@@ -3,5 +3,6 @@ package presentation.components;
 public enum ItemType {
     USER,
     CATEGORY,
-    MATERIAL
+    MATERIAL,
+    TAG
 }

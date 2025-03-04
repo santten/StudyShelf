@@ -153,16 +153,12 @@ public class UploadController {
         });
 
         btn.setOnAction(e -> {
-           Category cat = new Category();
-           cat.setCategoryName(field_courseName.getText());
-           cat.setCreator(Session.getInstance().getCurrentUser());
-           CategoryRepository categoryRepository = new CategoryRepository();
-           categoryRepository.save(cat);
-            try {
-                SceneManager.getInstance().displayCategory(cat.getCategoryId());
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            Category cat = new Category();
+            cat.setCategoryName(field_courseName.getText());
+            cat.setCreator(Session.getInstance().getCurrentUser());
+            CategoryRepository categoryRepository = new CategoryRepository();
+            categoryRepository.save(cat);
+            SceneManager.getInstance().displayCategory(cat.getCategoryId());
         });
 
         gp.add(btn, 1, 1);

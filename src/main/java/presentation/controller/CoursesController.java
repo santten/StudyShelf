@@ -16,7 +16,7 @@ import presentation.view.SceneManager;
 import java.io.IOException;
 import java.util.List;
 
-public class CoursesController {
+ public class CoursesController {
     private final CategoryRepository categoryRepo = new CategoryRepository();
 
     @FXML private VBox mainVBoxCourses;
@@ -48,11 +48,7 @@ public class CoursesController {
             hbox.setSpacing(8);
 
             button.setOnAction(e -> {
-                try {
-                    SceneManager.getInstance().displayCategory(c.getCategoryId());
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                SceneManager.getInstance().displayCategory(c.getCategoryId());
             });
 
             courseContainer.getChildren().addAll(title, hbox);

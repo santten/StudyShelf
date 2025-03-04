@@ -99,11 +99,7 @@ public class MyProfileSubScreens {
 
                 buttonL.setOnAction(e -> {
                     SceneManager sm = SceneManager.getInstance();
-                    try {
-                        sm.displayMaterial(s.getMaterialId());
-                    } catch (IOException ex) {
-                        sm.displayErrorPage("This material couldn't be displayed.", SCREEN_PROFILE, "Go back");
-                    }
+                    sm.displayMaterial(s.getMaterialId());
                 });
 
                 buttonL.setAlignment(Pos.CENTER_LEFT);
@@ -173,11 +169,7 @@ public class MyProfileSubScreens {
 
                 buttonL.setOnAction(e -> {
                     SceneManager sm = SceneManager.getInstance();
-                    try {
-                        sm.displayCategory(c.getCategoryId());
-                    } catch (IOException ex) {
-                        sm.displayErrorPage("This course couldn't be displayed.", SCREEN_PROFILE, "Go back");
-                    }
+                    sm.displayCategory(c.getCategoryId());
                 });
 
                 buttonL.setAlignment(Pos.CENTER_LEFT);
@@ -250,11 +242,7 @@ public class MyProfileSubScreens {
 
                 buttonL.setOnAction(e -> {
                     SceneManager sm = SceneManager.getInstance();
-                    try {
-                        sm.displayMaterial(r.getStudyMaterial().getMaterialId());
-                    } catch (IOException ex) {
-                        sm.displayErrorPage("This material couldn't be displayed.", SCREEN_PROFILE, "Go back");
-                    }
+                    sm.displayMaterial(r.getStudyMaterial().getMaterialId());
                 });
 
                 buttonL.setAlignment(Pos.CENTER_LEFT);

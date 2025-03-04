@@ -76,12 +76,12 @@ public class SignupController {
             }
 
             RoleRepository roleRepository = new RoleRepository();
-            Role userRole = roleRepository.findByName(roleType); // ✅ 查找 RoleType 而不是 String
+            Role userRole = roleRepository.findByName(roleType);
 
             System.out.println("[DB] Checking role: " + selectedRole);
 
             if (userRole == null) {
-                userRole = roleRepository.save(new Role(roleType)); // ✅ 这里改为 `RoleType`
+                userRole = roleRepository.save(new Role(roleType));
                 System.out.println("[DB] Created new role: " + selectedRole);
             }
 
