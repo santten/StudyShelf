@@ -10,6 +10,8 @@ import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
+import static domain.model.MaterialStatus.APPROVED;
+
 
 public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
     public StudyMaterialRepository() {
@@ -84,6 +86,18 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
         }
     }
 
+    public List<StudyMaterial> findLatestWithLimit(int limit) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT s FROM StudyMaterial s WHERE s.status = :status ORDER BY s.timestamp DESC", StudyMaterial.class)
+                    .setParameter("status", APPROVED)
+                    .setMaxResults(limit)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     public void updateMaterialStatus(int materialId, MaterialStatus status) {
         EntityManager em = getEntityManager();
         try {
@@ -101,14 +115,15 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
     public List<StudyMaterial> findReviewedMaterialsByUser(User user) {
         EntityManager em = getEntityManager();
         try {
-            return em.createQuery("SELECT s FROM StudyMaterial s WHERE s.uploader = :user AND s.status <> :status", StudyMaterial.class)
+            return em.createQuery(
+                            "SELECT DISTINCT r.studyMaterial FROM Rating r WHERE r.user = :user", StudyMaterial.class)
                     .setParameter("user", user)
-                    .setParameter("status", MaterialStatus.PENDING)
                     .getResultList();
         } finally {
             em.close();
         }
     }
+
     public StudyMaterial update(StudyMaterial material) {
         EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
         try {
@@ -121,6 +136,32 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
 
             em.getTransaction().commit();
             return managedMaterial;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<StudyMaterial> findBestReviewedMaterials(int limit) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery(
+                            "SELECT r.studyMaterial FROM Rating r GROUP BY r.studyMaterial " +
+                                    "ORDER BY AVG(r.ratingScore) ASC", StudyMaterial.class)
+                    .setMaxResults(limit)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<StudyMaterial> findReviewedMaterialsByUserLatest10(User user) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery(
+                            "SELECT DISTINCT r.studyMaterial FROM Rating r WHERE r.user = :user ORDER BY r.studyMaterial.timestamp DESC ", StudyMaterial.class)
+                    .setParameter("user", user)
+                    .setMaxResults(10)
+                    .getResultList();
         } finally {
             em.close();
         }

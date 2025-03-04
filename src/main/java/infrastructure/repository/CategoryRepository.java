@@ -74,41 +74,6 @@ public class CategoryRepository extends BaseRepository<Category>  {
         }
     }
 
-    public List<StudyMaterial> findMaterialsByUserInCategory(User user, Category category) {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<StudyMaterial> query = cb.createQuery(StudyMaterial.class);
-            Root<StudyMaterial> root = query.from(StudyMaterial.class);
-
-            Predicate userPredicate = cb.equal(root.get("uploader"), user);
-            Predicate categoryPredicate = cb.equal(root.get("category"), category);
-
-            query.where(cb.and(userPredicate, categoryPredicate));
-            return em.createQuery(query).getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-
-    public List<StudyMaterial> findMaterialsExceptUserInCategory(User user, Category category) {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<StudyMaterial> query = cb.createQuery(StudyMaterial.class);
-            Root<StudyMaterial> root = query.from(StudyMaterial.class);
-
-            Predicate userPredicate = cb.notEqual(root.get("uploader"), user);
-            Predicate categoryPredicate = cb.equal(root.get("category"), category);
-
-            query.where(cb.and(userPredicate, categoryPredicate));
-            return em.createQuery(query).getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
     public List<Category> findCategoriesByUser(User user) {
         EntityManager em = getEntityManager();
         try {

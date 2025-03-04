@@ -27,6 +27,17 @@ public class RatingRepository extends BaseRepository<Rating> {
         }
     }
 
+    public List<Rating> findByUser(User u) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT r FROM Rating r WHERE r.user = :user", Rating.class)
+                    .setParameter("user", u)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     public Double findAverageRatingByMaterial(StudyMaterial material) {
         EntityManager em = getEntityManager();
         try {

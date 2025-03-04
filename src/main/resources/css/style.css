@@ -26,6 +26,11 @@
 }
 
 /* text heading styles */
+.heading2 {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 24;
+}
+
 .heading3 {
     -fx-font-family: "Calistoga";
     -fx-font-size: 20;

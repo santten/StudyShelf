@@ -44,12 +44,6 @@ public class DatabaseInitializer {
                     savedPermissions.put(type, permission);
                 }
 
-//                Role adminRole = new Role(RoleType.ADMIN);
-//                Role teacherRole = new Role(RoleType.TEACHER);
-//                Role studentRole = new Role(RoleType.STUDENT);
-//
-//                adminRole.getPermissions().addAll(savedPermissions.values());
-
                 if (adminRole == null) {
                     adminRole = new Role(RoleType.ADMIN);
                     adminRole.getPermissions().addAll(savedPermissions.values());

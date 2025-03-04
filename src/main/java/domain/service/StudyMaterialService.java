@@ -193,4 +193,11 @@ public class StudyMaterialService {
     public StudyMaterial updateMaterial(StudyMaterial material) {
         return repository.update(material);
     }
+
+    public List<StudyMaterial> findLatestByLimit(User user, int limit){
+        if (!permissionService.hasPermission(user, PermissionType.READ_RESOURCES)) {
+            throw new SecurityException("You do not have permission to read study materials.");
+        }
+        return repository.findLatestWithLimit(limit);
+    }
 }
