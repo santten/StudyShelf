@@ -5,6 +5,8 @@ import domain.model.RoleType;
 import domain.model.User;
 import infrastructure.repository.RoleRepository;
 import infrastructure.repository.UserRepository;
+
+import java.util.List;
 import java.util.Optional;
 
 public class UserService {
@@ -41,7 +43,35 @@ public class UserService {
         return null;
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public boolean isTokenValid(String token) {
         return jwtService.getEmailFromToken(token) != null;
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User updateUser(User user, String firstName, String lastName, String email, String password) {
+        if (email != null && !email.equals(user.getEmail()) && userRepository.findByEmail(email) != null) {
+            throw new IllegalArgumentException("Email already taken!");
+        }
+
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+
+        if (password != null && !password.isEmpty()) {
+            user.setPassword(passwordService.hashPassword(password));
+        }
+
+        return userRepository.update(user);
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }

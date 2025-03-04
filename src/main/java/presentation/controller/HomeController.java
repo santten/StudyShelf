@@ -28,6 +28,7 @@ import static javafx.scene.shape.FillRule.EVEN_ODD;
 import static presentation.view.Screen.SCREEN_COURSES;
 import static presentation.view.Screen.SCREEN_FIND;
 
+// HomeController is a controller class which controls the home page of the application.
 public class HomeController {
     @FXML private VBox mainVBoxHome;
 

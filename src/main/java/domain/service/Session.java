@@ -5,9 +5,11 @@ import domain.model.User;
 public class Session {
     private static Session instance;
     private User currentUser;
+    private final PermissionService permissionService;
 
-    private Session() {}
-
+    private Session() {
+        this.permissionService = new PermissionService();
+    }
     public static Session getInstance() {
         if (instance == null) {
             instance = new Session();
@@ -22,4 +24,6 @@ public class Session {
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
+
+    public PermissionService getPermissionService() { return permissionService; }
 }

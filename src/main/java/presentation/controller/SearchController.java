@@ -2,9 +2,12 @@ package presentation.controller;
 
 import domain.model.Category;
 import domain.model.StudyMaterial;
+import domain.model.Tag;
 import domain.service.SearchService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
+import infrastructure.repository.TagRepository;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -14,14 +17,16 @@ import java.util.List;
 
 import static presentation.components.ListItem.listItemGraphic;
 
-public class SearchController {
+public class SearchController extends BaseController{
 
     private final SearchService searchService = new SearchService(
             new StudyMaterialRepository(),
-            new CategoryRepository()
+            new CategoryRepository(),
+            new TagRepository()
     );
     public CheckBox checkbox_includeMaterials;
     public CheckBox checkbox_includeCategories;
+    public CheckBox checkbox_includeTags;
 
     @FXML private TextField searchField;
     @FXML private Button searchButton;
@@ -65,6 +70,14 @@ public class SearchController {
                 List<Category> categoryResults = searchService.searchCategories(query);
                 categoryResults.forEach(category ->
                         resultsListView.getItems().add(ListItem.listItemGraphic(category))
+                );
+            }
+
+            // GUI related code
+            if (checkbox_includeTags.isSelected()) {
+                List<Tag> tagResults = searchService.searchTags(query);
+                tagResults.forEach(tag ->
+                        resultsListView.getItems().add(ListItem.listItemGraphic(tag))
                 );
             }
         }
