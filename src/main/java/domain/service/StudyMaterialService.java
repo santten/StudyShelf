@@ -43,6 +43,9 @@ public class StudyMaterialService {
         PreviewGeneratorService previewGenerator = new PreviewGeneratorService();
         byte[] preview = previewGenerator.generatePreview(content, fileType);
 
+        // auto-approve materials submitted by course owner
+        MaterialStatus status = (category.getCreator().getUserId() == uploader.getUserId()) ? MaterialStatus.APPROVED : MaterialStatus.PENDING;
+
         StudyMaterial material = new StudyMaterial(
                 uploader,
                 name,
@@ -51,7 +54,7 @@ public class StudyMaterialService {
                 content.length / 1024f,
                 fileType,
                 LocalDateTime.now(),
-                MaterialStatus.PENDING
+                status
         );
         material.setCategory(category);
         material.setPreviewImage(preview);

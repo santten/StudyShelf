@@ -169,7 +169,7 @@ public class MaterialPage {
                 break;
             case PENDING:
                 User u = Session.getInstance().getCurrentUser();
-                if (u.getUserId() != getMaterial().getUploader().getUserId()) {
+                if (u.getUserId() != getMaterial().getCategory().getCreator().getUserId()) {
                     Text pendingText = new Text("Please note: This material is still pending approval from the course owner.");
                     pendingText.getStyleClass().add("primary-light");
                     base.getChildren().add(pendingText);
