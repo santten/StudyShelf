@@ -48,11 +48,7 @@ import java.util.List;
             hbox.setSpacing(8);
 
             button.setOnAction(e -> {
-                try {
-                    SceneManager.getInstance().displayCategory(c.getCategoryId());
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                SceneManager.getInstance().displayCategory(c.getCategoryId());
             });
 
             courseContainer.getChildren().addAll(title, hbox);

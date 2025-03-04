@@ -4,6 +4,7 @@ import domain.model.Category;
 import domain.model.Tag;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -25,7 +26,20 @@ public class TagRepository extends BaseRepository<Tag> {
         }
     }
 
-    public List<Tag> findByName(String tagName) {
+    public Tag findByName(String tagName) {
+        EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        try {
+            return em.createQuery("SELECT t FROM Tag t WHERE LOWER(t.tagName) = LOWER(:tagName)", Tag.class)
+                    .setParameter("tagName", tagName)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Tag> searchByName(String tagName) {
         EntityManager em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
         try {
             return em.createQuery("SELECT t FROM Tag t WHERE LOWER(t.tagName) LIKE LOWER(:tagName)", Tag.class)

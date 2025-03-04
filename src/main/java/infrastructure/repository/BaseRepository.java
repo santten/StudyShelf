@@ -60,6 +60,7 @@ public abstract class BaseRepository<T> {
         try {
             transaction.begin();
             T updatedEntity = em.merge(entity);
+            em.flush();
             transaction.commit();
             return updatedEntity;
         } catch (Exception e) {

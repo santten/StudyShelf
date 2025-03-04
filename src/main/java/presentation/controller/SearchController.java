@@ -73,7 +73,6 @@ public class SearchController extends BaseController{
                 );
             }
 
-            // GUI related code
             if (checkbox_includeTags.isSelected()) {
                 List<Tag> tagResults = searchService.searchTags(query);
                 tagResults.forEach(tag ->
