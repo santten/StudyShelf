@@ -7,6 +7,7 @@ import domain.model.Category;
 
 import domain.service.Session;
 import infrastructure.repository.StudyMaterialRepository;
+import infrastructure.repository.TagRepository;
 import infrastructure.repository.UserRepository;
 import infrastructure.repository.CategoryRepository;
 
@@ -143,7 +144,10 @@ public class SceneManager {
         instance.current.setCenter(vbox);
     }
 
-    public void showMaterialsWithTag(Tag tag) {
+    public void showMaterialsWithTag(int tagId) {
+        TagRepository repo = new TagRepository();
+        Tag tag = repo.findById(tagId);
+
         VBox vbox = new VBox();
         vbox.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
         vbox.setPadding(new Insets(20, 20, 20, 20));

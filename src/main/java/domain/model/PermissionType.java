@@ -51,5 +51,7 @@ public enum PermissionType {
     // The following permissions are about review resources
     APPROVE_RESOURCE, // Approve a resource by a teacher or an admin
     REJECT_RESOURCE, // Reject a resource by a teacher or an admin
-    REVIEW_PENDING_RESOURCES // Review pending resources by a teacher or an admin
+    REVIEW_PENDING_RESOURCES, // Review pending resources by a teacher or an admin
+
+    CREATE_USER // ?
 }

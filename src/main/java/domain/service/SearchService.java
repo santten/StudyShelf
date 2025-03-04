@@ -30,7 +30,7 @@ public class SearchService {
     }
 
     public List<Tag> searchTags(String query) {
-        return tagRepository.findByName(query);
+        return tagRepository.searchByName(query);
     }
 
 }

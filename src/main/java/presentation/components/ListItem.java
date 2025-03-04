@@ -2,6 +2,7 @@ package presentation.components;
 
 import domain.model.Category;
 import domain.model.StudyMaterial;
+import domain.model.Tag;
 import domain.model.User;
 import domain.service.GoogleDriveService;
 import domain.service.PermissionService;
@@ -39,8 +40,14 @@ public class ListItem {
     }
 
     public static Button listItemGraphic(User u) {
-        return layout(u.getFullName(), USER, "girl whatever", 21);
+        return layout(u.getFullName(), USER, u.getRole().getName().toString(), u.getUserId());
     }
+
+    public static Button listItemGraphic(Tag t) {
+        String text = t.getMaterials().size() + " item" + (t.getMaterials().size() > 1 ? "s" : "") + " with this tag";
+        return layout(t.getTagName(), TAG, text, t.getTagId());
+    }
+
 
     public static Button layout(String text, ItemType type, String info, int id){
         Button btn = new Button();
@@ -68,6 +75,11 @@ public class ListItem {
                 svg.setContent(SVGContents.file());
                 color = "primary-light";
                 btn.setOnAction(e -> sm.displayMaterial(id));
+                break;
+            case TAG:
+                svg.setContent(SVGContents.tag());
+                color = "primary";
+                btn.setOnAction(e -> sm.showMaterialsWithTag(id));
                 break;
             default:
                 color = "error";

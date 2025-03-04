@@ -14,7 +14,7 @@ public class TagButton {
 
         btn.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();
-            sm.showMaterialsWithTag(tag);
+            sm.showMaterialsWithTag(tag.getTagId());
         });
 
         return btn;
