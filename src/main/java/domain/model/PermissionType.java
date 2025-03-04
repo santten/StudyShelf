@@ -41,7 +41,7 @@ public enum PermissionType {
     DELETE_ANY_RATING, // Delete any rating by an admin
 
     // The following permissions are about users
-    CREATE_USER, // Create a new user by a student, a teacher or an admin
+//    CREATE_USER, // Create a new user by a student, a teacher or an admin
     UPDATE_OWN_USER, // Update a user created by a student, a teacher or an admin themselves
     READ_OWN_USER, // Read a user created by a student, a teacher or an admin themselves
     READ_ALL_USERS, // Read all users by an admin
