@@ -48,6 +48,11 @@
     -fx-font-size: 16;
 }
 
+.label5 .text {
+    -fx-font-weight: bolder;
+    -fx-font-size: 12;
+}
+
 /* fill styles */
 .primary {
     -fx-text-fill: -primary;
@@ -139,6 +144,22 @@
     -fx-font-family: "Calistoga";
     -fx-font-size: 16;
     -fx-fill: -light;
+}
+
+.approveRejectButton {
+    -fx-cursor: hand;
+    -fx-background-color: -light;
+    -fx-border-color: transparent;
+}
+
+.approveRejectButton:hover {
+    -fx-background-color: -light-darker;
+}
+
+.decisionVBox {
+    -fx-background-color: -light-shadow;
+    -fx-background-radius: 6;
+    -fx-padding: 12;
 }
 
 .listItemBtn {

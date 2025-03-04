@@ -1,13 +1,10 @@
 package presentation.components;
 
-import domain.model.Rating;
-import domain.model.StudyMaterial;
-import domain.model.Tag;
+import domain.model.*;
 import domain.service.*;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.RatingRepository;
 import infrastructure.repository.ReviewRepository;
-import domain.model.Review;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.geometry.Insets;
@@ -17,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -31,11 +29,16 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static domain.model.MaterialStatus.*;
+
 public class MaterialPage {
     private final HBox fileContainer;
+
     private final VBox reviewContainer;
     private final VBox reviewWritingContainer;
-    private final HBox reviewTitleHBox;
+
+    private final VBox pendingStatusVBox;
+    private MaterialStatus pendingStatus;
 
     private final StudyMaterial material;
 
@@ -48,14 +51,16 @@ public class MaterialPage {
 
     private final RatingService ratingServ = new RatingService(new RatingRepository(), new PermissionService());
     private final ReviewService reviewSer = new ReviewService(new ReviewRepository(), new PermissionService());
+    private final StudyMaterialService materialServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
 
     public MaterialPage(StudyMaterial material) {
         this.material = material;
         this.fileContainer = new HBox();
+
+        this.pendingStatusVBox = new VBox();
+
         this.reviewWritingContainer = new VBox();
         this.reviewContainer = new VBox();
-        this.reviewTitleHBox = getReviewTitleHBox();
-
         this.curRatingNum = 0;
         this.curRatingText = "";
 
@@ -66,7 +71,7 @@ public class MaterialPage {
         return this.avgRating;
     }
 
-    private HBox getReviewTitleHBox() {
+    private HBox makeReviewTitleHBox() {
         Text title = new Text("Reviews");
         title.getStyleClass().addAll("heading3", "primary-light");
 
@@ -113,6 +118,14 @@ public class MaterialPage {
         return reviewContainer;
     }
 
+    private VBox getPendingStatusVBox() {
+        return pendingStatusVBox;
+    }
+
+    private void setPendingStatus(MaterialStatus status) {
+        this.pendingStatus = status;
+    }
+
     /* main method */
 
     public void displayPage(){
@@ -123,7 +136,6 @@ public class MaterialPage {
 
         setUpFileContainer();
         base.getChildren().add(getFileContainer());
-
 
         if (Session.getInstance().getCurrentUser().getUserId() != getMaterial().getUploader().getUserId() &&
             !ratingServ.hasUserRatedMaterial(Session.getInstance().getCurrentUser(), getMaterial())) {
@@ -136,6 +148,105 @@ public class MaterialPage {
 
         ScrollPane wrapper = new ScrollPane(base);
         SceneManager.getInstance().setCenter(wrapper);
+    }
+
+    private void setUpApprovalStatus() {
+        VBox base = getPendingStatusVBox();
+        base.getChildren().clear();
+
+        StudyMaterial sm = getMaterial();
+
+        switch (sm.getStatus()){
+            case APPROVED:
+                Text approvedText = new Text("This material has been approved by the course's owner " + sm.getCategory().getCreator().getFullName());
+                approvedText.getStyleClass().add("secondary-light");
+                base.getChildren().add(approvedText);
+                break;
+            case REJECTED:
+                Text rejectedText = new Text("Please note: This material has been rejected for the course it was submitted to.");
+                rejectedText.getStyleClass().add("error");
+                base.getChildren().add(rejectedText);
+                break;
+            case PENDING:
+                User u = Session.getInstance().getCurrentUser();
+                if (u.getUserId() != getMaterial().getUploader().getUserId()) {
+                    Text pendingText = new Text("Please note: This material is still pending approval from the course owner.");
+                    pendingText.getStyleClass().add("primary-light");
+                    base.getChildren().add(pendingText);
+                    break;
+                } else {
+                    VBox decisionVBox = new VBox();
+
+                    Text title = new Text("Waiting for approval!");
+                    title.getStyleClass().addAll("error", "heading3");
+
+                    Hyperlink courseHyperLink = new Hyperlink(sm.getCategory().getCategoryName());
+                    courseHyperLink.setOnAction(e -> {
+                        SceneManager sceneMan = SceneManager.getInstance();
+                        sceneMan.displayCategory(sm.getCategory().getCategoryId());
+                    });
+
+                    TextFlow textFlow = new TextFlow(
+                            new Text("This material is waiting for your approval under your course "),
+                            courseHyperLink);
+
+                    HBox buttons = new HBox();
+
+                    buttons.setSpacing(12);
+                    buttons.setAlignment(Pos.CENTER_LEFT);
+
+                    Button approvalButton = new Button();
+                    approvalButton.setOnAction(e -> {
+                        StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
+                        smServ.approveMaterial(Session.getInstance().getCurrentUser(), sm);
+                        setPendingStatus(APPROVED);
+                        setUpApprovalStatus();
+                    });
+
+                    approvalButton.getStyleClass().add("approveRejectButton");
+                    SVGPath approveSvg = new SVGPath();
+                    approveSvg.setContent(SVGContents.approve());
+                    approveSvg.getStyleClass().addAll("btnHover", "secondary-light");
+                    approveSvg.setFillRule(FillRule.EVEN_ODD);
+
+                    Label approveLabel = new Label("Approve Material");
+                    approveLabel.getStyleClass().addAll("label5", "secondary-light");
+
+                    HBox approvalGraphic = new HBox(approveSvg, approveLabel);
+                    approvalGraphic.setSpacing(12);
+                    approvalGraphic.setAlignment(Pos.CENTER_LEFT);
+                    approvalButton.setGraphic(approvalGraphic);
+
+                    Button rejectButton = new Button();
+                    rejectButton.setOnAction(e -> {
+                        StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
+                        smServ.rejectMaterial(Session.getInstance().getCurrentUser(), sm);
+                        setPendingStatus(REJECTED);
+                        setUpApprovalStatus();
+                    });
+
+                    rejectButton.getStyleClass().add("approveRejectButton");
+                    SVGPath rejectSvg = new SVGPath();
+                    rejectSvg.setContent(SVGContents.reject());
+                    rejectSvg.getStyleClass().addAll("btnHover", "error");
+                    rejectSvg.setFillRule(FillRule.EVEN_ODD);
+
+                    Label rejectLabel = new Label("Reject Material");
+                    rejectLabel.getStyleClass().addAll("label5", "error");
+
+                    HBox rejectGraphic = new HBox(rejectSvg, rejectLabel);
+                    rejectGraphic.setSpacing(12);
+                    rejectGraphic.setAlignment(Pos.CENTER_LEFT);
+                    rejectButton.setGraphic(rejectGraphic);
+
+                    buttons.getChildren().addAll(approvalButton, rejectButton);
+                    decisionVBox.getChildren().addAll(title, textFlow, buttons);
+                    decisionVBox.getStyleClass().add("decisionVBox");
+                    decisionVBox.setSpacing(10);
+                    base.getChildren().addAll(decisionVBox);
+                    break;
+                }
+        }
     }
 
     /* file display */
@@ -205,7 +316,13 @@ public class MaterialPage {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
         String formattedTimestamp = s.getTimestamp().format(formatter);
 
-        Text course = new Text("Uploaded under course " + s.getCategory().getCategoryName() + " on " + formattedTimestamp);
+        Hyperlink courseLink = new Hyperlink(s.getCategory().getCategoryName());
+        courseLink.setOnAction(e -> {
+            SceneManager sm = SceneManager.getInstance();
+            sm.displayCategory(s.getCategory().getCategoryId());
+        });
+
+        TextFlow course = new TextFlow(new Text("Uploaded under course "), courseLink, new Text(" on " + formattedTimestamp));
         course.getStyleClass().add("primary");
 
         TextFlow tagContainer = new TextFlow();
@@ -213,8 +330,9 @@ public class MaterialPage {
         tagContainer.setLineSpacing(10);
         tags.forEach(tag -> tagContainer.getChildren().addAll(TagButton.getBtn(tag), new Text("  ")));
 
+        setUpApprovalStatus();
         left.getChildren().addAll(title, uploaderLabels, fileDetails, downloadBtn,
-                course, fileDesc, tagContainer);
+                                course, getPendingStatusVBox(), fileDesc, tagContainer);
         left.setMinWidth(580);
         left.setMaxWidth(580);
         left.setSpacing(8);
@@ -358,7 +476,7 @@ public class MaterialPage {
             return;
         }
 
-        getReviewContainer().getChildren().add(getReviewTitleHBox());
+        getReviewContainer().getChildren().add(makeReviewTitleHBox());
 
         List<Rating> leftOverRatings = new ArrayList<>(ratings);
 
