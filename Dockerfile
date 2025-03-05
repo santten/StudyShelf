@@ -22,3 +22,4 @@ COPY . /app/
 RUN mvn package
 
 CMD ["java", "-jar", "target/studyshelf.jar"]
+
