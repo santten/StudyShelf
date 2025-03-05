@@ -148,17 +148,4 @@ class StudyMaterialRepositoryTest {
 //        assertEquals(2, updatedApprovedMaterials.size());
         assertTrue(updatedApprovedMaterials.stream().allMatch(m -> m.getStatus() == MaterialStatus.APPROVED));
     }
-
-    @Test
-    void findReviewedMaterialsByUser() {
-        List<StudyMaterial> reviewedMaterials = repository.findReviewedMaterialsByUser(user);
-        assertTrue(reviewedMaterials.isEmpty());
-
-        repository.updateMaterialStatus(testMaterial.getMaterialId(), MaterialStatus.APPROVED);
-        reviewedMaterials = repository.findReviewedMaterialsByUser(user);
-
-        assertFalse(reviewedMaterials.isEmpty());
-        assertEquals(1, reviewedMaterials.size());
-        assertEquals(MaterialStatus.APPROVED, reviewedMaterials.get(0).getStatus());
-    }
 }

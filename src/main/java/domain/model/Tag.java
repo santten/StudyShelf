@@ -17,7 +17,7 @@ public class Tag {
     @JoinColumn(name = "CreatorId")
     private User creator;
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.EAGER)
     private Set<StudyMaterial> materials = new HashSet<>();
 
     // Constructors

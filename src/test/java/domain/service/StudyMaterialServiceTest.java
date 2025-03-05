@@ -2,7 +2,6 @@ package domain.service;
 
 import domain.model.*;
 import infrastructure.repository.StudyMaterialRepository;
-import infrastructure.repository.TagRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,9 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -72,7 +69,7 @@ class StudyMaterialServiceTest {
         byte[] content = "Test content".getBytes();
         String filename = "test.txt";
         String expectedDriveUrl = "https://drive.google.com/file/test";
-        Category category = new Category("Java Programming", uploader);
+        Category category = new Category("Java Programming", adminUser);
 
         when(permissionService.hasPermission(uploader, PermissionType.CREATE_RESOURCE)).thenReturn(true);
         when(driveService.uploadFile(content, filename, "text/plain")).thenReturn(expectedDriveUrl);
@@ -112,7 +109,7 @@ class StudyMaterialServiceTest {
         materialService.approveMaterial(adminUser, testMaterial);
 
         assertEquals(MaterialStatus.APPROVED, testMaterial.getStatus());
-        verify(materialRepository, times(1)).save(testMaterial);
+        verify(materialRepository, times(1)).updateMaterialStatus(testMaterial.getMaterialId(), MaterialStatus.APPROVED);
     }
 
 
@@ -186,7 +183,6 @@ class StudyMaterialServiceTest {
         java.io.File saveLocation = mock(java.io.File.class);
 
         when(permissionService.hasPermission(uploader, PermissionType.READ_RESOURCES)).thenReturn(false);
-//        when(permissionService.hasPermission(uploader, PermissionType.REVIEW_PENDING_RESOURCES)).thenReturn(false);
 
         assertThrows(SecurityException.class, () ->
                 materialService.downloadMaterial(uploader, testMaterial, saveLocation)
@@ -202,7 +198,7 @@ class StudyMaterialServiceTest {
         materialService.approveMaterial(adminUser, testMaterial);
 
         assertEquals(MaterialStatus.APPROVED, testMaterial.getStatus());
-        verify(materialRepository, times(1)).save(testMaterial);
+        verify(materialRepository, times(1)).updateMaterialStatus(testMaterial.getMaterialId(), MaterialStatus.APPROVED);
     }
 
     @Test
@@ -212,7 +208,7 @@ class StudyMaterialServiceTest {
         materialService.rejectMaterial(adminUser, testMaterial);
 
         assertEquals(MaterialStatus.REJECTED, testMaterial.getStatus());
-        verify(materialRepository, times(1)).save(testMaterial);
+        verify(materialRepository, times(1)).updateMaterialStatus(testMaterial.getMaterialId(), MaterialStatus.REJECTED);
     }
 
     @Test
@@ -222,5 +218,28 @@ class StudyMaterialServiceTest {
         assertThrows(SecurityException.class, () -> materialService.approveMaterial(uploader, testMaterial));
 
         verify(materialRepository, never()).save(any(StudyMaterial.class));
+    }
+
+    @Test
+    void autoApprove_courseOwnerMaterial() throws IOException {
+        byte[] content = "Test content".getBytes();
+        String filename = "test.txt";
+        String expectedDriveUrl = "https://drive.google.com/file/test";
+        Category category = new Category("Java Programming", uploader);
+
+        when(permissionService.hasPermission(uploader, PermissionType.CREATE_RESOURCE)).thenReturn(true);
+        when(driveService.uploadFile(content, filename, "text/plain")).thenReturn(expectedDriveUrl);
+        when(materialRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
+        Set<Tag> tags = new HashSet<>();
+
+        StudyMaterial result = materialService.uploadMaterial(content, filename, uploader, "Java Basics", "Intro to Java", category, tags);
+
+        assertNotNull(result);
+        assertEquals("Java Basics", result.getName());
+        assertEquals("Intro to Java", result.getDescription());
+        assertEquals(expectedDriveUrl, result.getLink());
+        assertEquals(MaterialStatus.APPROVED, result.getStatus());
+
+        verify(materialRepository, times(1)).save(any(StudyMaterial.class));
     }
 }

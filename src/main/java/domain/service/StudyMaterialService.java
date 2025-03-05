@@ -5,6 +5,7 @@ import infrastructure.repository.StudyMaterialRepository;
 import domain.model.PermissionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import presentation.GUILogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +43,9 @@ public class StudyMaterialService {
         PreviewGeneratorService previewGenerator = new PreviewGeneratorService();
         byte[] preview = previewGenerator.generatePreview(content, fileType);
 
+        // auto-approve materials submitted by course owner
+        MaterialStatus status = (category.getCreator().getUserId() == uploader.getUserId()) ? MaterialStatus.APPROVED : MaterialStatus.PENDING;
+
         StudyMaterial material = new StudyMaterial(
                 uploader,
                 name,
@@ -50,7 +54,7 @@ public class StudyMaterialService {
                 content.length / 1024f,
                 fileType,
                 LocalDateTime.now(),
-                MaterialStatus.PENDING
+                status
         );
         material.setCategory(category);
         material.setPreviewImage(preview);
@@ -165,7 +169,8 @@ public class StudyMaterialService {
         }
 
         material.setStatus(MaterialStatus.APPROVED);
-        repository.save(material);
+        repository.updateMaterialStatus(material.getMaterialId(), MaterialStatus.APPROVED);
+
         logger.info("User {} approved study material: {}", user.getEmail(), material.getName());
     }
 
@@ -180,11 +185,19 @@ public class StudyMaterialService {
         }
 
         material.setStatus(MaterialStatus.REJECTED);
-        repository.save(material);
+        repository.updateMaterialStatus(material.getMaterialId(), MaterialStatus.REJECTED);
+
         logger.info("User {} rejected study material: {}", user.getEmail(), material.getName());
     }
 
     public StudyMaterial updateMaterial(StudyMaterial material) {
         return repository.update(material);
+    }
+
+    public List<StudyMaterial> findLatestByLimit(User user, int limit){
+        if (!permissionService.hasPermission(user, PermissionType.READ_RESOURCES)) {
+            throw new SecurityException("You do not have permission to read study materials.");
+        }
+        return repository.findLatestWithLimit(limit);
     }
 }

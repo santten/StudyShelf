@@ -26,6 +26,11 @@
 }
 
 /* text heading styles */
+.heading2 {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 24;
+}
+
 .heading3 {
     -fx-font-family: "Calistoga";
     -fx-font-size: 20;
@@ -46,6 +51,11 @@
 .label4 .text {
     -fx-font-family: "Calistoga";
     -fx-font-size: 16;
+}
+
+.label5 .text {
+    -fx-font-weight: bolder;
+    -fx-font-size: 12;
 }
 
 /* fill styles */
@@ -82,6 +92,11 @@
 .warning {
     -fx-text-fill: -warning;
     -fx-fill: -warning;
+}
+
+.dark {
+    -fx-text-fill: -dark;
+    -fx-fill: -dark;
 }
 
 /* button styles */
@@ -136,6 +151,22 @@
     -fx-fill: -light;
 }
 
+.approveRejectButton {
+    -fx-cursor: hand;
+    -fx-background-color: -light;
+    -fx-border-color: transparent;
+}
+
+.approveRejectButton:hover {
+    -fx-background-color: -light-darker;
+}
+
+.decisionVBox {
+    -fx-background-color: -light-shadow;
+    -fx-background-radius: 6;
+    -fx-padding: 12;
+}
+
 .listItemBtn {
     -fx-cursor: hand;
 
@@ -168,6 +199,21 @@
 .hyperlink:hover {
     -fx-text-fill: -primary;
 }
+
+.reviewUserLink {
+    -fx-underline: false;
+}
+
+.reviewUserLink .text {
+    -fx-fill: -primary;
+    -fx-font-size: 18;
+    -fx-font-family: "Calistoga";
+}
+
+.reviewUserLink:hover .text {
+    -fx-fill: -primary-light;
+}
+
 
 .text-field {
     -fx-focus-fill: -primary-light;
@@ -229,6 +275,10 @@
 .materialCardSubtitle {
     -fx-font-size: 12;
     -fx-fill: -primary-light;
+}
+
+.reviewCard {
+    -fx-padding: 10;
 }
 
 /* SVG icons */

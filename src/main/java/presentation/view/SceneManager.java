@@ -42,9 +42,6 @@ public class SceneManager {
     private boolean logged;
     private Stage primaryStage;
 
-    private SceneManager(){
-    }
-
     public static SceneManager getInstance() {
         if (instance == null){
             instance = new SceneManager();
@@ -65,63 +62,28 @@ public class SceneManager {
         instance.logged = false;
     }
 
-    public void displayCategory(int id) throws IOException {
-        if (!instance.logged){
-            setScreen(SCREEN_LOGIN);
+    public void displayCategory(int id) {
+        if (Session.getInstance().getCurrentUser() == null){
+            try { setScreen(SCREEN_LOGIN); }
+            catch (IOException e){ throw new RuntimeException("Failed to load FXML components", e);}
+            return;
+        }
+
+        CategoryRepository repo = new CategoryRepository();
+        Category c = repo.findById(id);
+        if (c == null) {
+            GUILogger.warn("DNE: Tried to go to category with id " + id);
+            displayErrorPage("This category does not exist.", SCREEN_HOME, "Go to home page");
         } else {
-            CategoryRepository repo = new CategoryRepository();
-            Category c = repo.findById(id);
-            if (c == null) {
-                GUILogger.warn("DNE: Tried to go to category with id " + id);
-                displayErrorPage("This category does not exist.", SCREEN_HOME, "Go to home page");
-            } else {
-//                 VBox vbox = new VBox();
-
-//                 vbox.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
-//                 vbox.setSpacing(12);
-//                 vbox.setPadding(new Insets(20, 20, 20, 20));
-//                 Text title = new Text(c.getCategoryName());
-//                 title.getStyleClass().add("heading3");
-//                 title.getStyleClass().add("secondary");
-
-//                 Text author = new Text("Course by " + c.getCreator().getFullName());
-//                 VBox header = new VBox();
-//                 header.getChildren().addAll(title, author);
-
-//                 vbox.getChildren().add(header);
-
-//                 List<StudyMaterial> creatorMaterials = repo.findMaterialsByUserInCategory(c.getCreator(), c);
-//                 if (!creatorMaterials.isEmpty()) {
-//                     Text text = new Text("Materials from " + c.getCreator().getFullName());
-//                     text.getStyleClass().add("heading4");
-//                     text.getStyleClass().add("secondary");
-
-//                     vbox.getChildren().addAll(
-//                             text,
-//                             MaterialCard.materialCardScrollHBox(creatorMaterials));
-//                 }
-
-//                 List<StudyMaterial> otherMaterials = repo.findMaterialsExceptUserInCategory(c.getCreator(), c);
-//                 if (!otherMaterials.isEmpty()) {
-//                     GUILogger.info(String.valueOf(otherMaterials.size()));
-//                     Text text = new Text("Materials from others");
-//                     text.getStyleClass().add("heading4");
-//                     text.getStyleClass().add("secondary");
-
-//                     vbox.getChildren().addAll(
-//                             text,
-//                             MaterialCard.materialCardScrollHBox(otherMaterials));
-//                 }
-
-//                 instance.current.setCenter(vbox);
-                CategoryPage.setPage(c);
-            }
+            CategoryPage page = new CategoryPage();
+            page.setPage(c);
         }
     }
 
-    public void displayMaterial(int id) throws IOException {
-        if (!instance.logged){
-            setScreen(SCREEN_LOGIN);
+    public void displayMaterial(int id) {
+        if (Session.getInstance().getCurrentUser() == null){
+            try { setScreen(SCREEN_LOGIN); }
+            catch (IOException e){ throw new RuntimeException("Failed to load FXML components", e);}
             return;
         }
 
@@ -134,12 +96,14 @@ public class SceneManager {
             return;
         }
 
-        MaterialPage.setPage(s);
+        MaterialPage page = new MaterialPage(s);
+        page.displayPage();
     }
 
-    public void displayProfile(int id) throws IOException {
-        if (!instance.logged){
-            setScreen(SCREEN_LOGIN);
+    public void displayProfile(int id) {
+        if (Session.getInstance().getCurrentUser() == null){
+            try { setScreen(SCREEN_LOGIN); }
+            catch (IOException e){ throw new RuntimeException("Failed to load FXML components", e);}
             return;
         }
 
@@ -180,7 +144,10 @@ public class SceneManager {
         instance.current.setCenter(vbox);
     }
 
-    public void showMaterialsWithTag(Tag tag) {
+    public void showMaterialsWithTag(int tagId) {
+        TagRepository repo = new TagRepository();
+        Tag tag = repo.findById(tagId);
+
         VBox vbox = new VBox();
         vbox.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
         vbox.setPadding(new Insets(20, 20, 20, 20));
@@ -194,9 +161,7 @@ public class SceneManager {
         List<StudyMaterial> list = sRepo.findByTag(tag);
         if (!list.isEmpty()){
             List<Node> buttonList = new ArrayList<>();
-            list.forEach(sm -> {
-                buttonList.add(ListItem.listItemGraphic(sm));
-            });
+            list.forEach(sm -> buttonList.add(ListItem.listItemGraphic(sm)));
             vbox.getChildren().add(ListItem.toListView(buttonList));
         } else {
             vbox.getChildren().add(new Text("No materials exist with this tag yet!"));

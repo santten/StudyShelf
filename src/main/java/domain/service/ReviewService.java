@@ -79,6 +79,14 @@ public class ReviewService {
         }
         reviewRepository.delete(review);
     }
+
+    public boolean hasUserReviewedMaterial(User user, StudyMaterial sm){
+        if (sm.getUploader().getUserId() == user.getUserId()){
+            return false;
+        } else {
+            return reviewRepository.hasUserReviewedMaterial(user, sm);
+        }
+    }
 }
 
 

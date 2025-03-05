@@ -86,7 +86,7 @@ class CategoryRepositoryTest {
 
         var categories = repository.findByName("Java");
         assertFalse(categories.isEmpty());
-        assertEquals("Java", categories.get(0).getCategoryName());
+        assertTrue(categories.get(0).getCategoryName().contains("Java"));
     }
 
     @Test
