@@ -30,6 +30,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static domain.model.MaterialStatus.*;
+import static domain.model.PermissionType.DELETE_ANY_RESOURCE;
 
 public class MaterialPage {
     private final HBox fileContainer;
@@ -343,7 +344,7 @@ public class MaterialPage {
         preview.setFitHeight(188);
         preview.setPreserveRatio(false);
         right.getChildren().add(preview);
-
+        
         getFileContainer().setSpacing(20);
         getFileContainer().getChildren().addAll(left, right);
     }

@@ -28,10 +28,7 @@ import java.util.Objects;
 
 import static presentation.view.Screen.*;
 
-import presentation.components.CategoryPage;
-import presentation.components.ListItem;
-import presentation.components.MaterialPage;
-import presentation.components.ProfilePage;
+import presentation.components.*;
 import presentation.GUILogger;
 
 public class SceneManager {
@@ -183,15 +180,25 @@ public class SceneManager {
             base.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
             base.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-            String resourcePath = switch (screen) {
-                case SCREEN_COURSES -> "/fxml/courses.fxml";
-                case SCREEN_PROFILE -> "/fxml/profile.fxml";
-                case SCREEN_FIND -> "/fxml/search.fxml";
-                case SCREEN_UPLOAD -> "/fxml/upload.fxml";
-                default -> "/fxml/home.fxml";
-            };
+            switch (screen) {
+                case SCREEN_COURSES:
+                    base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/courses.fxml"))));
+                    break;
+                case SCREEN_FIND:
+                    base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/search.fxml"))));
+                    break;
+                case SCREEN_PROFILE:
+                    base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/profile.fxml"))));
+                    break;
+                case SCREEN_UPLOAD:
+                    UploadPage page = new UploadPage();
+                    page.initialize(base);
+                    break;
+                default:
+                    base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/home.fxml"))));
+                    break;
+            }
 
-            base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(resourcePath))));
             instance.current.setCenter(base);
         }
 

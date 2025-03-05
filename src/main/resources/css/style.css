@@ -41,6 +41,11 @@
     -fx-font-size: 16;
 }
 
+.heading5 {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 14;
+}
+
 /* label heading styles */
 
 .label3 .text {
@@ -188,6 +193,18 @@
     -fx-border-color: transparent;
 }
 
+.buttonGreenBase {
+    -fx-cursor: hand;
+    -fx-background-color: -secondary-light;
+    -fx-border-color: -secondary-light;
+    -fx-border-radius: 5;
+}
+
+.buttonGreenBase:hover {
+    -fx-background-color: -secondary;
+    -fx-border-color: -secondary;
+}
+
 /* basic */
 
 .hyperlink {
@@ -262,7 +279,7 @@
     -fx-max-height: 108px;
     -fx-spacing: 4;
     -fx-padding: 4;
-    -fx-border-radius: 4;
+    -fx-border-radius: 5;
     -fx-border-color: -primary-light;
     -fx-background-color: -light;
 }

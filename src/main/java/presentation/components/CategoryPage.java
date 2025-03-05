@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static javafx.scene.shape.FillRule.EVEN_ODD;
+
 public class CategoryPage {
     private List<StudyMaterial> pendingMaterials;
     private List<StudyMaterial> ownerMaterials;
@@ -85,7 +87,33 @@ public class CategoryPage {
 
         Text author = new Text("Course by " + c.getCreator().getFullName());
         VBox header = new VBox();
-        header.getChildren().addAll(title, author);
+
+        Button addMaterialButton = new Button();
+        addMaterialButton.getStyleClass().add("buttonGreenBase");
+
+        SVGPath addSVG = new SVGPath();
+        addSVG.setFillRule(EVEN_ODD);
+        addSVG.setContent(SVGContents.create());
+        addSVG.getStyleClass().addAll("light");
+
+        Text addText = new Text("Add Your Material to this Course");
+        addText.getStyleClass().addAll("heading5", "light");
+
+        addMaterialButton.setOnAction(e -> {
+            ScrollPane scrollPane = new ScrollPane();
+            UploadPage page = new UploadPage();
+            page.initialize(scrollPane, c);
+            SceneManager sm = SceneManager.getInstance();
+            sm.setCenter(scrollPane);
+        });
+
+        HBox addMaterialHBox = new HBox(addSVG, addText);
+        addMaterialHBox.setAlignment(Pos.CENTER_LEFT);
+        addMaterialHBox.setSpacing(8);
+        addMaterialButton.setGraphic(addMaterialHBox);
+
+        header.setSpacing(12);
+        header.getChildren().addAll(title, author, addMaterialButton);
 
         vbox.getChildren().add(header);
 
@@ -105,7 +133,7 @@ public class CategoryPage {
         if (!getOwnerMaterials().isEmpty()) {
             Text text = new Text("Materials from " + c.getCreator().getFullName());
             text.getStyleClass().add("heading4");
-            text.getStyleClass().add("secondary");
+            text.getStyleClass().add("primary");
 
             vbox.getChildren().addAll(
                     text,
@@ -179,7 +207,7 @@ public class CategoryPage {
         SVGPath approveSvg = new SVGPath();
         approveSvg.setContent(SVGContents.approve());
         approveSvg.getStyleClass().addAll("btnHover", "secondary-light");
-        approveSvg.setFillRule(FillRule.EVEN_ODD);
+        approveSvg.setFillRule(EVEN_ODD);
         approvalButton.setGraphic(approveSvg);
         approvalButton.setMaxWidth(20);
 
@@ -197,7 +225,7 @@ public class CategoryPage {
         SVGPath rejectSvg = new SVGPath();
         rejectSvg.setContent(SVGContents.reject());
         rejectSvg.getStyleClass().addAll("btnHover", "error");
-        rejectSvg.setFillRule(FillRule.EVEN_ODD);
+        rejectSvg.setFillRule(EVEN_ODD);
         rejectButton.setGraphic(rejectSvg);
         rejectButton.setMaxWidth(20);
 
