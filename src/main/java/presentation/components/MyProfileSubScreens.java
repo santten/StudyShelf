@@ -76,9 +76,7 @@ public class MyProfileSubScreens {
                 SVGPath svgDel = new SVGPath();
                 svgDel.setContent(SVGContents.delete());
                 svgDel.getStyleClass().add("error");
-                svgDel.setFillRule(EVEN_ODD);
-                svgDel.setScaleX(1.5);
-                svgDel.setScaleY(1.5);
+                SVGContents.setScale(svgDel, 1.5);
 
                 buttonR.setGraphic(svgDel);
                 buttonR.setMinWidth(30);
@@ -163,9 +161,7 @@ public class MyProfileSubScreens {
                 SVGPath svgDel = new SVGPath();
                 svgDel.setContent(SVGContents.delete());
                 svgDel.getStyleClass().add("error");
-                svgDel.setFillRule(EVEN_ODD);
-                svgDel.setScaleX(1.5);
-                svgDel.setScaleY(1.5);
+                SVGContents.setScale(svgDel, 1.5);
 
                 buttonL.setOnAction(e -> {
                     SceneManager sm = SceneManager.getInstance();
@@ -227,9 +223,7 @@ public class MyProfileSubScreens {
                 SVGPath svgDel = new SVGPath();
                 svgDel.setContent(SVGContents.delete());
                 svgDel.getStyleClass().add("error");
-                svgDel.setFillRule(EVEN_ODD);
-                svgDel.setScaleX(1.5);
-                svgDel.setScaleY(1.5);
+                SVGContents.setScale(svgDel, 1.5);
 
                 buttonR.setGraphic(svgDel);
                 buttonR.setMinWidth(30);
