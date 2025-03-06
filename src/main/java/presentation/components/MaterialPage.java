@@ -77,7 +77,7 @@ public class MaterialPage {
         Text title = new Text("Reviews");
         title.getStyleClass().addAll("heading3", "primary-light");
 
-        HBox stars = Stars.StarRow(getAvgRating(), 1, 4, null);
+        HBox stars = Stars.StarRow(getAvgRating(), 1, 4);
         Text starsText = new Text(String.format("(%.1f)", getAvgRating()));
 
         HBox hbox = new HBox();
@@ -601,7 +601,7 @@ public class MaterialPage {
         HBox reviewerHBox = new HBox(userLink, TextLabels.getUserRoleLabel(review.getUser()));
         reviewerHBox.setSpacing(8);
 
-        HBox stars = Stars.StarRow(rating.getRatingScore(), 1, 3, null);
+        HBox stars = Stars.StarRow(rating.getRatingScore(), 1, 3);
 
         Text comment = new Text(review.getReviewText());
         comment.setWrappingWidth(320);
@@ -612,7 +612,7 @@ public class MaterialPage {
     }
 
     private HBox ratingOnlyCard(Rating r) {
-        HBox stars = Stars.StarRow(r.getRatingScore(), 1, 3, null);
+        HBox stars = Stars.StarRow(r.getRatingScore(), 1, 3);
         Hyperlink userLink = new Hyperlink(r.getUser().getFullName());
         userLink.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();
