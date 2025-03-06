@@ -112,6 +112,34 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
         }
     }
 
+    public void updateMaterialDescription(int materialId, String description) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            StudyMaterial material = em.find(StudyMaterial.class, materialId);
+            if (material != null) {
+                material.setDescription(description);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void updateMaterialTitle(int materialId, String title) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            StudyMaterial material = em.find(StudyMaterial.class, materialId);
+            if (material != null) {
+                material.setName(title);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
     public List<StudyMaterial> findReviewedMaterialsByUser(User user) {
         EntityManager em = getEntityManager();
         try {

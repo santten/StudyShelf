@@ -30,6 +30,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static domain.model.MaterialStatus.*;
+import static domain.model.PermissionType.DELETE_ANY_RESOURCE;
+import static domain.model.RoleType.ADMIN;
 
 public class MaterialPage {
     private final HBox fileContainer;
@@ -134,11 +136,13 @@ public class MaterialPage {
         base.setSpacing(12);
         base.setPadding(new Insets(20, 20, 20, 20));
 
-        setUpFileContainer();
+        boolean isOwned = Session.getInstance().getCurrentUser().getUserId() == getMaterial().getUploader().getUserId();
+        boolean isAdmin = (Session.getInstance().getCurrentUser().getRole().getName() == ADMIN);
+
+        setUpFileContainer(isOwned || isAdmin);
         base.getChildren().add(getFileContainer());
 
-        if (Session.getInstance().getCurrentUser().getUserId() != getMaterial().getUploader().getUserId() &&
-            !ratingServ.hasUserRatedMaterial(Session.getInstance().getCurrentUser(), getMaterial())) {
+        if (!isOwned && !ratingServ.hasUserRatedMaterial(Session.getInstance().getCurrentUser(), getMaterial())) {
             setUpReviewWriting();
             base.getChildren().add(getReviewWritingContainer());
         }
@@ -251,7 +255,7 @@ public class MaterialPage {
 
     /* file display */
 
-    private void setUpFileContainer() {
+    private void setUpFileContainer(boolean isEditable) {
         fileContainer.getChildren().clear();
         StudyMaterial s = getMaterial();
 
@@ -259,13 +263,53 @@ public class MaterialPage {
         base.getStylesheets().add(Objects.requireNonNull(MaterialPage.class.getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
         base.setPadding(new Insets(20, 20, 20, 20));
-
         VBox left = new VBox();
-        Label title = new Label(s.getName());
+
+        /* FILE TITLE */
+        TextFlow fileTitleContainer = new TextFlow();
+        Label title = new Label(s.getName() + " ");
         title.getStyleClass().add("label3");
         title.getStyleClass().add("primary-light");
         title.setWrapText(true);
         title.setMaxWidth(600);
+
+        if (isEditable){
+            Button editTitle = new Button();
+            editTitle.getStyleClass().add("buttonEmpty");
+            SVGPath svgEdit = new SVGPath();
+            svgEdit.setContent(SVGContents.edit());
+            svgEdit.getStyleClass().add("primary-light");
+            SVGContents.setScale(svgEdit, 1.4);
+            editTitle.setGraphic(svgEdit);
+
+            fileTitleContainer.getChildren().addAll(title, editTitle);
+            editTitle.setOnAction(e -> {
+                fileTitleContainer.getChildren().clear();
+                TextField titleArea = new TextField(s.getName());
+                titleArea.setMinWidth(540);
+
+                Button saveTitle = new Button("");
+                saveTitle.getStyleClass().add("buttonEmpty");
+                SVGPath svgSave = new SVGPath();
+                svgSave.setContent(SVGContents.save());
+                svgSave.getStyleClass().add("primary-light");
+                SVGContents.setScale(svgSave, 1.4);
+                saveTitle.setGraphic(svgSave);
+
+                saveTitle.setOnAction(ev -> {
+                    materialServ.updateTitle(Session.getInstance().getCurrentUser(), s, titleArea.getText());
+
+                    title.setText(titleArea.getText());
+
+                    fileTitleContainer.getChildren().clear();
+                    fileTitleContainer.getChildren().addAll(title, editTitle);
+                });
+                fileTitleContainer.getChildren().clear();
+                fileTitleContainer.getChildren().addAll(titleArea, saveTitle);
+            });
+        } else {
+            fileTitleContainer.getChildren().add(title);
+        }
 
         TextFlow uploaderLabels = new TextFlow();
         Text author = new Text("Uploaded by ");
@@ -309,9 +353,41 @@ public class MaterialPage {
             }
         });
 
+        /* FILE DESC CONTAINER */
+        VBox fileDescContainer = new VBox();
+
         TextFlow fileDesc = new TextFlow();
+        fileDesc.getChildren().clear();
         fileDesc.getChildren().add(new Text(s.getDescription()));
         fileDesc.setMaxWidth(580);
+
+        if (isEditable){
+            Button editDesc = new Button("Edit Description");
+            editDesc.getStyleClass().add("btnXSPrimary");
+            fileDescContainer.getChildren().addAll(fileDesc, editDesc);
+            editDesc.setOnAction(e -> {
+                fileDescContainer.getChildren().clear();
+                TextArea descArea = new TextArea(s.getDescription());
+
+                descArea.setWrapText(true);
+                Button saveDesc = new Button("Save Description");
+                saveDesc.getStyleClass().add("btnXSPrimary");
+                saveDesc.setOnAction(ev -> {
+                    materialServ.updateDescription(Session.getInstance().getCurrentUser(), s, descArea.getText());
+                    fileDescContainer.getChildren().clear();
+
+                    fileDesc.getChildren().clear();
+                    fileDesc.getChildren().add(new Text(descArea.getText()));
+
+                    fileDescContainer.getChildren().addAll(fileDesc, editDesc);
+                });
+                fileDescContainer.getChildren().addAll(descArea, saveDesc);
+            });
+            fileDescContainer.setSpacing(12);
+        } else {
+            fileDescContainer.getChildren().add(fileDesc);
+        }
+
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
         String formattedTimestamp = s.getTimestamp().format(formatter);
@@ -331,8 +407,8 @@ public class MaterialPage {
         tags.forEach(tag -> tagContainer.getChildren().addAll(TagButton.getBtn(tag), new Text("  ")));
 
         setUpApprovalStatus();
-        left.getChildren().addAll(title, uploaderLabels, fileDetails, downloadBtn,
-                                course, getPendingStatusVBox(), fileDesc, tagContainer);
+        left.getChildren().addAll(fileTitleContainer, uploaderLabels, tagContainer, fileDetails, downloadBtn,
+                                course, fileDescContainer, getPendingStatusVBox());
         left.setMinWidth(580);
         left.setMaxWidth(580);
         left.setSpacing(8);
@@ -343,7 +419,7 @@ public class MaterialPage {
         preview.setFitHeight(188);
         preview.setPreserveRatio(false);
         right.getChildren().add(preview);
-
+        
         getFileContainer().setSpacing(20);
         getFileContainer().getChildren().addAll(left, right);
     }

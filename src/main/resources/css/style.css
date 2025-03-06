@@ -41,6 +41,11 @@
     -fx-font-size: 16;
 }
 
+.heading5 {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 14;
+}
+
 /* label heading styles */
 
 .label3 .text {
@@ -129,9 +134,20 @@
     -fx-background-color: -secondary;
 }
 
-.btnXS .text {
+.btnXS .text, .btnXSPrimary .text {
     -fx-font-size: 10;
     -fx-fill: -light;
+}
+
+.btnXSPrimary {
+    -fx-background-color: -primary-light;
+    -fx-padding: 0 8px;
+    -fx-background-radius: 2;
+    -fx-cursor: hand;
+}
+
+.btnXSPrimary:hover, .btnXSPrimary:focused {
+    -fx-background-color: -primary;
 }
 
 .btnDownload {
@@ -186,6 +202,18 @@
     -fx-cursor: hand;
     -fx-background-color: transparent;
     -fx-border-color: transparent;
+}
+
+.buttonGreenBase {
+    -fx-cursor: hand;
+    -fx-background-color: -secondary-light;
+    -fx-border-color: -secondary-light;
+    -fx-border-radius: 5;
+}
+
+.buttonGreenBase:hover {
+    -fx-background-color: -secondary;
+    -fx-border-color: -secondary;
 }
 
 /* basic */
@@ -262,7 +290,7 @@
     -fx-max-height: 108px;
     -fx-spacing: 4;
     -fx-padding: 4;
-    -fx-border-radius: 4;
+    -fx-border-radius: 5;
     -fx-border-color: -primary-light;
     -fx-background-color: -light;
 }
@@ -367,4 +395,21 @@
 .star-empty {
     -fx-fill: -light-darker;
     -fx-clip-rule: even-odd;
+}
+
+.text-area, .text-field {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-color: -light-darker;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-text-fill: -dark;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.text-area:focused, .text-field:focused {
+    -fx-border-color: -primary-light;
 }

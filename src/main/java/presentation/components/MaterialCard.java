@@ -118,7 +118,9 @@ public class MaterialCard {
 
         pane.setContent(materialCardHBox);
         pane.setMinViewportWidth(720);
+        pane.setPrefViewportWidth(720);
         pane.setMinViewportHeight(120);
+        pane.setPrefViewportHeight(120);
         pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
