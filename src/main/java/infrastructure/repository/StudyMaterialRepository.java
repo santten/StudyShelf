@@ -3,6 +3,7 @@ package infrastructure.repository;
 import domain.model.*;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -16,6 +17,11 @@ import static domain.model.MaterialStatus.APPROVED;
 public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
     public StudyMaterialRepository() {
         super(StudyMaterial.class);
+    }
+
+    //    constructor for testing
+    public StudyMaterialRepository(EntityManagerFactory emf) {
+        super(StudyMaterial.class, emf);
     }
 
     public List<StudyMaterial> findByNameOrDescription(String query) {

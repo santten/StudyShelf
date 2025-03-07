@@ -6,7 +6,9 @@ import domain.model.RoleType;
 import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
+import util.TestPersistenceUtil;
 
 import java.util.List;
 
@@ -28,14 +30,21 @@ class BaseRepositoryTest {
         public TestRepository() {
             super(Category.class);
         }
+
+        // Constructor for test EntityManagerFactory
+        public TestRepository(EntityManagerFactory emf) {
+            super(Category.class, emf);
+        }
     }
 
     @BeforeAll
     void setupDatabase() {
-        entityManager = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        categoryRepository = new TestRepository();
-        roleRepository = new RoleRepository();
-        userRepository = new UserRepository();
+        entityManager = TestPersistenceUtil.getEntityManager();
+
+        EntityManagerFactory testEmf = TestPersistenceUtil.getEntityManagerFactory();
+        categoryRepository = new TestRepository(testEmf);
+        roleRepository = new RoleRepository(testEmf);
+        userRepository = new UserRepository(testEmf);
     }
 
     @BeforeEach
@@ -109,5 +118,6 @@ class BaseRepositoryTest {
         if (entityManager.isOpen()) {
             entityManager.close();
         }
+        TestPersistenceUtil.closeEntityManagerFactory(); // Add this to clean up
     }
 }

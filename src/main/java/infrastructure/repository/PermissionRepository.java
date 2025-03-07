@@ -5,6 +5,7 @@ import domain.model.PermissionType;
 import domain.service.PermissionService;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import java.util.List;
 
@@ -17,6 +18,11 @@ public class PermissionRepository extends BaseRepository<Permission> {
 
     public PermissionRepository() {
         super(Permission.class);
+    }
+
+    //    constructor for testing
+    public PermissionRepository(EntityManagerFactory emf) {
+        super(Permission.class, emf);
     }
 
     public Permission save(Permission permission) {

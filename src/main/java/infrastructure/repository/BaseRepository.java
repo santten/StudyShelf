@@ -2,19 +2,28 @@ package infrastructure.repository;
 
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
 import java.util.List;
 
 public abstract class BaseRepository<T> {
     private final Class<T> entityClass;
+    private EntityManagerFactory emf;
 
     protected BaseRepository(Class<T> entityClass) {
         this.entityClass = entityClass;
+        this.emf = DatabaseConnection.getEntityManagerFactory();
+    }
+
+    // Constructor for testing
+    protected BaseRepository(Class<T> entityClass, EntityManagerFactory emf) {
+        this.entityClass = entityClass;
+        this.emf = emf;
     }
 
     protected EntityManager getEntityManager() {
-        return DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        return emf.createEntityManager();
     }
 
     public T save(T entity) {

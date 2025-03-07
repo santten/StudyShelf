@@ -4,33 +4,33 @@ import domain.model.RoleType;
 import domain.model.Tag;
 import domain.model.User;
 import domain.model.Role;
+import jakarta.persistence.EntityManagerFactory;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import util.TestPersistenceUtil;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TagRepositoryTest {
+    private static EntityManagerFactory emf;
     private TagRepository repository;
     private User creator;
     private Tag testTag;
     private RoleRepository roleRepo;
     private UserRepository userRepo;
 
-//    @BeforeEach
-//    void setUp() {
-//        repository = new TagRepository();
-//        Role testRole = new Role(RoleType.STUDENT);
-//        UserRepository userRepo = new UserRepository();
-//        creator = new User("Armas", "Nevolainen", "armas" + System.currentTimeMillis() + "@gmail.com", "password", testRole);
-//        creator = userRepo.save(creator);
-//
-//        testTag = new Tag("Java" + System.currentTimeMillis(), creator);
-//    }
+    @BeforeAll
+    static void setupDatabase() {
+        emf = TestPersistenceUtil.getEntityManagerFactory();
+    }
 
     @BeforeEach
     void setUp() {
-        repository = new TagRepository();
-        roleRepo = new RoleRepository();
-        userRepo = new UserRepository();
+        repository = new TagRepository(emf);
+        roleRepo = new RoleRepository(emf);
+        userRepo = new UserRepository(emf);
 
         Role testRole = roleRepo.findByName(RoleType.STUDENT);
         if (testRole == null) {
@@ -61,5 +61,9 @@ class TagRepositoryTest {
         assertEquals(savedTag.getTagId(), foundTag.getTagId());
         assertEquals(savedTag.getTagName(), foundTag.getTagName());
         assertEquals(creator.getUserId(), foundTag.getCreator().getUserId());
+    }
+    @AfterAll
+    static void tearDown() {
+        TestPersistenceUtil.closeEntityManagerFactory();
     }
 }

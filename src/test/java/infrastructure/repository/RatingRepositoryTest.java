@@ -2,6 +2,8 @@ package infrastructure.repository;
 
 import domain.model.*;
 import org.junit.jupiter.api.*;
+import util.TestPersistenceUtil;
+import jakarta.persistence.EntityManagerFactory;
 import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,13 +16,14 @@ class RatingRepositoryTest {
     private User user;
     private StudyMaterial material;
     private Rating testRating;
-
+    private EntityManagerFactory emf;
     @BeforeAll
     void setupDatabase() {
-        repository = new RatingRepository();
-        roleRepo = new RoleRepository();
-        userRepo = new UserRepository();
-        materialRepo = new StudyMaterialRepository();
+        emf = TestPersistenceUtil.getEntityManagerFactory();
+        repository = new RatingRepository(emf);
+        roleRepo = new RoleRepository(emf);
+        userRepo = new UserRepository(emf);
+        materialRepo = new StudyMaterialRepository(emf);
     }
 
     @BeforeEach
@@ -89,5 +92,6 @@ class RatingRepositoryTest {
         roleRepo = null;
         userRepo = null;
         materialRepo = null;
+        TestPersistenceUtil.closeEntityManagerFactory();
     }
 }
