@@ -79,8 +79,7 @@ public class HomeController {
                 SceneManager sm = SceneManager.getInstance();
                 svg.setContent(SVGContents.school());
                 btn.setOnAction(e -> sm.displayCategory(category.getCategoryId()));
-                svg.setFillRule(FillRule.EVEN_ODD);
-                svg.setStyle("-fx-scale-y: 1.2; -fx-scale-x: 1.2;");
+                SVGContents.setScale(svg, 1.2);
                 svg.getStyleClass().add("secondary");
 
                 Label label = new Label(category.getCategoryName());
@@ -155,9 +154,7 @@ public class HomeController {
 
         SVGPath searchSvg = new SVGPath();
         searchSvg.setContent(SVGContents.search());
-        searchSvg.setFillRule(EVEN_ODD);
-        searchSvg.setScaleX(1.3);
-        searchSvg.setScaleY(1.3);
+        SVGContents.setScale(searchSvg, 1.3);
         searchSvg.getStyleClass().add("primary");
 
         Text text = new Text("Looking for something else?");

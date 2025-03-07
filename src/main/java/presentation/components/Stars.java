@@ -27,16 +27,12 @@ public class Stars {
             StackPane starContainer = new StackPane();
             SVGPath emptyStar = new SVGPath();
             emptyStar.setContent(SVGContents.star());
-            emptyStar.setScaleX(scale);
-            emptyStar.setScaleY(scale);
-            emptyStar.setFillRule(EVEN_ODD);
+            SVGContents.setScale(emptyStar, scale);
             emptyStar.getStyleClass().add("star-empty");
 
             SVGPath filledStar = new SVGPath();
             filledStar.setContent(SVGContents.star());
-            filledStar.setScaleX(scale);
-            filledStar.setScaleY(scale);
-            filledStar.setFillRule(EVEN_ODD);
+            SVGContents.setScale(filledStar, scale);
             filledStar.getStyleClass().add("star-filled");
 
             double fillPercentage = Math.max(0, Math.min(1, fillAmount - (i - 1)));

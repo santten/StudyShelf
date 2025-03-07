@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.List;
 
+import static domain.model.RoleType.ADMIN;
+
 public class StudyMaterialService {
     private static final Logger logger = LoggerFactory.getLogger(StudyMaterialService.class);
 
@@ -192,6 +194,26 @@ public class StudyMaterialService {
 
     public StudyMaterial updateMaterial(StudyMaterial material) {
         return repository.update(material);
+    }
+
+    public void updateDescription(User user, StudyMaterial sm, String description) {
+        if ((user.getUserId() == sm.getUploader().getUserId()
+                && permissionService.hasPermission(user, PermissionType.UPDATE_OWN_RESOURCE))
+                || user.getRole().getName() == ADMIN) {
+            repository.updateMaterialDescription(sm.getMaterialId(), description);
+        } else {
+            throw new SecurityException("You do not have permission to modify this description.");
+        }
+    }
+
+    public void updateTitle(User user, StudyMaterial sm, String title) {
+        if ((user.getUserId() == sm.getUploader().getUserId()
+                && permissionService.hasPermission(user, PermissionType.UPDATE_OWN_RESOURCE))
+                || user.getRole().getName() == ADMIN) {
+            repository.updateMaterialTitle(sm.getMaterialId(), title);
+        } else {
+            throw new SecurityException("You do not have permission to modify this title.");
+        }
     }
 
     public List<StudyMaterial> findLatestByLimit(User user, int limit){
