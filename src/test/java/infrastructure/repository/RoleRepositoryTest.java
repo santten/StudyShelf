@@ -25,17 +25,33 @@ class RoleRepositoryTest {
     @BeforeEach
     void cleanDatabase() {
         EntityManager em = TestPersistenceUtil.getEntityManager();
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM User u WHERE u.role IN (SELECT r FROM Role r)").executeUpdate();
-        for (RoleType roleType : RoleType.values()) {
-            Role existingRole = roleRepository.findByName(roleType);
-            if (existingRole != null) {
-                roleRepository.delete(existingRole);
+        try {
+            em.getTransaction().begin();
+
+            // Delete dependent entities first (in order)
+            em.createQuery("DELETE FROM Rating r").executeUpdate();
+            em.createQuery("DELETE FROM Review r").executeUpdate();
+            em.createQuery("DELETE FROM StudyMaterial s").executeUpdate();
+            em.createQuery("DELETE FROM Category c").executeUpdate();
+            em.createQuery("DELETE FROM Tag t").executeUpdate();
+
+            // Now delete users
+            em.createQuery("DELETE FROM User u").executeUpdate();
+
+            // Finally delete roles
+            em.createQuery("DELETE FROM Role r").executeUpdate();
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
             }
+            throw e;
+        } finally {
+            em.close();
         }
-        em.getTransaction().commit();
-        em.close();
     }
+
 
 
 

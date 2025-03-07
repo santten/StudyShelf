@@ -84,7 +84,13 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
     public List<StudyMaterial> findByStatus(MaterialStatus status) {
         EntityManager em = getEntityManager();
         try {
-            return em.createQuery("SELECT s FROM StudyMaterial s WHERE s.status = :status", StudyMaterial.class)
+            return em.createQuery(
+                            "SELECT DISTINCT s FROM StudyMaterial s " +
+                                    "LEFT JOIN FETCH s.category c " +
+                                    "LEFT JOIN FETCH c.creator " +
+                                    "LEFT JOIN FETCH s.uploader " +
+                                    "LEFT JOIN FETCH s.tags " +
+                                    "WHERE s.status = :status", StudyMaterial.class)
                     .setParameter("status", status)
                     .getResultList();
         } finally {

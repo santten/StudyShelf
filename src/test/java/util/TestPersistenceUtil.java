@@ -8,7 +8,7 @@ public class TestPersistenceUtil {
     private static EntityManagerFactory emf;
 
     public static EntityManagerFactory getEntityManagerFactory() {
-        if (emf == null) {
+        if (emf == null || !emf.isOpen()) {
             emf = Persistence.createEntityManagerFactory("studyshelf-test");
         }
         return emf;
@@ -19,8 +19,6 @@ public class TestPersistenceUtil {
     }
 
     public static void closeEntityManagerFactory() {
-        if (emf != null && emf.isOpen()) {
-            emf.close();
-        }
+
     }
 }
