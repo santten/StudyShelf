@@ -37,3 +37,5 @@ src/main/resources/META-INF/
 tokens/
 src/main/resources/META-INF/persistence.xml
 tokens/.idea/
+
+.env
