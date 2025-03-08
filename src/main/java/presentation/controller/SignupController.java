@@ -55,6 +55,7 @@ public class SignupController {
             }
         });
     }
+
     @FXML
     private void handleSignup() {
         try {
@@ -102,32 +103,5 @@ public class SignupController {
             e.printStackTrace();
         }
     }
-
-//            User newUser = new User(firstName, lastName, email, password);
-//            RoleRepository roleRepository = new RoleRepository();
-//            Role userRole = roleRepository.findByName(selectedRole);
-//
-//            System.out.println("[DB] Checking role: " + selectedRole);
-//
-
-
-//            if (userRole == null) {
-//                userRole = roleRepository.save(new Role(selectedRole));
-//                System.out.println("[DB] Created new role: " + selectedRole);
-//            }
-//
-//            newUser.getRoles().add(userRole);
-//            UserRepository userRepository = new UserRepository();
-//            User savedUser = userRepository.save(newUser);
-//
-//            System.out.println("[DB] User saved successfully - ID: " + savedUser.getUserId());
-//            System.out.println("[DB] User details: " + firstName + " " + lastName + " (" + email + ")");
-//
-//            sm.setScreen(SCREEN_LOGIN);
-//
-//        } catch (Exception e) {
-//            System.out.println("[DB] Error in user creation: " + e.getMessage());
-//            e.printStackTrace();
-//        }
 }
 

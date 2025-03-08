@@ -1,19 +1,14 @@
 package presentation.controller;
 
-import domain.model.PermissionType;
-import domain.model.RoleType;
 import domain.model.User;
 import domain.service.*;
 import infrastructure.repository.RoleRepository;
 import infrastructure.repository.UserRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import presentation.GUILogger;
 
-import java.util.List;
-
-import static domain.model.PermissionType.*;
-
+// Only fot the users (admin,teacher,student) to manage their own account
+// UserController handles user-related operations for their own account.
 public class UserController extends BaseController {
     private final UserService userService = new UserService(
             new UserRepository(),
@@ -22,103 +17,93 @@ public class UserController extends BaseController {
             new JWTService()
     );
 
-    @FXML private ListView<String> userListView;
+    private final PasswordService passwordService;
+
+    public UserController() {
+        this.passwordService = new PasswordService();
+    }
+
+    // Update account
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
     @FXML private TextField emailField;
-    @FXML private PasswordField passwordField;
-    @FXML private ChoiceBox<RoleType> roleChoiceBox;
-    @FXML private Button createUserButton;
-    @FXML private Button updateUserButton;
-    @FXML private Button deleteUserButton;
+    @FXML private Button updateButton;
 
-    private User selectedUser;
+    // Change password
+    @FXML private PasswordField confirmPasswordField;
+    @FXML private PasswordField newPasswordField;
+    @FXML private Button updatePasswordButton;
+
+    // Delete account
+    @FXML private Button deleteButton;
+
+    private User currentUser;
 
     @FXML
-    private void initialize() {
-        loadUsers();
+    public void initialize() {
+        currentUser = Session.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            firstNameField.setText(currentUser.getFirstName());
+            lastNameField.setText(currentUser.getLastName());
+            emailField.setText(currentUser.getEmail());
+        }
 
-        userListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                selectedUser = userService.findByEmail(newVal);
-                populateUserDetails();
-            }
-        });
-
-        updateUserButton.setOnAction(e -> updateUser());
-        deleteUserButton.setOnAction(e -> deleteUser());
-
-        roleChoiceBox.getItems().addAll(RoleType.ADMIN, RoleType.TEACHER, RoleType.STUDENT);
+        updateButton.setOnAction(e -> updateUserInfo());
+        updatePasswordButton.setOnAction(e -> updatePassword());
+        deleteButton.setOnAction(e -> deleteUserAccount());
     }
 
-    private void loadUsers() {
-        if (!hasPermission(READ_ALL_USERS)) {
-            showAlert(Alert.AlertType.ERROR, "Permission Denied", "You do not have permission to view all users.");
-            return;
-        }
+    private void updateUserInfo() {
+        if (currentUser == null) return;
 
-        userListView.getItems().clear();
-        List<User> users = userService.getAllUsers();
-        users.forEach(user -> userListView.getItems().add(user.getEmail()));
-    }
+        currentUser.setFirstName(firstNameField.getText());
+        currentUser.setLastName(lastNameField.getText());
+        currentUser.setEmail(emailField.getText());
 
-    private void updateUser() {
-        if (selectedUser == null) {
-            showAlert(Alert.AlertType.WARNING, "No User Selected", "Please select a user to update.");
-            return;
-        }
-
-        User currentUser = Session.getInstance().getCurrentUser();
-
-        if (selectedUser.equals(currentUser)) {
-            if (!hasPermission(UPDATE_OWN_USER)) {
-                showAlert(Alert.AlertType.ERROR, "Permission Denied", "You do not have permission to update your own profile.");
-                return;
-            }
-        } else {
-            showAlert(Alert.AlertType.ERROR, "Permission Denied", "You can only update your own profile.");
-            return;
-        }
-
-        selectedUser.setFirstName(firstNameField.getText());
-        selectedUser.setLastName(lastNameField.getText());
-        selectedUser.setEmail(emailField.getText());
-
-        userService.updateUser( selectedUser, selectedUser.getFirstName(), selectedUser.getLastName(), selectedUser.getEmail(), passwordField.getText());
-        showAlert(Alert.AlertType.INFORMATION, "Success", "User updated successfully.");
-        loadUsers();
-    }
-
-    private void deleteUser() {
-        if (selectedUser == null) {
-            showAlert(Alert.AlertType.WARNING, "No User Selected", "Please select a user to delete.");
-            return;
-        }
-
-        User currentUser = Session.getInstance().getCurrentUser();
-
-        if (selectedUser.equals(currentUser)) {
-            if (!hasPermission(DELETE_OWN_USER)) {
-                showAlert(Alert.AlertType.ERROR, "Permission Denied", "You do not have permission to delete your own account.");
-                return;
-            }
-        } else if (!hasPermission(DELETE_ANY_USER)) {
-            showAlert(Alert.AlertType.ERROR, "Permission Denied", "You do not have permission to delete other users.");
-            return;
-        }
-
-        userService.deleteUser(selectedUser);
-        showAlert(Alert.AlertType.INFORMATION, "Success", "User deleted successfully.");
-        loadUsers();
-    }
-
-    private void populateUserDetails() {
-        if (selectedUser != null) {
-            firstNameField.setText(selectedUser.getFirstName());
-            lastNameField.setText(selectedUser.getLastName());
-            emailField.setText(selectedUser.getEmail());
-            roleChoiceBox.setValue(selectedUser.getRole().getName());
+        try {
+            userService.updateUser(currentUser,currentUser.getFirstName(), currentUser.getLastName(), currentUser.getEmail());
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Profile updated successfully.");
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Update Failed", "Failed to update profile: " + e.getMessage());
         }
     }
 
+    private void updatePassword() {
+        if (currentUser == null) return;
+
+        String confirmPassword = confirmPasswordField.getText();
+        String newPassword = newPasswordField.getText();
+
+        if (!userService.checkPassword(confirmPassword, currentUser.getPassword())) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Password", "Current password is incorrect.");
+            return;
+        }
+
+        if (newPassword.isEmpty() || newPassword.length() < 8) {
+            showAlert(Alert.AlertType.ERROR, "Password Error", "New password must be at least 8 characters long.");
+            return;
+        }
+
+        String hashedNewPassword = passwordService.hashPassword(newPassword);
+        currentUser.setPassword(hashedNewPassword);
+
+        try {
+            userService.updateUserPassword(currentUser, newPassword);
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Password updated successfully.");
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Password Update Failed", "Failed to update password: " + e.getMessage());
+        }
+    }
+
+    private void deleteUserAccount() {
+        if (currentUser == null) return;
+
+        try {
+            userService.deleteUser(currentUser);
+            Session.getInstance().logout();  // Log out after deleting account
+            showAlert(Alert.AlertType.INFORMATION, "Account Deleted", "Your account has been successfully deleted.");
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Deletion Failed", "Failed to delete account: " + e.getMessage());
+        }
+    }
 }
