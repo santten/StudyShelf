@@ -95,4 +95,33 @@ public class CategoryRepository extends BaseRepository<Category>  {
             em.close();
         }
     }
+
+    public long countMaterialsByCategory(Category category) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Long> query = cb.createQuery(Long.class);
+            Root<StudyMaterial> root = query.from(StudyMaterial.class);
+            query.select(cb.count(root));
+            query.where(cb.equal(root.get("category"), category));
+            return em.createQuery(query).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    public long countPendingMaterialsByCategory(Category category) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Long> query = cb.createQuery(Long.class);
+            Root<StudyMaterial> root = query.from(StudyMaterial.class);
+            query.select(cb.count(root));
+            query.where(cb.equal(root.get("category"), category),
+                    cb.equal(root.get("status"), PENDING));
+            return em.createQuery(query).getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
 }

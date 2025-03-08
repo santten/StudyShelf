@@ -53,10 +53,10 @@ public class CategoryService {
             throw new RuntimeException("Category not found");
         }
 
-        // UPDATE_COURSE_CATEGORY
+    // UPDATE_COURSE_CATEGORY
         boolean isCourseOwner = user.equals(existingCategory.getCreator());
         boolean canUpdateCourseCategory = isCourseOwner && permissionService.hasPermission(user, PermissionType.UPDATE_COURSE_CATEGORY);
-        // UPDATE_ANY_CATEGORY
+    // UPDATE_ANY_CATEGORY
         boolean canUpdateAnyCategory = permissionService.hasPermission(user, PermissionType.UPDATE_ANY_CATEGORY);
 
         if (!(canUpdateCourseCategory || canUpdateAnyCategory)) {
@@ -79,15 +79,21 @@ public class CategoryService {
             throw new RuntimeException("Category not found.");
         }
 
-        // DELETE_COURSE_CATEGORY
+    // DELETE_COURSE_CATEGORY
         boolean isCourseOwner = user.equals(category.getCreator());
         boolean canDeleteCourseCategory = isCourseOwner && permissionService.hasPermission(user, PermissionType.DELETE_COURSE_CATEGORY);
-        //
+    // DELETE_ANY_CATEGORY
         boolean canDeleteAnyCategory = permissionService.hasPermission(user, PermissionType.DELETE_ANY_CATEGORY);
 
         if (!(canDeleteCourseCategory || canDeleteAnyCategory)) {
             throw new SecurityException("You do not have permission to delete this category.");
         }
+
+        long materialCount = repository.countMaterialsByCategory(category);
+        if (materialCount > 0) {
+            throw new RuntimeException("Cannot delete category with existing study materials.");
+        }
+
         logger.info("User {} deleted category: {}", user.getEmail(), category.getCategoryName());
         repository.delete(category);
     }
@@ -97,8 +103,10 @@ public class CategoryService {
         List<Category> pendingCategories = new ArrayList<>();
 
         for (Category category : allCategories) {
-            List<StudyMaterial> pending = repository.findPendingMaterialsByCategory(category);
-            if (!pending.isEmpty()) {pendingCategories.add(category);}
+            long pendingCount = repository.countPendingMaterialsByCategory(category);
+            if (pendingCount > 0) {
+                pendingCategories.add(category);
+            }
         }
 
         return pendingCategories;
