@@ -4,10 +4,11 @@ import domain.model.Category;
 import domain.model.RoleType;
 import domain.model.User;
 import domain.model.Role;
-import infrastructure.config.DatabaseConnection;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import org.junit.jupiter.api.*;
+import util.TestPersistenceUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,11 +23,12 @@ class CategoryRepositoryTest {
 
     @BeforeAll
     void setupDatabase() {
-        entityManager = DatabaseConnection.getEntityManagerFactory().createEntityManager();
+        entityManager = TestPersistenceUtil.getEntityManager();
 
-        repository = new CategoryRepository();
-        roleRepo = new RoleRepository();
-        userRepo = new UserRepository();
+        EntityManagerFactory testEmf = TestPersistenceUtil.getEntityManagerFactory();
+        repository = new CategoryRepository(testEmf);
+        roleRepo = new RoleRepository(testEmf);
+        userRepo = new UserRepository(testEmf);
     }
 
     @BeforeEach
@@ -138,5 +140,6 @@ class CategoryRepositoryTest {
         if (entityManager.isOpen()) {
             entityManager.close();
         }
+        TestPersistenceUtil.closeEntityManagerFactory();
     }
 }

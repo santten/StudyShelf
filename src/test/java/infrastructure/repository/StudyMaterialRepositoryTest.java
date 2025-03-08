@@ -1,16 +1,16 @@
 package infrastructure.repository;
 
 import domain.model.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.*;
+import util.TestPersistenceUtil;
+import jakarta.persistence.EntityManagerFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudyMaterialRepositoryTest {
+    private static EntityManagerFactory emf;
     private StudyMaterialRepository repository;
     private User user;
     private Category category;
@@ -19,12 +19,17 @@ class StudyMaterialRepositoryTest {
     private UserRepository userRepo;
     private CategoryRepository categoryRepo;
 
+    @BeforeAll
+    static void setupDatabase() {
+        emf = TestPersistenceUtil.getEntityManagerFactory();
+    }
+
     @BeforeEach
     void setUp() {
-        repository = new StudyMaterialRepository();
-        roleRepo = new RoleRepository();
-        userRepo = new UserRepository();
-        categoryRepo = new CategoryRepository();
+        repository = new StudyMaterialRepository(emf);
+        roleRepo = new RoleRepository(emf);
+        userRepo = new UserRepository(emf);
+        categoryRepo = new CategoryRepository(emf);
 
         Role testRole = roleRepo.findByName(RoleType.STUDENT);
         if (testRole == null) {
@@ -147,5 +152,10 @@ class StudyMaterialRepositoryTest {
 
 //        assertEquals(2, updatedApprovedMaterials.size());
         assertTrue(updatedApprovedMaterials.stream().allMatch(m -> m.getStatus() == MaterialStatus.APPROVED));
+    }
+
+    @AfterAll
+    static void tearDown() {
+        TestPersistenceUtil.closeEntityManagerFactory();
     }
 }

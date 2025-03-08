@@ -1,8 +1,10 @@
 package infrastructure.repository;
 
+import domain.model.Permission;
 import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -15,6 +17,11 @@ public class UserRepository extends BaseRepository<User> {
 
     public UserRepository() {
         super(User.class);
+    }
+
+    //    constructor for testing
+    public UserRepository(EntityManagerFactory emf) {
+        super(User.class, emf);
     }
 
     public User findByEmail(String email) {

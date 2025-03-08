@@ -15,6 +15,7 @@
             <!--<property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://host.docker.internal:3306/StudyShelf"/>
              Uncomment this line and comment line above to use the local database>-->
               <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/StudyShelf"/>
+
             <property name="jakarta.persistence.jdbc.user" value="appuser"/>
             <property name="jakarta.persistence.jdbc.password" value="password"/>
             <property name="hibernate.connection.pool_size" value="100"/>
@@ -30,6 +31,24 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="studyshelf-test" transaction-type="RESOURCE_LOCAL">
+        <class>domain.model.User</class>
+        <class>domain.model.StudyMaterial</class>
+        <class>domain.model.Category</class>
+        <class>domain.model.Tag</class>
+        <class>domain.model.Role</class>
+        <class>domain.model.Permission</class>
+
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.show_sql" value="true"/>
         </properties>
     </persistence-unit>
 </persistence>

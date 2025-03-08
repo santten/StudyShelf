@@ -5,6 +5,7 @@ import domain.model.Role;
 import domain.model.RoleType;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -17,6 +18,11 @@ import java.util.Set;
 public class RoleRepository  extends BaseRepository<Role> {
     public RoleRepository() {
         super(Role.class);
+    }
+
+    //    constructor for testing
+    public RoleRepository(EntityManagerFactory emf) {
+        super(Role.class, emf);
     }
 
     @Override

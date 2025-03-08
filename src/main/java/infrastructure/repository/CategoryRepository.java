@@ -5,6 +5,7 @@ import domain.model.StudyMaterial;
 import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -18,6 +19,11 @@ import static domain.model.MaterialStatus.PENDING;
 public class CategoryRepository extends BaseRepository<Category>  {
     public CategoryRepository() {
         super(Category.class);
+    }
+
+//    constructor for testing
+    public CategoryRepository(EntityManagerFactory emf) {
+        super(Category.class, emf);
     }
 
     public List<StudyMaterial> findMaterialsByCategory(Category category) {
