@@ -1,9 +1,11 @@
 package infrastructure.repository;
 
 import domain.model.Category;
+import domain.model.Permission;
 import domain.model.Tag;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -14,6 +16,11 @@ import java.util.List;
 public class TagRepository extends BaseRepository<Tag> {
     public TagRepository() {
         super(Tag.class);
+    }
+
+    //    constructor for testing
+    public TagRepository(EntityManagerFactory emf) {
+        super(Tag.class, emf);
     }
 
     public List<Tag> findAll() {

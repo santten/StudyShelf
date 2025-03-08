@@ -3,6 +3,7 @@ package infrastructure.repository;
 import domain.model.*;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -16,6 +17,11 @@ import static domain.model.MaterialStatus.APPROVED;
 public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
     public StudyMaterialRepository() {
         super(StudyMaterial.class);
+    }
+
+    //    constructor for testing
+    public StudyMaterialRepository(EntityManagerFactory emf) {
+        super(StudyMaterial.class, emf);
     }
 
     public List<StudyMaterial> findByNameOrDescription(String query) {
@@ -78,7 +84,13 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
     public List<StudyMaterial> findByStatus(MaterialStatus status) {
         EntityManager em = getEntityManager();
         try {
-            return em.createQuery("SELECT s FROM StudyMaterial s WHERE s.status = :status", StudyMaterial.class)
+            return em.createQuery(
+                            "SELECT DISTINCT s FROM StudyMaterial s " +
+                                    "LEFT JOIN FETCH s.category c " +
+                                    "LEFT JOIN FETCH c.creator " +
+                                    "LEFT JOIN FETCH s.uploader " +
+                                    "LEFT JOIN FETCH s.tags " +
+                                    "WHERE s.status = :status", StudyMaterial.class)
                     .setParameter("status", status)
                     .getResultList();
         } finally {

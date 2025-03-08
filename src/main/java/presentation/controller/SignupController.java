@@ -3,6 +3,7 @@ package presentation.controller;
 import domain.model.Role;
 import domain.model.RoleType;
 import domain.model.User;
+import domain.service.PasswordService;
 import infrastructure.repository.UserRepository;
 import infrastructure.repository.RoleRepository;
 import javafx.fxml.FXML;
@@ -54,6 +55,7 @@ public class SignupController {
             }
         });
     }
+
     @FXML
     private void handleSignup() {
         try {
@@ -85,7 +87,9 @@ public class SignupController {
                 System.out.println("[DB] Created new role: " + selectedRole);
             }
 
-            User newUser = new User(firstName, lastName, email, password, userRole);
+            PasswordService passwordService = new PasswordService();
+            String hashedPassword = passwordService.hashPassword(password);
+            User newUser = new User(firstName, lastName, email, hashedPassword, userRole);
             UserRepository userRepository = new UserRepository();
             User savedUser = userRepository.save(newUser);
 
@@ -99,32 +103,5 @@ public class SignupController {
             e.printStackTrace();
         }
     }
-
-//            User newUser = new User(firstName, lastName, email, password);
-//            RoleRepository roleRepository = new RoleRepository();
-//            Role userRole = roleRepository.findByName(selectedRole);
-//
-//            System.out.println("[DB] Checking role: " + selectedRole);
-//
-
-
-//            if (userRole == null) {
-//                userRole = roleRepository.save(new Role(selectedRole));
-//                System.out.println("[DB] Created new role: " + selectedRole);
-//            }
-//
-//            newUser.getRoles().add(userRole);
-//            UserRepository userRepository = new UserRepository();
-//            User savedUser = userRepository.save(newUser);
-//
-//            System.out.println("[DB] User saved successfully - ID: " + savedUser.getUserId());
-//            System.out.println("[DB] User details: " + firstName + " " + lastName + " (" + email + ")");
-//
-//            sm.setScreen(SCREEN_LOGIN);
-//
-//        } catch (Exception e) {
-//            System.out.println("[DB] Error in user creation: " + e.getMessage());
-//            e.printStackTrace();
-//        }
 }
 

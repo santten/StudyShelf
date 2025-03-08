@@ -1,10 +1,12 @@
 package infrastructure.repository;
 
+import domain.model.Permission;
 import domain.model.Review;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
@@ -13,6 +15,11 @@ import java.util.List;
 public class ReviewRepository extends BaseRepository<Review> {
     public ReviewRepository() {
         super(Review.class);
+    }
+
+    //    constructor for testing
+    public ReviewRepository(EntityManagerFactory emf) {
+        super(Review.class, emf);
     }
 
     public List<Review> findByStudyMaterial(StudyMaterial material) {

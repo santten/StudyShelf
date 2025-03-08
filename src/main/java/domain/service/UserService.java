@@ -7,7 +7,6 @@ import infrastructure.repository.RoleRepository;
 import infrastructure.repository.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -22,7 +21,7 @@ public class UserService {
         this.jwtService = jwtService;
     }
 
-    public User registerUser(String firstName, String lastName, String email, String password, RoleType roleType) {
+    public User registerUser(String firstName, String lastName, String email,   String password, RoleType roleType) {
         Role role = roleRepository.findByName(roleType);
 
         if (role == null) {
@@ -31,7 +30,7 @@ public class UserService {
         }
 
         String hashedPassword = passwordService.hashPassword(password);
-        User user = new User(firstName, lastName, email, password, role);
+        User user = new User(firstName, lastName, email, hashedPassword, role);
         return userRepository.save(user);
     }
 
@@ -55,7 +54,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User updateUser(User user, String firstName, String lastName, String email, String password) {
+    public User updateUser(User user, String firstName, String lastName, String email) {
         if (email != null && !email.equals(user.getEmail()) && userRepository.findByEmail(email) != null) {
             throw new IllegalArgumentException("Email already taken!");
         }
@@ -64,14 +63,22 @@ public class UserService {
         user.setLastName(lastName);
         user.setEmail(email);
 
-        if (password != null && !password.isEmpty()) {
-            user.setPassword(passwordService.hashPassword(password));
-        }
-
         return userRepository.update(user);
     }
 
     public void deleteUser(User user) {
         userRepository.delete(user);
+    }
+
+    public boolean checkPassword(String providedPassword, String actualPassword) {
+        return passwordService.checkPassword(providedPassword, actualPassword);
+    }
+
+    public void updateUserPassword(User user, String newPassword) {
+        if (newPassword != null && !newPassword.isEmpty()) {
+            String hashedPassword = passwordService.hashPassword(newPassword);
+            user.setPassword(hashedPassword);
+            userRepository.update(user);
+        }
     }
 }

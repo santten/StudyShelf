@@ -1,11 +1,13 @@
 package infrastructure.repository;
 
 
+import domain.model.Permission;
 import domain.model.Rating;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 
 import java.util.List;
@@ -14,6 +16,11 @@ public class RatingRepository extends BaseRepository<Rating> {
 
     public RatingRepository() {
         super(Rating.class);
+    }
+
+    //    constructor for testing
+    public RatingRepository(EntityManagerFactory emf) {
+        super(Rating.class, emf);
     }
 
     public List<Rating> findByMaterial(StudyMaterial material) {

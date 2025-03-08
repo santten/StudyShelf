@@ -1,6 +1,7 @@
 package presentation.controller;
 
 import domain.model.User;
+import domain.service.PasswordService;
 import domain.service.Session;
 import infrastructure.repository.UserRepository;
 import javafx.event.ActionEvent;
@@ -19,23 +20,32 @@ public class LoginController {
     public LoginController() throws IOException {
     }
 
-    @FXML private Button btn_login;
-    @FXML public Hyperlink link_toSignup;
-    @FXML private Label errorLabel;
-    @FXML private TextField emailField;
-    @FXML private PasswordField passwordField;
+    @FXML
+    private Button btn_login;
+    @FXML
+    public Hyperlink link_toSignup;
+    @FXML
+    private Label errorLabel;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private PasswordField passwordField;
 
     @FXML
-    private void initialize(){
-        btn_login.setOnAction( (e) -> {
+    private void initialize() {
+        btn_login.setOnAction((e) -> {
             handleLogin();
         });
 
-        link_toSignup.setOnAction( (e) -> {
-            try { sm.setScreen(SCREEN_SIGNUP); }
-            catch (IOException ex) { throw new RuntimeException(ex); }
+        link_toSignup.setOnAction((e) -> {
+            try {
+                sm.setScreen(SCREEN_SIGNUP);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
+
     @FXML
     private void handleLogin() {
         String email = emailField.getText();
@@ -44,18 +54,21 @@ public class LoginController {
         UserRepository userRepository = new UserRepository();
         User user = userRepository.findByEmail(email);
 
-        if (user != null && user.getPassword().equals(password)) {
-            try {
-                // Store logged in user for the session
-                Session.getInstance().setCurrentUser(user);
-                sm.login();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+        if (user != null) {
+            PasswordService passwordService = new PasswordService();
+            if (passwordService.checkPassword(password, user.getPassword())) {
+                try {
+                    // Store logged in user for the session
+                    Session.getInstance().setCurrentUser(user);
+                    sm.login();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else {
+                // Show login error message
+                errorLabel.setText("Invalid email or password");
+                errorLabel.setVisible(true);
             }
-        } else {
-            // Show login error message
-            errorLabel.setText("Invalid email or password");
-            errorLabel.setVisible(true);
         }
     }
-};
+}

@@ -4,7 +4,9 @@ import domain.model.Permission;
 import domain.model.PermissionType;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.*;
+import util.TestPersistenceUtil;
 
 import java.util.List;
 
@@ -18,8 +20,9 @@ class PermissionRepositoryTest {
 
     @BeforeAll
     void setupDatabase() {
-        entityManager = DatabaseConnection.getEntityManagerFactory().createEntityManager();
-        permissionRepository = new PermissionRepository();
+        entityManager = TestPersistenceUtil.getEntityManager();
+        EntityManagerFactory testEmf = TestPersistenceUtil.getEntityManagerFactory();
+        permissionRepository = new PermissionRepository(testEmf);
     }
 
     @BeforeEach
