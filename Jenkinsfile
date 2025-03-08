@@ -39,9 +39,7 @@ pipeline {
       stage('Build Docker Image') {
             steps {
               script {
-                bat "IF NOT EXIST temp\\credentials mkdir temp\\credentials"
-                bat "copy src\\main\\resources\\credentials\\*.* temp\\credentials\\"
-                bat "docker build -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} --build-arg CREDENTIALS_PATH=temp/credentials ."
+               bat "docker build -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} --build-arg SKIP_CREDENTIALS=true ."
               }
             }
           }

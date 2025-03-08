@@ -3,6 +3,7 @@ FROM maven:3.9-amazoncorretto-17 AS build
 WORKDIR /app
 COPY pom.xml .
 COPY . .
+ARG SKIP_CREDENTIALS=false
 RUN mvn dependency:copy-dependencies -DoutputDirectory=target/dependency
 RUN mvn package -DskipTests
 
@@ -21,6 +22,9 @@ RUN yum update -y && yum install -y \
     gtk3 \
     xorg-x11-server-Xorg \
     && yum clean all
+RUN if [ "$SKIP_CREDENTIALS" = "false" ]; then \
+      mkdir -p /app/credentials; \
+    fi
 
 
 COPY --from=build /app/target/studyshelf.jar /app/
