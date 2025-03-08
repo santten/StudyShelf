@@ -26,4 +26,7 @@ public class Session {
     }
 
     public PermissionService getPermissionService() { return permissionService; }
+
+    public void logout() { this.currentUser = null; }
+
 }
