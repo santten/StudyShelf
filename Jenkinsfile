@@ -56,7 +56,11 @@ pipeline {
 
           stage('Cleanup') {
             steps {
-              bat "rmdir /S /Q temp\\credentials"
+              bat '''
+                if exist temp\\credentials (
+                  rmdir /S /Q temp\\credentials
+                )
+              '''
             }
           }
     }
