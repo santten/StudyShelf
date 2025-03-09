@@ -1,4 +1,4 @@
-package presentation;
+package presentation.utility;
 
 public class GUILogger {
     static boolean showWarnings = false;

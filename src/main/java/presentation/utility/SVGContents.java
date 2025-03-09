@@ -1,4 +1,4 @@
-package presentation.components;
+package presentation.utility;
 
 import javafx.scene.shape.SVGPath;
 

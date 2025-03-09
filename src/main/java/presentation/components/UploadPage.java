@@ -24,9 +24,9 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
-import presentation.GUILogger;
+import presentation.utility.GUILogger;
 import presentation.view.SceneManager;
-import presentation.view.UITools;
+import presentation.utility.UITools;
 
 import java.io.File;
 import java.io.IOException;

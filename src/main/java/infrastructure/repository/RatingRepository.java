@@ -8,6 +8,7 @@ import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 
 import java.util.List;
@@ -67,6 +68,25 @@ public class RatingRepository extends BaseRepository<Rating> {
                     .setParameter("material", material)
                     .getSingleResult();
             return count > 0;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void deleteByMaterial(int materialId) {
+        EntityManager em = getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            em.createQuery("DELETE FROM Rating r WHERE r.id = :materialId")
+                    .setParameter("materialId", materialId)
+                    .executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
         } finally {
             em.close();
         }

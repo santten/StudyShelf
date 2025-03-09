@@ -8,7 +8,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import presentation.GUILogger;
 import presentation.view.SceneManager;
 import presentation.view.SubScreen;
 import presentation.components.MyProfileSubScreens;
@@ -25,7 +24,7 @@ public class ProfileController {
     @FXML private VBox subVBox;
     @FXML private VBox vbox_profile_options;
 
-    private void setSubScreen(SubScreen scr) {
+    public void setSubScreen(SubScreen scr) {
         subVBox.getChildren().clear();
 
         Node item = switch (scr) {
@@ -52,7 +51,6 @@ public class ProfileController {
 
         Label label1 = new Label("Profile");
         label1.getStyleClass().addAll("label4", "light");
-
         vbox_profile_options.getChildren().add(label1);
 
         addLink("My Files", PROFILE_FILES);

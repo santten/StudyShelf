@@ -4,6 +4,7 @@ import domain.model.*;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -202,6 +203,28 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
                     .setParameter("user", user)
                     .setMaxResults(10)
                     .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void delete(StudyMaterial entity) {
+        EntityManager em = getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            new ReviewRepository().deleteByMaterial(entity.getMaterialId());
+            new RatingRepository().deleteByMaterial(entity.getMaterialId());
+
+            StudyMaterial mergedEntity = em.merge(entity);
+            em.remove(mergedEntity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
         } finally {
             em.close();
         }

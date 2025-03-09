@@ -1,12 +1,10 @@
 package presentation.components;
 
-import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-
-import static javafx.scene.shape.FillRule.EVEN_ODD;
+import presentation.utility.SVGContents;
 
 public class Stars {
 

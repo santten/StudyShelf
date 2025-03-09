@@ -4,7 +4,7 @@ import domain.model.Category;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import presentation.GUILogger;
+import presentation.utility.GUILogger;
 
 public class CategoryPageController {
     @FXML public Text txt_courseTitle;

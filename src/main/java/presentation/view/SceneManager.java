@@ -29,7 +29,7 @@ import java.util.Objects;
 import static presentation.view.Screen.*;
 
 import presentation.components.*;
-import presentation.GUILogger;
+import presentation.utility.GUILogger;
 
 public class SceneManager {
     private static SceneManager instance;
@@ -188,11 +188,12 @@ public class SceneManager {
                     base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/search.fxml"))));
                     break;
                 case SCREEN_PROFILE:
-                    base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/profile.fxml"))));
+                    MyProfilePage pPage = new MyProfilePage();
+                    pPage.initialize(base);
                     break;
                 case SCREEN_UPLOAD:
-                    UploadPage page = new UploadPage();
-                    page.initialize(base);
+                    UploadPage uPage = new UploadPage();
+                    uPage.initialize(base);
                     break;
                 default:
                     base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/home.fxml"))));
