@@ -214,8 +214,8 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            new ReviewRepository().deleteByMaterial(entity.getMaterialId());
-            new RatingRepository().deleteByMaterial(entity.getMaterialId());
+            new ReviewRepository().deleteByMaterial(entity);
+            new RatingRepository().deleteByMaterial(entity);
 
             StudyMaterial mergedEntity = em.merge(entity);
             em.remove(mergedEntity);

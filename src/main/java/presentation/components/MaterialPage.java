@@ -437,7 +437,10 @@ public class MaterialPage {
             svgPath.getStyleClass().add("error");
 
             button.setGraphic(svgPath);
-            button.setOnAction(e -> StudyMaterialController.deleteMaterial(s));
+            button.setOnAction(e -> {
+                StudyMaterialController.deleteMaterial(s);
+                SceneManager.getInstance().displayCategory(s.getCategory().getCategoryId());
+            });
 
             HBox managementHBox = new HBox(button);
             managementHBox.setAlignment(Pos.CENTER_RIGHT);

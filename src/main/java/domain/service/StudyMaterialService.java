@@ -223,4 +223,11 @@ public class StudyMaterialService {
         }
         return repository.findLatestWithLimit(limit);
     }
+
+    public List<StudyMaterial> findByUser(User user){
+        if (!permissionService.hasPermission(user, PermissionType.READ_RESOURCES)) {
+            throw new SecurityException("You do not have permission to view these study materials.");
+        }
+        return repository.findByUser(user);
+    }
 }

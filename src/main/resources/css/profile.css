@@ -15,3 +15,10 @@
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
+
+.menuBox {
+    -fx-background-color: -primary-dark;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-min-width: 150;
+}

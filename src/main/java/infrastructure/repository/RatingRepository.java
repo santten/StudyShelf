@@ -73,13 +73,13 @@ public class RatingRepository extends BaseRepository<Rating> {
         }
     }
 
-    public void deleteByMaterial(int materialId) {
+    public void deleteByMaterial(StudyMaterial studyMaterial) {
         EntityManager em = getEntityManager();
         EntityTransaction transaction = em.getTransaction();
         try {
             transaction.begin();
-            em.createQuery("DELETE FROM Rating r WHERE r.id = :materialId")
-                    .setParameter("materialId", materialId)
+            em.createQuery("DELETE FROM Rating r WHERE r.studyMaterial = :studyMaterial")
+                    .setParameter("studyMaterial", studyMaterial)
                     .executeUpdate();
             transaction.commit();
         } catch (Exception e) {

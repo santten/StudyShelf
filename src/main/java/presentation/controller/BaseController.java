@@ -6,6 +6,12 @@ import domain.model.PermissionType;
 import domain.model.User;
 
 import javafx.scene.control.Alert;
+import presentation.utility.CustomAlert;
+import presentation.view.SceneManager;
+
+import java.io.IOException;
+
+import static presentation.view.Screen.SCREEN_PROFILE;
 
 public abstract class BaseController {
     protected final PermissionService permissionService = new PermissionService();
@@ -58,5 +64,17 @@ public abstract class BaseController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public static void logout(){
+        if (CustomAlert.confirm("Logging out", "Log out from StudyShelf?", "You're welcome back anytime!", true)) {
+            Session.getInstance().logout();
+            try {
+                SceneManager.getInstance().logout();
+            } catch (IOException ex) {
+                SceneManager.getInstance().displayErrorPage("Something went wrong when logging out...", SCREEN_PROFILE, "Go back");
+                throw new RuntimeException(ex);
+            }
+        }
     }
 }

@@ -113,18 +113,16 @@ public class StudyMaterialController extends BaseController {
         alert.showAndWait();
     }
 
-    public static void deleteMaterial(StudyMaterial s) {
-        if (CustomAlert.confirm("Deleting Material", "Are you sure you want to delete this Study Material?", "This can not be undone.", true)) {
+    public static boolean deleteMaterial(StudyMaterial s) {
+        if (CustomAlert.confirm("Deleting Material", "Are you sure you want to delete material \"" + s.getName() + "\"?", "This can not be undone.", true)) {
             User user = Session.getInstance().getCurrentUser();
             if (!(user.getUserId() == s.getUploader().getUserId() || user.hasPermission(PermissionType.DELETE_ANY_RESOURCE))) {
                 CustomAlert.show(WARNING, "Permission Denied", "You do not have permission to delete this material.");
-                return;
             }
-
             new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService()).deleteMaterial(user, s);
-            CustomAlert.show(INFORMATION, "Material Deleted", "This material has been deleted.");
-
-            SceneManager.getInstance().displayCategory(s.getCategory().getCategoryId());
+            return true;
+        } else {
+            return false;
         }
     }
 }
