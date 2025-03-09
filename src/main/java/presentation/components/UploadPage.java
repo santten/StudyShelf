@@ -24,9 +24,9 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
-import presentation.GUILogger;
+import presentation.utility.GUILogger;
 import presentation.view.SceneManager;
-import presentation.view.UITools;
+import presentation.utility.UITools;
 
 import java.io.File;
 import java.io.IOException;
@@ -360,8 +360,12 @@ public class UploadPage {
         Text warningText = new Text();
         warningText.getStyleClass().add("error");
 
+        User u = Session.getInstance().getCurrentUser();
+        CategoryRepository courseRepo = new CategoryRepository();
+        List<Category> allOwned = courseRepo.findCategoriesByUser(u);
+
         field_courseName.textProperty().addListener((obs, oldText, newText) -> {
-            boolean bool = checkDoubleCategoryName(field_courseName.getText());
+            boolean bool = checkDoubleCategoryName(field_courseName.getText(), allOwned);
             btn.setDisable(newText == null || newText.isEmpty() || bool);
             warningText.setText(bool ? "You already have a course with this name." : "");
         });
@@ -384,12 +388,8 @@ public class UploadPage {
         getVBox().getChildren().add(gp);
     }
 
-    private boolean checkDoubleCategoryName(String str){
-        User u = Session.getInstance().getCurrentUser();
-        CategoryRepository courseRepo = new CategoryRepository();
-        List<Category> all = courseRepo.findCategoriesByUser(u);
-
-        Stream<Category> matchingCategory = all.stream()
+    private boolean checkDoubleCategoryName(String str, List<Category> allOwned) {
+        Stream<Category> matchingCategory = allOwned.stream()
                 .filter(category -> category.getCategoryName().equals(str));
 
         return matchingCategory.findFirst().isPresent();

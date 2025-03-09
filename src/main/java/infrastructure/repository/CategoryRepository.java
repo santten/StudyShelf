@@ -124,4 +124,18 @@ public class CategoryRepository extends BaseRepository<Category>  {
             em.close();
         }
     }
+
+    public void updateCategoryTitle(int categoryId, String title) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Category category = em.find(Category.class, categoryId);
+            if (category != null) {
+                category.setCategoryName(title);
+            }
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 }

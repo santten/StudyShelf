@@ -7,6 +7,7 @@ import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
@@ -58,6 +59,25 @@ public class ReviewRepository extends BaseRepository<Review> {
                     .setParameter("material", material)
                     .getSingleResult();
             return count > 0;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void deleteByMaterial(StudyMaterial studyMaterial) {
+        EntityManager em = getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            em.createQuery("DELETE FROM Review r WHERE r.studyMaterial = :studyMaterial")
+                .setParameter("studyMaterial", studyMaterial)
+                .executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
         } finally {
             em.close();
         }

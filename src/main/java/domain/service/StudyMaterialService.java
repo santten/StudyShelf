@@ -5,7 +5,6 @@ import infrastructure.repository.StudyMaterialRepository;
 import domain.model.PermissionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import presentation.GUILogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -142,13 +141,14 @@ public class StudyMaterialService {
 
 
     public void deleteMaterial(User user, StudyMaterial material) {
-        int ownerId = material.getUploader().getUserId();
-        User categoryCreator = material.getCategory().getCreator();
+        int userId = user.getUserId();
+        int courseOwnerId = material.getCategory().getCreator().getUserId();
+        int materialOwnerId = material.getUploader().getUserId();
 
         // DELETE_OWN_RESOURCE
-        boolean canDeleteOwn = permissionService.hasPermissionOnEntity(user, PermissionType.DELETE_OWN_RESOURCE, ownerId);
+        boolean canDeleteOwn = permissionService.hasPermission(user, PermissionType.DELETE_OWN_RESOURCE) && (userId == materialOwnerId);
         // DELETE_COURSE_RESOURCE
-        boolean canDeleteCourse = permissionService.hasPermission(user, PermissionType.DELETE_COURSE_RESOURCE) && user.equals(categoryCreator);
+        boolean canDeleteCourse = permissionService.hasPermission(user, PermissionType.DELETE_COURSE_RESOURCE) && (userId == courseOwnerId);
         //
         boolean canDeleteAny = permissionService.hasPermission(user, PermissionType.DELETE_ANY_RESOURCE);
 
@@ -156,6 +156,7 @@ public class StudyMaterialService {
             logger.warn("User {} attempted to delete study material {} without permission", user.getEmail(), material.getName());
             throw new SecurityException("You do not have permission to delete this study material.");
         }
+
         repository.delete(material);
         logger.info("User {} deleted study material: {}", user.getEmail(), material.getName());
     }
@@ -221,5 +222,12 @@ public class StudyMaterialService {
             throw new SecurityException("You do not have permission to read study materials.");
         }
         return repository.findLatestWithLimit(limit);
+    }
+
+    public List<StudyMaterial> findByUser(User user){
+        if (!permissionService.hasPermission(user, PermissionType.READ_RESOURCES)) {
+            throw new SecurityException("You do not have permission to view these study materials.");
+        }
+        return repository.findByUser(user);
     }
 }

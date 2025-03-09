@@ -19,7 +19,10 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
-import presentation.GUILogger;
+import presentation.controller.StudyMaterialController;
+import presentation.utility.GUILogger;
+import presentation.utility.CustomAlert;
+import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
 
 
@@ -30,8 +33,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static domain.model.MaterialStatus.*;
-import static domain.model.PermissionType.DELETE_ANY_RESOURCE;
 import static domain.model.RoleType.ADMIN;
+import static javafx.scene.control.Alert.AlertType.*;
+
 
 public class MaterialPage {
     private final HBox fileContainer;
@@ -77,7 +81,7 @@ public class MaterialPage {
         Text title = new Text("Reviews");
         title.getStyleClass().addAll("heading3", "primary-light");
 
-        HBox stars = Stars.StarRow(getAvgRating(), 1, 4, null);
+        HBox stars = Stars.StarRow(getAvgRating(), 1, 4);
         Text starsText = new Text(String.format("(%.1f)", getAvgRating()));
 
         HBox hbox = new HBox();
@@ -101,7 +105,8 @@ public class MaterialPage {
         this.reviews = reviewRepo.findByStudyMaterial(material);
         RatingRepository ratingRepo = new RatingRepository();
         this.ratings = ratingRepo.findByMaterial(material);
-        this.avgRating = ratingServ.getAverageRating(getMaterial());;
+        this.avgRating = ratingServ.getAverageRating(getMaterial());
+        ;
     }
 
     private StudyMaterial getMaterial() {
@@ -130,7 +135,7 @@ public class MaterialPage {
 
     /* main method */
 
-    public void displayPage(){
+    public void displayPage() {
         VBox base = new VBox();
         base.getStylesheets().add(Objects.requireNonNull(CategoryPage.class.getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
@@ -160,7 +165,7 @@ public class MaterialPage {
 
         StudyMaterial sm = getMaterial();
 
-        switch (sm.getStatus()){
+        switch (sm.getStatus()) {
             case APPROVED:
                 Text approvedText = new Text("This material has been approved by the course's owner " + sm.getCategory().getCreator().getFullName());
                 approvedText.getStyleClass().add("secondary-light");
@@ -273,7 +278,7 @@ public class MaterialPage {
         title.setWrapText(true);
         title.setMaxWidth(600);
 
-        if (isEditable){
+        if (isEditable) {
             Button editTitle = new Button();
             editTitle.getStyleClass().add("buttonEmpty");
             SVGPath svgEdit = new SVGPath();
@@ -361,7 +366,7 @@ public class MaterialPage {
         fileDesc.getChildren().add(new Text(s.getDescription()));
         fileDesc.setMaxWidth(580);
 
-        if (isEditable){
+        if (isEditable) {
             Button editDesc = new Button("Edit Description");
             editDesc.getStyleClass().add("btnXSPrimary");
             fileDescContainer.getChildren().addAll(fileDesc, editDesc);
@@ -408,7 +413,7 @@ public class MaterialPage {
 
         setUpApprovalStatus();
         left.getChildren().addAll(fileTitleContainer, uploaderLabels, tagContainer, fileDetails, downloadBtn,
-                                course, fileDescContainer, getPendingStatusVBox());
+                course, fileDescContainer, getPendingStatusVBox());
         left.setMinWidth(580);
         left.setMaxWidth(580);
         left.setSpacing(8);
@@ -418,8 +423,30 @@ public class MaterialPage {
         preview.setFitWidth(141);
         preview.setFitHeight(188);
         preview.setPreserveRatio(false);
+
         right.getChildren().add(preview);
-        
+        right.setSpacing(8);
+
+        if (isEditable) {
+            Button button = new Button();
+            button.getStyleClass().add("buttonEmpty");
+
+            SVGPath svgPath = new SVGPath();
+            SVGContents.setScale(svgPath,1.5);
+            svgPath.setContent(SVGContents.delete());
+            svgPath.getStyleClass().add("error");
+
+            button.setGraphic(svgPath);
+            button.setOnAction(e -> {
+                StudyMaterialController.deleteMaterial(s);
+                SceneManager.getInstance().displayCategory(s.getCategory().getCategoryId());
+            });
+
+            HBox managementHBox = new HBox(button);
+            managementHBox.setAlignment(Pos.CENTER_RIGHT);
+            right.getChildren().add(managementHBox);
+        }
+
         getFileContainer().setSpacing(20);
         getFileContainer().getChildren().addAll(left, right);
     }
@@ -454,7 +481,7 @@ public class MaterialPage {
         starContainer.setSpacing(4);
         Button sendReviewButton = new Button("Send Review");
 
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
             Button btn = getStarButton(i, starContainer, sendReviewButton);
             starContainer.getChildren().add(btn);
         }
@@ -469,19 +496,19 @@ public class MaterialPage {
         sendReviewButton.setDisable(true);
         sendReviewButton.getStyleClass().add("btnS");
         sendReviewButton.setOnAction(e -> {
-            if (!Objects.equals(getCurRatingText(), "") && (getCurRatingText() != null)){
+            if (!Objects.equals(getCurRatingText(), "") && (getCurRatingText() != null)) {
                 String reviewText = getCurRatingText().trim();
                 if (!reviewText.isEmpty()) {
                     reviewSer.addReview(
-                         Session.getInstance().getCurrentUser(),
-                         material,
-                         reviewText
+                            Session.getInstance().getCurrentUser(),
+                            material,
+                            reviewText
                     );
                 }
             }
 
             int rating = getCurRatingNum();
-            if (rating > 0){
+            if (rating > 0) {
                 ratingServ.rateMaterial(rating, getMaterial(), Session.getInstance().getCurrentUser());
             }
 
@@ -547,7 +574,7 @@ public class MaterialPage {
         Collections.reverse(ratings);
         GUILogger.info(ratings.size() + " ratings found");
 
-        if (ratings.isEmpty()){
+        if (ratings.isEmpty()) {
             getReviewContainer().getChildren().add(new Text("No ratings left yet!"));
             return;
         }
@@ -560,7 +587,7 @@ public class MaterialPage {
         Collections.reverse(reviews);
         GUILogger.info(reviews.size() + " reviews found");
 
-        if (!reviews.isEmpty()){
+        if (!reviews.isEmpty()) {
             FlowPane fp = new FlowPane();
             reviews.forEach(r -> {
                 Rating correspondingRating = ratings.stream()
@@ -601,7 +628,7 @@ public class MaterialPage {
         HBox reviewerHBox = new HBox(userLink, TextLabels.getUserRoleLabel(review.getUser()));
         reviewerHBox.setSpacing(8);
 
-        HBox stars = Stars.StarRow(rating.getRatingScore(), 1, 3, null);
+        HBox stars = Stars.StarRow(rating.getRatingScore(), 1, 3);
 
         Text comment = new Text(review.getReviewText());
         comment.setWrappingWidth(320);
@@ -612,7 +639,7 @@ public class MaterialPage {
     }
 
     private HBox ratingOnlyCard(Rating r) {
-        HBox stars = Stars.StarRow(r.getRatingScore(), 1, 3, null);
+        HBox stars = Stars.StarRow(r.getRatingScore(), 1, 3);
         Hyperlink userLink = new Hyperlink(r.getUser().getFullName());
         userLink.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();

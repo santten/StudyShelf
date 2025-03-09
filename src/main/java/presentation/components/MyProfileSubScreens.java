@@ -1,10 +1,10 @@
 package presentation.components;
 
-import domain.model.Category;
-import domain.model.Review;
-import domain.model.StudyMaterial;
-import domain.model.User;
+import domain.model.*;
+import domain.service.GoogleDriveService;
+import domain.service.PermissionService;
 import domain.service.Session;
+import domain.service.StudyMaterialService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.ReviewRepository;
 import infrastructure.repository.StudyMaterialRepository;
@@ -15,14 +15,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
-import presentation.GUILogger;
+import presentation.controller.ProfileController;
+import presentation.controller.StudyMaterialController;
+import presentation.utility.CustomAlert;
+import presentation.utility.GUILogger;
+import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
 import java.util.List;
 
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
+import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.scene.shape.FillRule.EVEN_ODD;
 import static presentation.view.Screen.*;
+import static presentation.view.SubScreen.PROFILE_FILES;
 
 public class MyProfileSubScreens {
     public static VBox Files(){
@@ -51,6 +58,7 @@ public class MyProfileSubScreens {
             base.getChildren().addAll(text, link);
         } else {
             List<Node> hboxlist = new java.util.ArrayList<>(List.of());
+            VBox container;
 
             list.forEach(s -> {
                 HBox left = new HBox();
@@ -83,17 +91,8 @@ public class MyProfileSubScreens {
                 buttonR.setMaxWidth(30);
                 buttonR.setMinHeight(30);
 
-                buttonR.setOnAction(e -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This can not be undone.", ButtonType.YES, ButtonType.NO);
-                    alert.setHeaderText("Are you sure you want to delete your material \"" + s.getName() + "\"?");
-                    alert.setTitle("Deleting material \"" + s.getName() + "\"");
-
-                    alert.showAndWait().ifPresent(response -> {
-                        if (response == ButtonType.YES) {
-                            GUILogger.info("Deleting material \"" + s.getName() + "\"");
-                        }
-                    });
-                });
+                HBox thisHBox = new HBox();
+                buttonR.setOnAction(e -> StudyMaterialController.deleteMaterial(s));
 
                 buttonL.setOnAction(e -> {
                     SceneManager sm = SceneManager.getInstance();
@@ -105,10 +104,12 @@ public class MyProfileSubScreens {
                 buttonR.getStyleClass().add("buttonEmpty");
                 buttonL.getStyleClass().add("buttonEmpty");
 
-                hboxlist.add(new HBox(buttonL, buttonR));
+                thisHBox.getChildren().addAll(buttonL, buttonR);
+                hboxlist.add(thisHBox);
             });
 
-            base.getChildren().add(ListItem.toListView(hboxlist, 420));
+            container = new VBox(ListItem.toListView(hboxlist, 420));
+            base.getChildren().add(container);
         }
 
         return base;

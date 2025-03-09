@@ -9,7 +9,6 @@ import domain.service.TagService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.TagRepository;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +22,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
-import presentation.GUILogger;
+import presentation.utility.GUILogger;
 import presentation.view.SceneManager;
 
 import java.io.File;

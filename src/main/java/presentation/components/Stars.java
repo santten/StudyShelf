@@ -1,28 +1,16 @@
 package presentation.components;
 
-import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
-
-import static javafx.scene.shape.FillRule.EVEN_ODD;
+import presentation.utility.SVGContents;
 
 public class Stars {
 
-    public static HBox StarRow(double fillAmount, double scale, int spacing, RatingCallback callback){
+    public static HBox StarRow(double fillAmount, double scale, int spacing){
         HBox base = new HBox();
-        base.setOnMouseClicked(e -> {
-            Node source = (Node) e.getSource();
-            double width = source.getBoundsInLocal().getWidth();
-            double x = e.getX();
-            int rating = (int) Math.ceil((x / width) * 5);
-            updateStarFill(base, rating);
 
-            if (callback != null) {
-                callback.onRatingSelected(rating);
-            }
-        });
         for (int i = 1; i <= 5; i++) {
             StackPane starContainer = new StackPane();
             SVGPath emptyStar = new SVGPath();

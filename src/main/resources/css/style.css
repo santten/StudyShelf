@@ -8,6 +8,7 @@
     -warning: #cd7418;
     -secondary: #306c01;
     -secondary-light: #568105;
+    -primary-dark: #14254e;
     -primary: #113f79;
     -primary-light: #2c7794;
     -dark: #000806;
@@ -72,6 +73,11 @@
 .primary-light {
     -fx-text-fill: -primary-light;
     -fx-fill: -primary-light;
+}
+
+.primary-dark {
+    -fx-text-fill: -primary-dark;
+    -fx-fill: -primary-dark;
 }
 
 .secondary {
@@ -412,4 +418,14 @@
 
 .text-area:focused, .text-field:focused {
     -fx-border-color: -primary-light;
+}
+
+.separator .line {
+    -fx-border-color: transparent;
+}
+
+.profileListItem {
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: transparent transparent -light-darker transparent;
+    -fx-padding: 2;
 }

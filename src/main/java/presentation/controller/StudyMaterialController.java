@@ -11,10 +11,15 @@ import domain.service.StudyMaterialService;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
+import presentation.utility.CustomAlert;
+import presentation.view.SceneManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
+import static javafx.scene.control.Alert.AlertType.WARNING;
 
 public class StudyMaterialController extends BaseController {
     private final StudyMaterialService studyMaterialService =
@@ -55,17 +60,6 @@ public class StudyMaterialController extends BaseController {
 
         studyMaterialService.updateMaterial(user, updatedMaterial);
         showAlert("Success", "Study material updated.");
-    }
-
-    public void deleteMaterial(StudyMaterial material) {
-        User user = Session.getInstance().getCurrentUser();
-        if (!hasPermission(PermissionType.DELETE_OWN_RESOURCE) && !hasPermission(PermissionType.DELETE_ANY_RESOURCE)) {
-            showAlert("Permission Denied", "You do not have permission to delete this material.");
-            return;
-        }
-
-        studyMaterialService.deleteMaterial(user, material);
-        showAlert("Success", "Study material deleted.");
     }
 
     public void downloadMaterial(StudyMaterial material) {
@@ -117,5 +111,18 @@ public class StudyMaterialController extends BaseController {
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public static boolean deleteMaterial(StudyMaterial s) {
+        if (CustomAlert.confirm("Deleting Material", "Are you sure you want to delete material \"" + s.getName() + "\"?", "This can not be undone.", true)) {
+            User user = Session.getInstance().getCurrentUser();
+            if (!(user.getUserId() == s.getUploader().getUserId() || user.hasPermission(PermissionType.DELETE_ANY_RESOURCE))) {
+                CustomAlert.show(WARNING, "Permission Denied", "You do not have permission to delete this material.");
+            }
+            new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService()).deleteMaterial(user, s);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

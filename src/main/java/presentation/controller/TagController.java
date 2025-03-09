@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import presentation.GUILogger;
+
 import java.util.List;
 
 public class TagController extends BaseController {

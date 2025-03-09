@@ -129,7 +129,8 @@ class StudyMaterialServiceTest {
 
     @Test
     void deleteMaterial_AsUploader_Success() {
-        when(permissionService.hasPermissionOnEntity(uploader, PermissionType.DELETE_OWN_RESOURCE, uploader.getUserId())).thenReturn(true);
+        when(permissionService.hasPermission(uploader, PermissionType.DELETE_OWN_RESOURCE)).thenReturn(true);
+        assertEquals(uploader.getUserId(), testMaterial.getUploader().getUserId());
 
         materialService.deleteMaterial(uploader, testMaterial);
 

@@ -2,17 +2,20 @@ package presentation.controller;
 
 import domain.model.Category;
 import domain.model.PermissionType;
+import domain.model.StudyMaterial;
 import domain.model.User;
-import domain.service.CategoryService;
-import domain.service.PermissionService;
-import domain.service.Session;
+import domain.service.*;
 import infrastructure.repository.CategoryRepository;
+import infrastructure.repository.StudyMaterialRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import presentation.GUILogger;
+import presentation.utility.CustomAlert;
+
 import java.util.List;
+
+import static javafx.scene.control.Alert.AlertType.WARNING;
 
 public class CategoryController extends BaseController {
     private final CategoryService categoryService = new CategoryService(new CategoryRepository(), new PermissionService());
@@ -107,5 +110,19 @@ public class CategoryController extends BaseController {
 
         contextMenu.getItems().add(deleteItem);
         return contextMenu;
+    }
+
+    public static boolean deleteCategory(Category c) {
+        if (CustomAlert.confirm("Deleting Course", "Are you sure you want to delete course \"" + c.getCategoryName() + "\"?", "This will delete all of the materials in it and can not be undone.", true)) {
+            User user = Session.getInstance().getCurrentUser();
+            if (!(user.getUserId() == c.getCreator().getUserId() || user.hasPermission(PermissionType.DELETE_ANY_CATEGORY))) {
+                CustomAlert.show(WARNING, "Permission Denied", "You do not have permission to delete this course.");
+            }
+            new CategoryService(new CategoryRepository(), new PermissionService()).deleteCategory(user, c.getCategoryId());
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }

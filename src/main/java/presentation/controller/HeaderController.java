@@ -8,6 +8,8 @@ import presentation.view.SceneManager;
 import java.io.IOException;
 
 import presentation.view.Screen;
+
+import static presentation.controller.BaseController.logout;
 import static presentation.view.Screen.*;
 
 public class HeaderController {
@@ -28,7 +30,7 @@ public class HeaderController {
     }
 
     @FXML
-    private void initialize() throws IOException {
+    private void initialize() {
         SceneManager sm = SceneManager.getInstance();
 
         linkBtnToScreen(btn_toCourses, SCREEN_COURSES, sm);
@@ -41,9 +43,6 @@ public class HeaderController {
             catch (IOException ex) { throw new RuntimeException(ex); }
         });
 
-        btn_logOut.setOnAction((e) -> {
-            try { sm.logout(); }
-            catch (IOException ex) { throw new RuntimeException(ex); }
-        });
+        btn_logOut.setOnAction(e -> logout());
     }
 }

@@ -14,16 +14,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import presentation.GUILogger;
+import presentation.utility.GUILogger;
+import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static javafx.scene.shape.FillRule.EVEN_ODD;
-import static presentation.view.Screen.SCREEN_HOME;
 
 public class MaterialCard {
     public static Button materialCard(StudyMaterial s) {
@@ -51,7 +50,6 @@ public class MaterialCard {
             default:
                 svgPath.setContent(SVGContents.file());
         }
-
 
         svgPath.getStyleClass().add("iconPrimaryM");
         svgPath.setFillRule(EVEN_ODD);
@@ -89,7 +87,7 @@ public class MaterialCard {
         double avgRating = ratingService.getAverageRating(s);
 
         if (avgRating > 0.0) {
-            HBox starContainer = Stars.StarRow(avgRating, 0.7, 5, null);
+            HBox starContainer = Stars.StarRow(avgRating, 0.7, 5);
             ratingBox.getChildren().add(starContainer);
         }
 

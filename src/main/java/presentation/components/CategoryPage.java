@@ -8,24 +8,28 @@ import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
-import presentation.GUILogger;
+import presentation.controller.CategoryController;
+import presentation.utility.GUILogger;
+import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static javafx.scene.shape.FillRule.EVEN_ODD;
+import static presentation.view.Screen.SCREEN_COURSES;
+import static presentation.view.Screen.SCREEN_HOME;
 
 public class CategoryPage {
     private List<StudyMaterial> pendingMaterials;
@@ -36,6 +40,8 @@ public class CategoryPage {
     private final Text pendingMaterialLabel;
     private final VBox otherMaterialsContainer;
 
+    private final HBox titleLabelHBox;
+
     public CategoryPage() {
         this.pendingMaterials = new ArrayList<>();
         this.ownerMaterials = new ArrayList<>();
@@ -45,6 +51,8 @@ public class CategoryPage {
         this.pendingMaterialLabel = new Text();
 
         this.otherMaterialsContainer = new VBox();
+
+        this.titleLabelHBox = new HBox();
     }
 
     private List<StudyMaterial> getPendingMaterials() {
@@ -56,6 +64,7 @@ public class CategoryPage {
     private List<StudyMaterial> getOtherMaterials() {
         return this.otherMaterials;
     }
+    private HBox getTitleLabelHBox() { return this.titleLabelHBox; }
 
     private VBox getPendingContainer() {
         return this.pendingContainer;
@@ -81,9 +90,10 @@ public class CategoryPage {
         vbox.getStylesheets().add(Objects.requireNonNull(CategoryPage.class.getResource("/css/style.css")).toExternalForm());
         vbox.setSpacing(12);
         vbox.setPadding(new Insets(20, 20, 20, 20));
+
         Text title = new Text(c.getCategoryName());
-        title.getStyleClass().add("heading3");
-        title.getStyleClass().add("secondary");
+        title.getStyleClass().addAll("heading3", "secondary-light");
+        getTitleLabelHBox().getChildren().add(title);
 
         Text author = new Text("Course by " + c.getCreator().getFullName());
         VBox header = new VBox();
@@ -112,12 +122,71 @@ public class CategoryPage {
         addMaterialHBox.setSpacing(8);
         addMaterialButton.setGraphic(addMaterialHBox);
 
+        User u = Session.getInstance().getCurrentUser();
+
+        boolean isEditable = u.getUserId() == c.getCreator().getUserId() || u.isAdmin();
+
+        if (isEditable) {
+            Button deleteBtn = new Button();
+            deleteBtn.getStyleClass().add("buttonEmpty");
+            SVGPath svgDelete = new SVGPath();
+            svgDelete.setContent(SVGContents.delete());
+            svgDelete.getStyleClass().add("error");
+            SVGContents.setScale(svgDelete, 1.4);
+            deleteBtn.setGraphic(svgDelete);
+
+            deleteBtn.setOnAction(e3 -> {
+                if (CategoryController.deleteCategory(c)) {
+                    try {
+                        SceneManager.getInstance().setScreen(SCREEN_HOME);
+                    } catch (IOException e) {
+                        SceneManager.getInstance().displayErrorPage("Something went wrong when navigating to the home page...", SCREEN_COURSES, "Go to courses page");
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            Button editTitle = new Button();
+            editTitle.getStyleClass().add("buttonEmpty");
+            SVGPath svgEdit = new SVGPath();
+            svgEdit.setContent(SVGContents.edit());
+            svgEdit.getStyleClass().add("secondary-light");
+            SVGContents.setScale(svgEdit, 1.4);
+            editTitle.setGraphic(svgEdit);
+
+            getTitleLabelHBox().getChildren().clear();
+            getTitleLabelHBox().getChildren().addAll(title, editTitle, deleteBtn);
+            editTitle.setOnAction(e1 -> {
+                TextField titleArea = new TextField(c.getCategoryName());
+                titleArea.setMinWidth(540);
+
+                Button saveTitle = new Button();
+                saveTitle.getStyleClass().add("buttonEmpty");
+                SVGPath svgSave = new SVGPath();
+                svgSave.setContent(SVGContents.save());
+                svgSave.getStyleClass().add("secondary-light");
+                SVGContents.setScale(svgSave, 1.4);
+                saveTitle.setGraphic(svgSave);
+
+                CategoryService categoryServ = new CategoryService(new CategoryRepository(), new PermissionService());
+                saveTitle.setOnAction(e2 -> {
+                    categoryServ.updateTitle(Session.getInstance().getCurrentUser(), c, titleArea.getText());
+
+                    title.setText(titleArea.getText());
+
+                    getTitleLabelHBox().getChildren().clear();
+                    getTitleLabelHBox().getChildren().addAll(title, editTitle, deleteBtn);
+                });
+
+                getTitleLabelHBox().getChildren().clear();
+                getTitleLabelHBox().getChildren().addAll(titleArea, saveTitle, deleteBtn);
+            });
+        }
+
         header.setSpacing(12);
-        header.getChildren().addAll(title, author, addMaterialButton);
+        header.getChildren().addAll(getTitleLabelHBox(), author, addMaterialButton);
 
         vbox.getChildren().add(header);
-
-        User u = Session.getInstance().getCurrentUser();
 
         if (u.getUserId() == c.getCreator().getUserId()) {
             setUpApproveView(c, vbox);

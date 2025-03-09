@@ -5,11 +5,15 @@ import domain.model.StudyMaterial;
 import infrastructure.repository.CategoryRepository;
 import domain.model.PermissionType;
 import domain.model.User;
+import infrastructure.repository.StudyMaterialRepository;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static domain.model.RoleType.ADMIN;
 
 public class CategoryService {
     private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
@@ -80,7 +84,7 @@ public class CategoryService {
         }
 
     // DELETE_COURSE_CATEGORY
-        boolean isCourseOwner = user.equals(category.getCreator());
+        boolean isCourseOwner = user.getUserId() == category.getCreator().getUserId();
         boolean canDeleteCourseCategory = isCourseOwner && permissionService.hasPermission(user, PermissionType.DELETE_COURSE_CATEGORY);
     // DELETE_ANY_CATEGORY
         boolean canDeleteAnyCategory = permissionService.hasPermission(user, PermissionType.DELETE_ANY_CATEGORY);
@@ -91,7 +95,10 @@ public class CategoryService {
 
         long materialCount = repository.countMaterialsByCategory(category);
         if (materialCount > 0) {
-            throw new RuntimeException("Cannot delete category with existing study materials.");
+            StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
+            repository.findMaterialsByCategory(category).forEach(material -> {
+                smServ.deleteMaterial(user, material);
+            });
         }
 
         logger.info("User {} deleted category: {}", user.getEmail(), category.getCategoryName());
@@ -111,5 +118,18 @@ public class CategoryService {
 
         return pendingCategories;
     }
-}
 
+    public List<Category> getCategoriesByUser(User user) {
+        return repository.findCategoriesByUser(user);
+    }
+
+    public void updateTitle(User user, Category c, String title) {
+        if ((user.getUserId() == c.getCreator().getUserId()
+                && permissionService.hasPermission(user, PermissionType.UPDATE_COURSE_CATEGORY))
+                || user.getRole().getName() == ADMIN) {
+            repository.updateCategoryTitle(c.getCategoryId(), title);
+        } else {
+            throw new SecurityException("You do not have permission to modify this title.");
+        }
+    }
+}

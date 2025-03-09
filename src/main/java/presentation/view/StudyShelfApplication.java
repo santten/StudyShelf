@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import static presentation.view.Screen.SCREEN_LOGIN;
-import presentation.GUILogger;
+import presentation.utility.GUILogger;
 
 public class StudyShelfApplication extends Application {
     @Override

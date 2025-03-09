@@ -10,10 +10,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
-import presentation.GUILogger;
+import presentation.utility.GUILogger;
 import presentation.view.SceneManager;
 
-import java.io.IOException;
 import java.util.List;
 
  public class CoursesController {

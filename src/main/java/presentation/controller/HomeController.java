@@ -7,24 +7,20 @@ import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
-import presentation.components.SVGContents;
+import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static domain.model.RoleType.STUDENT;
-import static javafx.scene.shape.FillRule.EVEN_ODD;
 import static presentation.view.Screen.SCREEN_COURSES;
 import static presentation.view.Screen.SCREEN_FIND;
 

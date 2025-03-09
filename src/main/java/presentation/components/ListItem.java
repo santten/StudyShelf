@@ -4,11 +4,6 @@ import domain.model.Category;
 import domain.model.StudyMaterial;
 import domain.model.Tag;
 import domain.model.User;
-import domain.service.GoogleDriveService;
-import domain.service.PermissionService;
-import domain.service.Session;
-import domain.service.StudyMaterialService;
-import infrastructure.repository.StudyMaterialRepository;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,12 +15,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
-import javafx.scene.text.Text;
 import javafx.util.Callback;
-import presentation.GUILogger;
+import presentation.utility.GUILogger;
+import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
 
-import java.io.IOException;
 import java.util.List;
 
 import static presentation.components.ItemType.*;
