@@ -77,7 +77,7 @@ public class ReviewService {
         if (!(canDeleteOwn || canDeleteAny)) {
             throw new SecurityException("You do not have permission to delete this review.");
         }
-        reviewRepository.delete(review);
+        reviewRepository.deleteById(review.getReviewId());
     }
 
     public boolean hasUserReviewedMaterial(User user, StudyMaterial sm){
@@ -86,6 +86,10 @@ public class ReviewService {
         } else {
             return reviewRepository.hasUserReviewedMaterial(user, sm);
         }
+    }
+
+    public List<Review> findReviewByUserAndMaterial(User user, StudyMaterial sm) {
+        return reviewRepository.findByUserAndMaterial(user, sm);
     }
 }
 

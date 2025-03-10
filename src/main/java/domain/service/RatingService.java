@@ -65,7 +65,7 @@ public class RatingService {
         if (!(canDeleteOwn || canDeleteAny)) {
             throw new SecurityException("You do not have permission to delete this rating.");
         }
-        ratingRepository.delete(rating);
+        ratingRepository.deleteById(rating.getRatingId());
     }
 
     public boolean hasUserRatedMaterial(User user, StudyMaterial sm){
@@ -74,5 +74,13 @@ public class RatingService {
         } else {
             return ratingRepository.hasUserReviewedMaterial(user, sm);
         }
+    }
+
+    public List<Rating> getRatingsByUser(User user) {
+        return ratingRepository.findByUser(user);
+    }
+
+    public List<Rating> findRatingByUserAndMaterial(User user, StudyMaterial sm) {
+        return ratingRepository.findByUserAndMaterial(user, sm);
     }
 }
