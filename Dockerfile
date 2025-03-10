@@ -1,5 +1,6 @@
 # Build stage
 FROM maven:3.9-amazoncorretto-17 AS build
+LABEL authors="Jiayue, Santtu, Armas"
 WORKDIR /app
 COPY pom.xml .
 COPY . .
