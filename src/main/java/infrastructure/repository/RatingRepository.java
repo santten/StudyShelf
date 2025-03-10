@@ -91,4 +91,35 @@ public class RatingRepository extends BaseRepository<Rating> {
             em.close();
         }
     }
+
+    public List<Rating> findByUserAndMaterial(User user, StudyMaterial sm) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT r FROM Rating r WHERE r.user = :user AND r.studyMaterial = :studyMaterial", Rating.class)
+                    .setParameter("user", user)
+                    .setParameter("studyMaterial", sm)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void deleteById(int id) {
+        EntityManager em = getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            em.createQuery("DELETE FROM Rating r WHERE r.id = :id")
+                    .setParameter("id", id)
+                    .executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }

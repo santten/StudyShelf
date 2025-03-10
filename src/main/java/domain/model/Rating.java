@@ -30,6 +30,7 @@ public class Rating {
     public int getRatingId() {
         return ratingId;
     }
+    public void setRatingId(int ratingId) { this.ratingId = ratingId; }
     public int getRatingScore() {
         return ratingScore;
     }

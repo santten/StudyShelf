@@ -134,8 +134,9 @@ public class UploadPage {
         field_description.setWrapText(true);
         field_description.setMaxHeight(80);
 
-        /* */
+
         choice_category = new ChoiceBox<>();
+        choice_category.setMinWidth(600);
         List<Category> categories = new CategoryRepository().findAll();
         GUILogger.info("Loading categories: " + categories.size());
         ObservableList<Category> categoriesObservableList = FXCollections.observableList(categories);

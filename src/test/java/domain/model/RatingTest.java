@@ -28,10 +28,11 @@ class RatingTest {
         rating = new Rating(5, material, user);
     }
 
-    /* @Test
-    void getRatingId() {
-        assertEquals(0, rating.getRatingId());
-    } */
+    @Test
+    void getAndSetRatingId() {
+        rating.setRatingId(2);
+        assertEquals(2, rating.getRatingId());
+    }
 
     @Test
     void getRatingScore() {

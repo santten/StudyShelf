@@ -28,8 +28,9 @@ class ReviewTest {
         review = new Review("Confused", material, user);
     }
     @Test
-    void getReviewId() {
-        assertEquals(0, review.getReviewId());
+    void getAndSetReviewId() {
+        review.setReviewId(1234891);
+        assertEquals(1234891, review.getReviewId());
     }
 
     @Test

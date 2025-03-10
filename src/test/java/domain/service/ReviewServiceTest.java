@@ -45,6 +45,7 @@ class ReviewServiceTest {
         );
 
         testReview = new Review("Great resource!", testMaterial, testUser);
+        testReview.setReviewId(12341);
     }
 
     @Test
@@ -103,7 +104,7 @@ class ReviewServiceTest {
 
         reviewService.deleteReview(testUser, testReview);
 
-        verify(reviewRepository, times(1)).delete(testReview);
+        verify(reviewRepository, times(1)).deleteById(testReview.getReviewId());
     }
 
     @Test
@@ -112,7 +113,7 @@ class ReviewServiceTest {
 
         reviewService.deleteReview(adminUser, testReview);
 
-        verify(reviewRepository, times(1)).delete(testReview);
+        verify(reviewRepository, times(1)).deleteById(testReview.getReviewId());
     }
 
     @Test
@@ -152,5 +153,35 @@ class ReviewServiceTest {
         );
 
         verify(reviewRepository, never()).findByStudyMaterial(any(StudyMaterial.class));
+    }
+
+    @Test
+    void findReviewByUserAndMaterial(){
+        when(reviewRepository.findByUserAndMaterial(testUser, testMaterial)).thenReturn(List.of(testReview));
+
+        List<Review> reviews = reviewService.findReviewByUserAndMaterial(testUser, testMaterial);
+
+        assertNotNull(reviews);
+        assertEquals(1, reviews.size());
+        assertEquals(testReview, reviews.get(0));
+
+        verify(reviewRepository, times(1)).findByUserAndMaterial(testUser, testMaterial);
+    }
+
+    @Test
+    void getReviewsForMaterial(){
+        Review review1 = new Review("Awesome!", testMaterial, testUser);
+        Review review2 = new Review("Helpful!", testMaterial, testUser);
+
+        when(reviewRepository.findByStudyMaterial(testMaterial)).thenReturn(List.of(review1, review2));
+
+        List<Review> reviews = reviewService.getReviewsForMaterial(testMaterial);
+
+        assertNotNull(reviews);
+        assertEquals(2, reviews.size());
+        assertEquals("Awesome!", reviews.get(0).getReviewText());
+        assertEquals("Helpful!", reviews.get(1).getReviewText());
+
+        verify(reviewRepository, times(1)).findByStudyMaterial(testMaterial);
     }
 }

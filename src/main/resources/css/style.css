@@ -100,6 +100,16 @@
     -fx-fill: -light;
 }
 
+.light-shadow {
+    -fx-text-fill: -light-shadow;
+    -fx-fill: -light-shadow;
+}
+
+.light-darker {
+    -fx-text-fill: -light-darker;
+    -fx-fill: -light-darker;
+}
+
 .warning {
     -fx-text-fill: -warning;
     -fx-fill: -warning;
@@ -259,7 +269,23 @@
 }
 
 .menu-button {
-    -fx-background-color: #ccd7b8;
+    -fx-background-color: -light-shadow;
+    -fx-border-color: transparent;
+    -fx-border-radius: 5;
+}
+
+.menu-button:focused {
+    -fx-border-color: -primary-light;
+}
+
+.choice-box {
+    -fx-background-color: -light-shadow;
+    -fx-border-color: transparent;
+    -fx-border-radius: 5;
+}
+
+.choice-box:focused {
+    -fx-border-color: -primary-light;
 }
 
 .menu-item:focused {

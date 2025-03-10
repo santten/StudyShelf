@@ -243,4 +243,76 @@ class StudyMaterialServiceTest {
 
         verify(materialRepository, times(1)).save(any(StudyMaterial.class));
     }
+
+    @Test
+    void findByUser() {
+        when(permissionService.hasPermission(uploader, PermissionType.READ_RESOURCES)).thenReturn(true);
+        when(materialRepository.findByUser(uploader)).thenReturn(List.of(testMaterial));
+
+        List<StudyMaterial> materials = materialService.findByUser(uploader);
+
+        assertEquals(1, materials.size());
+        assertEquals(testMaterial, materials.get(0));
+
+        verify(materialRepository, times(1)).findByUser(uploader);
+    }
+
+    @Test
+    void findByUser_NoPermission() {
+        when(permissionService.hasPermission(uploader, PermissionType.READ_RESOURCES)).thenReturn(false);
+
+        assertThrows(SecurityException.class, () -> materialService.findByUser(uploader));
+
+        verify(materialRepository, never()).findByUser(any(User.class));
+    }
+
+    @Test
+    void updateDescription_AsUploader_Success() {
+        when(permissionService.hasPermission(uploader, PermissionType.UPDATE_OWN_RESOURCE)).thenReturn(true);
+
+        materialService.updateDescription(uploader, testMaterial, "Updated Description");
+
+        verify(materialRepository, times(1)).updateMaterialDescription(testMaterial.getMaterialId(), "Updated Description");
+    }
+
+    @Test
+    void updateDescription_AsAdmin_Success() {
+        materialService.updateDescription(adminUser, testMaterial, "Updated Description");
+
+        verify(materialRepository, times(1)).updateMaterialDescription(testMaterial.getMaterialId(), "Updated Description");
+    }
+
+    @Test
+    void updateDescription_NoPermission() {
+        when(permissionService.hasPermission(uploader, PermissionType.UPDATE_OWN_RESOURCE)).thenReturn(false);
+
+        assertThrows(SecurityException.class, () -> materialService.updateDescription(uploader, testMaterial, "Updated Description"));
+
+        verify(materialRepository, never()).updateMaterialDescription(anyInt(), anyString());
+    }
+
+    @Test
+    void updateTitle_AsUploader_Success() {
+        when(permissionService.hasPermission(uploader, PermissionType.UPDATE_OWN_RESOURCE)).thenReturn(true);
+
+        materialService.updateTitle(uploader, testMaterial, "Updated Title");
+
+        verify(materialRepository, times(1)).updateMaterialTitle(testMaterial.getMaterialId(), "Updated Title");
+    }
+
+    @Test
+    void updateTitle_AsAdmin_Success() {
+        materialService.updateTitle(adminUser, testMaterial, "Updated Title");
+
+        verify(materialRepository, times(1)).updateMaterialTitle(testMaterial.getMaterialId(), "Updated Title");
+    }
+
+    @Test
+    void updateTitle_NoPermission() {
+        when(permissionService.hasPermission(uploader, PermissionType.UPDATE_OWN_RESOURCE)).thenReturn(false);
+
+        assertThrows(SecurityException.class, () -> materialService.updateTitle(uploader, testMaterial, "Updated Title"));
+
+        verify(materialRepository, never()).updateMaterialTitle(anyInt(), anyString());
+    }
 }

@@ -587,8 +587,10 @@ public class MaterialPage {
         Collections.reverse(reviews);
         GUILogger.info(reviews.size() + " reviews found");
 
+        FlowPane fp = new FlowPane();
+        fp.setMaxWidth(700);
+
         if (!reviews.isEmpty()) {
-            FlowPane fp = new FlowPane();
             reviews.forEach(r -> {
                 Rating correspondingRating = ratings.stream()
                         .filter(rating -> rating.getUser().getUserId() == r.getUser().getUserId())
@@ -601,58 +603,43 @@ public class MaterialPage {
                     fp.getChildren().add(reviewCard(correspondingRating, r));
                 }
             });
-
-            fp.setMaxWidth(700);
-            getReviewContainer().getChildren().add(fp);
         }
 
         VBox leftOverVBox = new VBox();
         leftOverVBox.setSpacing(8);
-        leftOverRatings.forEach(r -> leftOverVBox.getChildren().add(ratingOnlyCard(r)));
+        leftOverRatings.forEach(r -> fp.getChildren().add(reviewCard(r)));
 
+        getReviewContainer().getChildren().add(fp);
         getReviewContainer().setSpacing(8);
-        getReviewContainer().getChildren().add(leftOverVBox);
+    }
+
+    private Node reviewCard(Rating rating) {
+        return reviewCard(rating, null);
     }
 
     private Node reviewCard(Rating rating, Review review) {
+        String commentText = (review != null) ? review.getReviewText() : "";
+
         VBox base = new VBox();
         base.setSpacing(10);
 
-        Hyperlink userLink = new Hyperlink(review.getUser().getFullName());
+        Hyperlink userLink = new Hyperlink(rating.getUser().getFullName());
         userLink.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();
-            sm.displayProfile(review.getUser().getUserId());
+            sm.displayProfile(rating.getUser().getUserId());
         });
         userLink.getStyleClass().add("reviewUserLink");
 
-        HBox reviewerHBox = new HBox(userLink, TextLabels.getUserRoleLabel(review.getUser()));
+        HBox reviewerHBox = new HBox(userLink, TextLabels.getUserRoleLabel(rating.getUser()));
         reviewerHBox.setSpacing(8);
 
         HBox stars = Stars.StarRow(rating.getRatingScore(), 1, 3);
 
-        Text comment = new Text(review.getReviewText());
+        Text comment = new Text(commentText);
         comment.setWrappingWidth(320);
 
         base.getChildren().addAll(reviewerHBox, stars, comment);
         base.getStyleClass().add("reviewCard");
-        return base;
-    }
-
-    private HBox ratingOnlyCard(Rating r) {
-        HBox stars = Stars.StarRow(r.getRatingScore(), 1, 3);
-        Hyperlink userLink = new Hyperlink(r.getUser().getFullName());
-        userLink.setOnAction(e -> {
-            SceneManager sm = SceneManager.getInstance();
-            sm.displayProfile(r.getUser().getUserId());
-        });
-        userLink.getStyleClass().add("reviewUserLink");
-
-        HBox userLabel = new HBox(userLink, TextLabels.getUserRoleLabel(r.getUser()));
-        userLabel.setSpacing(8);
-
-        HBox base = new HBox(stars, userLabel);
-        base.setSpacing(12);
-        base.setAlignment(Pos.CENTER_LEFT);
         return base;
     }
 }

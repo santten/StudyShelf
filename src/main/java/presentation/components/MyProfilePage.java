@@ -1,12 +1,10 @@
 package presentation.components;
 
-import domain.model.PermissionType;
-import domain.model.StudyMaterial;
-import domain.model.User;
-import domain.model.Category;
+import domain.model.*;
 import domain.service.*;
 
 import infrastructure.repository.CategoryRepository;
+import infrastructure.repository.RatingRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,10 +13,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+
 import presentation.controller.BaseController;
 import presentation.controller.StudyMaterialController;
 import presentation.controller.CategoryController;
+import presentation.controller.RatingController;
+
+import presentation.utility.CustomAlert;
+import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
 import presentation.view.SubScreen;
@@ -36,6 +38,7 @@ public class MyProfilePage {
     private VBox contentVBox;
     private final VBox materialContainer = new VBox();
     private final VBox courseContainer = new VBox();
+    private final VBox ratingContainer = new VBox();
 
     public void initialize(ScrollPane wrapper) {
         initialize(wrapper, PROFILE_FILES);
@@ -67,15 +70,12 @@ public class MyProfilePage {
     private VBox getMenuVBox() {
         return this.menuVBox;
     }
-
     private void setMenuVBox(VBox menuVBox) {
         this.menuVBox = menuVBox;
     }
-
     private VBox getContentVBox() {
         return this.contentVBox;
     }
-
     private void setContentVBox(VBox contentVBox) {
         this.contentVBox = contentVBox;
     }
@@ -94,7 +94,7 @@ public class MyProfilePage {
         if (Session.getInstance().getCurrentUser().hasPermission(PermissionType.CREATE_CATEGORY)) {
             addMenuLink("My Courses", PROFILE_COURSES);
         }
-        addMenuLink("My Reviews", PROFILE_REVIEWS);
+        addMenuLink("My Ratings", PROFILE_REVIEWS);
 
         Text headingSettings = new Text("Settings");
         base.getChildren().addAll(new Separator(), headingSettings);
@@ -119,7 +119,7 @@ public class MyProfilePage {
                 setUpMyCourses(base);
                 break;
             case PROFILE_REVIEWS:
-                setUpMyReviews(base);
+                setUpMyRatings(base);
                 break;
             case PROFILE_SETTINGS:
                 setUpMySettings(base);
@@ -203,13 +203,9 @@ public class MyProfilePage {
         base.getChildren().addAll(heading, getMaterialContainer());
     }
 
-    private VBox getMaterialContainer() {
-        return this.materialContainer;
-    }
-
-    private VBox getCourseContainer() {
-        return this.courseContainer;
-    }
+    private VBox getMaterialContainer() { return this.materialContainer; }
+    private VBox getCourseContainer() { return this.courseContainer; }
+    private VBox getRatingContainer() { return this.ratingContainer; }
 
     private void setUpMySettings(VBox base) {
         Text heading = new Text("Settings");
@@ -218,11 +214,82 @@ public class MyProfilePage {
         base.getChildren().add(heading);
     }
 
-    private void setUpMyReviews(VBox base) {
-        Text heading = new Text("My Reviews");
+    private void setUpMyRatings(VBox base) {
+        Text heading = new Text("My Ratings");
         heading.getStyleClass().addAll("heading3", "warning");
 
-        base.getChildren().add(heading);
+        User user = Session.getInstance().getCurrentUser();
+        RatingService rServ = new RatingService(new RatingRepository(), new PermissionService());
+        List<Rating> ratings = rServ.getRatingsByUser(user);
+
+        getRatingContainer().getChildren().clear();
+
+        if (ratings.isEmpty()) {
+            getRatingContainer().getChildren().addAll(new Text("You haven't created any ratings yet! \nFind a Study Material to start."));
+        }
+
+        for (Rating r : ratings) {
+            HBox item = new HBox();
+            Button btn = new Button();
+
+            int score = r.getRatingScore();
+            HBox starContainer = new HBox();
+
+            for (int i = 0; i < 5; i++){
+                SVGPath svgPath = new SVGPath();
+                SVGContents.setScale(svgPath, 1.1);
+                svgPath.setContent(SVGContents.star());
+                if (i < score) {
+                    svgPath.getStyleClass().add("warning");
+                } else {
+                    svgPath.getStyleClass().add("light-darker");
+                }
+                starContainer.getChildren().add(svgPath);
+            }
+            starContainer.setSpacing(6);
+
+            Text text = new Text("   " + r.getStudyMaterial().getName());
+            text.getStyleClass().addAll("heading4", "warning");
+
+            btn.getStyleClass().add("buttonEmpty");
+
+            btn.setOnAction(e -> SceneManager.getInstance().displayMaterial(r.getStudyMaterial().getMaterialId()));
+            btn.setMinWidth(540);
+            btn.setMaxWidth(540);
+
+            HBox hbox = new HBox(starContainer, text);
+            hbox.setAlignment(Pos.CENTER_LEFT);
+            btn.setGraphic(hbox);
+
+            Button deleteBtn = new Button();
+
+            SVGPath svgPathDelete = new SVGPath();
+            svgPathDelete.getStyleClass().add("error");
+            SVGContents.setScale(svgPathDelete, 1.3);
+            svgPathDelete.setContent(SVGContents.delete());
+            deleteBtn.getStyleClass().add("buttonEmpty");
+            deleteBtn.setGraphic(svgPathDelete);
+
+            deleteBtn.setOnAction(e -> {
+                if (CustomAlert.confirm("Deleting Review", "Are you sure you want do delete your review for this Study Material?", "This can not be undone, but you can always write a new one.", true)) {
+                    if (new RatingController().deleteRatingAndReview(Session.getInstance().getCurrentUser(), r.getStudyMaterial())) {
+                        getRatingContainer().getChildren().remove(item);
+                    }
+
+                    if (getRatingContainer().getChildren().isEmpty()) {
+                        getRatingContainer().getChildren().add(new Text("No ratings left!"));
+                    }
+                }
+            });
+
+            item.getChildren().addAll(btn, deleteBtn);
+            item.setAlignment(Pos.CENTER_LEFT);
+            item.getStyleClass().add("profileListItem");
+
+            getRatingContainer().getChildren().add(item);
+        }
+
+        base.getChildren().addAll(heading, getRatingContainer());
     }
 
     private void setUpMyCourses(VBox base) {

@@ -1,9 +1,6 @@
 package infrastructure.repository;
 
-import domain.model.Permission;
-import domain.model.Review;
-import domain.model.StudyMaterial;
-import domain.model.User;
+import domain.model.*;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -72,6 +69,37 @@ public class ReviewRepository extends BaseRepository<Review> {
             em.createQuery("DELETE FROM Review r WHERE r.studyMaterial = :studyMaterial")
                 .setParameter("studyMaterial", studyMaterial)
                 .executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Review> findByUserAndMaterial(User user, StudyMaterial sm) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.createQuery("SELECT r FROM Review r WHERE r.user = :user AND r.studyMaterial = :studyMaterial", Review.class)
+                    .setParameter("user", user)
+                    .setParameter("studyMaterial", sm)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void deleteById(int id) {
+        EntityManager em = getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+            em.createQuery("DELETE FROM Review r WHERE r.id = :id")
+                    .setParameter("id", id)
+                    .executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction.isActive()) {
