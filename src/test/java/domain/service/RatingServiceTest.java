@@ -147,21 +147,22 @@ class RatingServiceTest {
     void testDeleteRating_OwnerSuccess() {
         Rating rating = new Rating(4, material, user);
         when(permissionService.hasPermission(user, PermissionType.DELETE_OWN_RATING)).thenReturn(true);
-
+        rating.setRatingId(15125);
         ratingService.deleteRating(user, rating);
 
-        verify(ratingRepository, times(1)).delete(rating);
+        verify(ratingRepository, times(1)).deleteById(rating.getRatingId());
     }
 
     @Test
     void testDeleteRating_AdminSuccess() {
         User admin = new User();
         Rating rating = new Rating(4, material, user);
+        rating.setRatingId(21341);
         when(permissionService.hasPermission(admin, PermissionType.DELETE_ANY_RATING)).thenReturn(true);
 
         ratingService.deleteRating(admin, rating);
 
-        verify(ratingRepository, times(1)).delete(rating);
+        verify(ratingRepository, times(1)).deleteById(rating.getRatingId());
     }
 
     @Test

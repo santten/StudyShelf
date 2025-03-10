@@ -48,9 +48,6 @@ public class ReviewService {
 
     // READ_REVIEWS
     public List<Review> getReviewsForMaterial(User user, StudyMaterial material) {
-        if (material == null) {
-            throw new IllegalArgumentException("Material cannot be null");
-        }
         if (!permissionService.hasPermission(user, PermissionType.READ_REVIEWS)) {
             throw new SecurityException("You do not have permission to read reviews.");
         }
@@ -65,27 +62,16 @@ public class ReviewService {
     }
 
     public void deleteReview(User user, Review review) {
-        if (review == null) {
-            throw new IllegalArgumentException("Review cannot be null.");
-        }
         // DELETE_OWN_REVIEW
         boolean isOwner = review.getUser().equals(user);
         boolean canDeleteOwn = isOwner && permissionService.hasPermission(user, PermissionType.DELETE_OWN_REVIEW);
-       // DELETE_ANY_REVIEW
+        // DELETE_ANY_REVIEW
         boolean canDeleteAny = permissionService.hasPermission(user, PermissionType.DELETE_ANY_REVIEW);
 
         if (!(canDeleteOwn || canDeleteAny)) {
             throw new SecurityException("You do not have permission to delete this review.");
         }
         reviewRepository.deleteById(review.getReviewId());
-    }
-
-    public boolean hasUserReviewedMaterial(User user, StudyMaterial sm){
-        if (sm.getUploader().getUserId() == user.getUserId()){
-            return false;
-        } else {
-            return reviewRepository.hasUserReviewedMaterial(user, sm);
-        }
     }
 
     public List<Review> findReviewByUserAndMaterial(User user, StudyMaterial sm) {
