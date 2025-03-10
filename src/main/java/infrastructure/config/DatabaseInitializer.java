@@ -1,13 +1,12 @@
 package infrastructure.config;
 
-import domain.model.Permission;
-import domain.model.PermissionType;
-import domain.model.Role;
-import domain.model.RoleType;
+import domain.model.*;
 import infrastructure.repository.PermissionRepository;
 import infrastructure.repository.RoleRepository;
+import infrastructure.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import domain.service.PasswordService;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,10 +16,14 @@ public class DatabaseInitializer {
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
     private final EntityManager em;
+    private final UserRepository userRepository;
+    private final PasswordService passwordService;
 
     public DatabaseInitializer() {
         this.roleRepository = new RoleRepository();
         this.permissionRepository = new PermissionRepository();
+        this.userRepository = new UserRepository();
+        this.passwordService = new PasswordService();
         this.em = DatabaseConnection.getEntityManagerFactory().createEntityManager();
     }
 
@@ -123,6 +126,19 @@ public class DatabaseInitializer {
                 em.persist(studentRole);
                 em.flush();
             }
+
+            User adminUser = userRepository.findByEmail("admin@test.com");
+            if (adminUser == null) {
+                adminUser = new User();
+                adminUser.setFirstName("Admin");
+                adminUser.setLastName("User");
+                adminUser.setEmail("admin@test.com");
+                adminUser.setPassword(passwordService.hashPassword("admin123"));
+                adminUser.setRole(adminRole);
+
+                em.persist(adminUser);
+            }
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
