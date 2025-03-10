@@ -5,6 +5,7 @@
 .naviBtn {
     -fx-background-color: transparent;
     -fx-padding: 0 12;
+    -fx-cursor: hand;
 }
 
 .naviBtn .text {
