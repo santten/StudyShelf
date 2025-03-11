@@ -98,6 +98,104 @@ class ReviewRepositoryTest {
         }
     }
 
+
+
+    @Test
+    void testFindByUserAndMaterial() {
+        // Test finding reviews by user and material
+        List<Review> reviews = repository.findByUserAndMaterial(user, material);
+
+        // Verify results
+        assertNotNull(reviews);
+        assertEquals(1, reviews.size(), "Should find one review");
+        assertEquals(review.getReviewId(), reviews.get(0).getReviewId());
+        assertEquals("Great!!!", reviews.get(0).getReviewText());
+    }
+
+    @Test
+    void testHasUserReviewedMaterial_WhenReviewExists() {
+        // Test when the user has reviewed the material
+        boolean hasReviewed = repository.hasUserReviewedMaterial(user, material);
+
+        // Verify result
+        assertTrue(hasReviewed, "User should have reviewed the material");
+    }
+
+    @Test
+    void testHasUserReviewedMaterial_WhenNoReviewExists() {
+        // Create a new user who hasn't reviewed anything
+        User anotherUser = new User("Another", "User", "another" + System.currentTimeMillis() + "@example.com", "password", user.getRole());
+        anotherUser = userRepo.save(anotherUser);
+
+        // Test when the user has not reviewed the material
+        boolean hasReviewed = repository.hasUserReviewedMaterial(anotherUser, material);
+
+        // Verify result
+        assertFalse(hasReviewed, "New user should not have reviewed the material");
+    }
+
+    @Test
+    void testDeleteById() {
+        // Verify review exists before deletion
+        Review foundReview = repository.findById(review.getReviewId());
+        assertNotNull(foundReview, "Review should exist before deletion");
+
+        // Delete the review
+        repository.deleteById(review.getReviewId());
+
+        // Verify review was deleted
+        Review deletedReview = repository.findById(review.getReviewId());
+        assertNull(deletedReview, "Review should be deleted");
+    }
+
+    @Test
+    void testDeleteByMaterial_WithMultipleReviews() {
+        // Create another user and review for the same material
+        User anotherUser = new User("Second", "Reviewer", "second" + System.currentTimeMillis() + "@example.com", "password", user.getRole());
+        anotherUser = userRepo.save(anotherUser);
+
+        Review secondReview = new Review("Also good!", material, anotherUser);
+        secondReview = repository.save(secondReview);
+
+        // Verify we have multiple reviews for this material
+        List<Review> initialReviews = repository.findByStudyMaterial(material);
+        assertEquals(2, initialReviews.size(), "Should have 2 reviews for the material");
+
+        // Delete all reviews for the material
+        repository.deleteByMaterial(material);
+
+        // Verify all reviews for the material are deleted
+        List<Review> remainingReviews = repository.findByStudyMaterial(material);
+        assertTrue(remainingReviews.isEmpty(), "All reviews for the material should be deleted");
+    }
+
+    @Test
+    void testDeleteByMaterial_WithNoReviews() {
+        // Create a material with no reviews
+        StudyMaterial emptyMaterial = new StudyMaterial(
+                user,
+                "Empty Material",
+                "This material has no reviews",
+                "materials/empty.pdf",
+                3.0f,
+                "PDF",
+                LocalDateTime.now(),
+                MaterialStatus.APPROVED
+        );
+        emptyMaterial = materialRepo.save(emptyMaterial);
+
+        // Verify there are no reviews for this material
+        List<Review> initialReviews = repository.findByStudyMaterial(emptyMaterial);
+        assertTrue(initialReviews.isEmpty(), "Should have no reviews initially");
+
+        // Test deleteByMaterial with a material that has no reviews
+        repository.deleteByMaterial(emptyMaterial);
+
+        // This is mainly to ensure no exceptions are thrown
+        // No further assertions needed as there were no reviews to delete
+    }
+
+
     @AfterAll
     void tearDown() {
         repository = null;

@@ -183,4 +183,153 @@ class StudyMaterialTest {
         material.setRatings(newRatings);
         assertEquals(newRatings, material.getRatings());
     }
+
+    @Test
+    void getFileExtension() {
+        material.setFileType("application/pdf");
+        assertEquals("pdf", material.getFileExtension());
+
+        material.setFileType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        assertEquals("docx", material.getFileExtension());
+
+        material.setFileType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        assertEquals("xlsx", material.getFileExtension());
+
+        material.setFileType("application/vnd.openxmlformats-officedocument.presentationml.presentation");
+        assertEquals("pptx", material.getFileExtension());
+
+        // Test image types
+        material.setFileType("image/jpeg");
+        assertEquals("jpg", material.getFileExtension());
+
+        material.setFileType("image/png");
+        assertEquals("png", material.getFileExtension());
+
+        material.setFileType("application/x-zip-compressed");
+        assertEquals("zip", material.getFileExtension());
+
+        material.setFileType("application/x-7z-compressed");
+        assertEquals("7z", material.getFileExtension());
+
+        material.setFileType("application/x-rar-compressed");
+        assertEquals("rar", material.getFileExtension());
+
+        material.setFileType("application/x-tar");
+        assertEquals("tar", material.getFileExtension());
+
+        material.setFileType("application/gzip");
+        assertEquals("gz", material.getFileExtension());
+
+        material.setFileType("application/x-bzip2");
+        assertEquals("bz2", material.getFileExtension());
+
+        // Test text types
+        material.setFileType("text/plain");
+        assertEquals("txt", material.getFileExtension());
+
+        material.setFileType("text/csv");
+        assertEquals("csv", material.getFileExtension());
+
+        material.setFileType("text/html");
+        assertEquals("html", material.getFileExtension());
+
+        material.setFileType("application/vnd.ms-powerpoint");
+        assertEquals("ppt", material.getFileExtension());
+
+        material.setFileType("application/vnd.ms-excel");
+        assertEquals("xls", material.getFileExtension());
+
+        material.setFileType("image/gif");
+        assertEquals("gif", material.getFileExtension());
+
+        material.setFileType("video/mp4");
+        assertEquals("mp4", material.getFileExtension());
+
+        material.setFileType("video/x-msvideo");
+        assertEquals("avi", material.getFileExtension());
+
+        material.setFileType("video/quicktime");
+        assertEquals("mov", material.getFileExtension());
+
+        material.setFileType("audio/mpeg");
+        assertEquals("mp3", material.getFileExtension());
+
+        // Test executable formats
+        material.setFileType("application/java-archive");
+        assertEquals("jar", material.getFileExtension());
+
+        material.setFileType("application/x-msdownload");
+        assertEquals("exe", material.getFileExtension());
+
+
+        // Test an unknown file type
+        material.setFileType("application/unknown");
+        assertEquals("unknown", material.getFileExtension());
+
+        // Test custom format
+        material.setFileType("custom/format");
+        assertEquals("format", material.getFileExtension());
+    }
+
+    @Test
+    void testConstructorWithId() {
+        // Test the constructor that takes an ID
+        int materialId = 123;
+        LocalDateTime timestamp = LocalDateTime.now();
+
+        StudyMaterial materialWithId = new StudyMaterial(
+                materialId,
+                user,
+                "Test Material",
+                "Test Description",
+                "materials/test.pdf",
+                2.5f,
+                "PDF",
+                timestamp,
+                MaterialStatus.APPROVED
+        );
+
+        assertEquals(materialId, materialWithId.getMaterialId());
+        assertEquals(user, materialWithId.getUploader());
+        assertEquals("Test Material", materialWithId.getName());
+        assertEquals("Test Description", materialWithId.getDescription());
+        assertEquals("materials/test.pdf", materialWithId.getLink());
+        assertEquals(2.5f, materialWithId.getFileSize());
+        assertEquals("PDF", materialWithId.getFileType());
+        assertEquals(timestamp, materialWithId.getTimestamp());
+        assertEquals(MaterialStatus.APPROVED, materialWithId.getStatus());
+    }
+
+    @Test
+    void testSetUploader() {
+        User newUploader = new User("Armas", "N", "a@gmail.com", "password", new Role(RoleType.TEACHER));
+
+        material.setUploader(newUploader);
+        assertEquals(newUploader, material.getUploader());
+
+        assertNotEquals(user, material.getUploader());
+        assertEquals("Armas", material.getUploader().getFirstName());
+        assertEquals("N", material.getUploader().getLastName());
+    }
+
+    @Test
+    void testPreviewImage() {
+        // Create a test byte array
+        byte[] testImage = "Test preview image data".getBytes();
+
+        // Test setter
+        material.setPreviewImage(testImage);
+
+        // Test getter
+        byte[] retrievedImage = material.getPreviewImage();
+
+        // Verify
+        assertNotNull(retrievedImage);
+        assertArrayEquals(testImage, retrievedImage);
+
+        // Test with null
+        material.setPreviewImage(null);
+        assertNull(material.getPreviewImage());
+    }
+
 }

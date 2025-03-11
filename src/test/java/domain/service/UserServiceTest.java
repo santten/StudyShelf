@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -78,19 +81,6 @@ class UserServiceTest {
     }
 
     @Test
-    void testCheckPassword() {
-        String rawPassword = "mypassword123";
-        String fakeHashedPassword = "$2a$10$XYZ9876543210ABCDEFabcdef1234567890abcdef1234567890abcdef";
-
-        when(passwordService.hashPassword(rawPassword)).thenReturn(fakeHashedPassword);
-        when(passwordService.checkPassword(rawPassword, fakeHashedPassword)).thenReturn(true);
-        when(passwordService.checkPassword("wrongpassword", fakeHashedPassword)).thenReturn(false);
-
-        assertTrue(passwordService.checkPassword(rawPassword, fakeHashedPassword),"Matching passwords should return true");
-        assertFalse(passwordService.checkPassword("wrongpassword", fakeHashedPassword),"Non-matching passwords should return false");
-    }
-
-    @Test
     void testLoginUser_Success() {
         String email = "test@example.com";
         String rawPassword = "mypassword123";
@@ -106,4 +96,152 @@ class UserServiceTest {
         assertNotNull(token);
         assertEquals("mockJwtToken", token);
     }
+
+    @Test
+    void testUpdateUser_Success() {
+        User user = new User("Old", "Name", "old@example.com", "password", new Role(RoleType.STUDENT));
+        when(userRepository.update(user)).thenReturn(user);
+
+        User updatedUser = userService.updateUser(user, "New", "Name", "old@example.com");
+
+        assertNotNull(updatedUser);
+        assertEquals("New", updatedUser.getFirstName());
+        assertEquals("Name", updatedUser.getLastName());
+        assertEquals("old@example.com", updatedUser.getEmail());
+        verify(userRepository).update(user);
+    }
+
+    @Test
+    void testUpdateUser_EmailAlreadyTaken() {
+        User existingUser = new User("Existing", "User", "taken@example.com", "password", new Role(RoleType.STUDENT));
+        User userToUpdate = new User("Old", "Name", "old@example.com", "password", new Role(RoleType.STUDENT));
+
+        when(userRepository.findByEmail("taken@example.com")).thenReturn(existingUser);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                userService.updateUser(userToUpdate, "New", "Name", "taken@example.com"));
+
+        verify(userRepository).findByEmail("taken@example.com");
+        verify(userRepository, never()).update(any(User.class));
+    }
+
+    @Test
+    void testUpdateUser_SameEmail() {
+        User user = new User("Old", "Name", "same@example.com", "password", new Role(RoleType.STUDENT));
+        when(userRepository.update(user)).thenReturn(user);
+
+        User updatedUser = userService.updateUser(user, "New", "Name", "same@example.com");
+
+        assertNotNull(updatedUser);
+        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository).update(user);
+    }
+
+    @Test
+    void testUpdateUserPassword_ValidPassword() {
+        User user = new User("Test", "User", "test@example.com", "oldPassword", new Role(RoleType.STUDENT));
+        String newPassword = "newPassword123";
+        String hashedPassword = "hashedNewPassword";
+
+        when(passwordService.hashPassword(newPassword)).thenReturn(hashedPassword);
+
+        userService.updateUserPassword(user, newPassword);
+
+        assertEquals(hashedPassword, user.getPassword());
+        verify(passwordService).hashPassword(newPassword);
+        verify(userRepository).update(user);
+    }
+
+    @Test
+    void testUpdateUserPassword_NullPassword() {
+        User user = new User("Test", "User", "test@example.com", "oldPassword", new Role(RoleType.STUDENT));
+
+        userService.updateUserPassword(user, null);
+
+        assertEquals("oldPassword", user.getPassword());
+        verify(passwordService, never()).hashPassword(any());
+        verify(userRepository, never()).update(any());
+    }
+
+    @Test
+    void testUpdateUserPassword_EmptyPassword() {
+        User user = new User("Test", "User", "test@example.com", "oldPassword", new Role(RoleType.STUDENT));
+
+        userService.updateUserPassword(user, "");
+
+        assertEquals("oldPassword", user.getPassword());
+        verify(passwordService, never()).hashPassword(any());
+        verify(userRepository, never()).update(any());
+    }
+
+    @Test
+    void testIsTokenValid_ValidToken() {
+        String token = "valid-token";
+        when(jwtService.getEmailFromToken(token)).thenReturn("test@example.com");
+
+        boolean result = userService.isTokenValid(token);
+
+        assertTrue(result);
+        verify(jwtService).getEmailFromToken(token);
+    }
+
+    @Test
+    void testIsTokenValid_InvalidToken() {
+        String token = "invalid-token";
+        when(jwtService.getEmailFromToken(token)).thenReturn(null);
+
+        boolean result = userService.isTokenValid(token);
+
+        assertFalse(result);
+        verify(jwtService).getEmailFromToken(token);
+    }
+
+    @Test
+    void testCheckPassword() {
+        String rawPassword = "userPassword";
+        String hashedPassword = "hashedPassword";
+        when(passwordService.checkPassword(rawPassword, hashedPassword)).thenReturn(true);
+
+        boolean result = userService.checkPassword(rawPassword, hashedPassword);
+
+        assertTrue(result);
+        verify(passwordService).checkPassword(rawPassword, hashedPassword);
+    }
+
+    @Test
+    void testFindByEmail() {
+        String email = "test@example.com";
+        User expectedUser = new User("Test", "User", email, "password", new Role(RoleType.STUDENT));
+        when(userRepository.findByEmail(email)).thenReturn(expectedUser);
+
+
+        User result = userService.findByEmail(email);
+
+        assertEquals(expectedUser, result);
+        verify(userRepository).findByEmail(email);
+    }
+
+    @Test
+    void testDeleteUser() {
+        User user = new User("Test", "User", "test@example.com", "password", new Role(RoleType.STUDENT));
+
+        userService.deleteUser(user);
+
+        verify(userRepository).delete(user);
+    }
+
+    @Test
+    void testGetAllUsers() {
+        User user1 = new User("User1", "Test", "user1@example.com", "password", new Role(RoleType.STUDENT));
+        User user2 = new User("User2", "Test", "user2@example.com", "password", new Role(RoleType.TEACHER));
+        List<User> expectedUsers = Arrays.asList(user1, user2);
+
+        when(userRepository.findAll()).thenReturn(expectedUsers);
+
+        List<User> result = userService.getAllUsers();
+
+        assertEquals(expectedUsers, result);
+        verify(userRepository).findAll();
+    }
+
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.MockedStatic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -231,5 +232,131 @@ class CategoryServiceTest {
 
         verify(categoryRepository, never()).save(any(Category.class));
     }
+
+    @Test
+    @DisplayName("Get owned categories with pending materials")
+    void testGetOwnedCategoriesWithPending() {
+        // Arrange
+        List<Category> teacherCategories = List.of(testCategory);
+        when(categoryRepository.findCategoriesByUser(teacherUser)).thenReturn(teacherCategories);
+        when(categoryRepository.countPendingMaterialsByCategory(testCategory)).thenReturn(2L);
+
+        // Act
+        List<Category> result = categoryService.getOwnedCategoriesWithPending(teacherUser);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(testCategory, result.get(0));
+        verify(categoryRepository).findCategoriesByUser(teacherUser);
+        verify(categoryRepository).countPendingMaterialsByCategory(testCategory);
+    }
+
+    @Test
+    @DisplayName("Get owned categories with no pending materials")
+    void testGetOwnedCategoriesWithNoPending() {
+        // Arrange
+        List<Category> teacherCategories = List.of(testCategory);
+        when(categoryRepository.findCategoriesByUser(teacherUser)).thenReturn(teacherCategories);
+        when(categoryRepository.countPendingMaterialsByCategory(testCategory)).thenReturn(0L);
+
+        // Act
+        List<Category> result = categoryService.getOwnedCategoriesWithPending(teacherUser);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(0, result.size());
+        verify(categoryRepository).findCategoriesByUser(teacherUser);
+        verify(categoryRepository).countPendingMaterialsByCategory(testCategory);
+    }
+
+    @Test
+    @DisplayName("Get categories by user")
+    void testGetCategoriesByUser() {
+        // Arrange
+        List<Category> expectedCategories = List.of(testCategory);
+        when(categoryRepository.findCategoriesByUser(teacherUser)).thenReturn(expectedCategories);
+
+        // Act
+        List<Category> result = categoryService.getCategoriesByUser(teacherUser);
+
+        // Assert
+        assertEquals(expectedCategories, result);
+        verify(categoryRepository).findCategoriesByUser(teacherUser);
+    }
+
+    @Test
+    @DisplayName("Update category title as course owner with permission")
+    void testUpdateTitle_AsCourseOwner() {
+        // Arrange
+        when(permissionService.hasPermission(teacherUser, PermissionType.UPDATE_COURSE_CATEGORY))
+                .thenReturn(true);
+
+        // Act
+        categoryService.updateTitle(teacherUser, testCategory, "Updated Title");
+
+        // Assert
+        verify(categoryRepository).updateCategoryTitle(testCategory.getCategoryId(), "Updated Title");
+    }
+
+
+
+    @Test
+    @DisplayName("Get pending materials by category with permission")
+    void testGetPendingMaterialsByCategory_WithPermission() {
+        // Arrange
+        List<StudyMaterial> pendingMaterials = new ArrayList<>();
+        pendingMaterials.add(new StudyMaterial());
+
+        when(permissionService.hasPermission(teacherUser, PermissionType.APPROVE_RESOURCE))
+                .thenReturn(true);
+        when(categoryRepository.findPendingMaterialsByCategory(testCategory))
+                .thenReturn(pendingMaterials);
+
+        // Act
+        List<StudyMaterial> result = categoryService.getPendingMaterialsByCategory(teacherUser, testCategory);
+
+        // Assert
+        assertEquals(pendingMaterials, result);
+        verify(permissionService).hasPermission(teacherUser, PermissionType.APPROVE_RESOURCE);
+        verify(categoryRepository).findPendingMaterialsByCategory(testCategory);
+    }
+
+    @Test
+    @DisplayName("Get pending materials by category without permission throws exception")
+    void testGetPendingMaterialsByCategory_WithoutPermission() {
+        // Arrange
+        when(permissionService.hasPermission(studentUser, PermissionType.APPROVE_RESOURCE))
+                .thenReturn(false);
+
+        // Act & Assert
+        assertThrows(SecurityException.class, () ->
+                categoryService.getPendingMaterialsByCategory(studentUser, testCategory)
+        );
+
+        verify(permissionService).hasPermission(studentUser, PermissionType.APPROVE_RESOURCE);
+        verify(categoryRepository, never()).findPendingMaterialsByCategory(any());
+    }
+
+    @Test
+    @DisplayName("Get approved materials by category")
+    void testGetApprovedMaterialsByCategory() {
+        // Arrange
+        List<StudyMaterial> approvedMaterials = new ArrayList<>();
+        approvedMaterials.add(new StudyMaterial());
+
+        when(categoryRepository.findApprovedMaterialsByCategory(testCategory))
+                .thenReturn(approvedMaterials);
+
+        // Act
+        List<StudyMaterial> result = categoryService.getApprovedMaterialsByCategory(teacherUser, testCategory);
+
+        // Assert
+        assertEquals(approvedMaterials, result);
+        verify(categoryRepository).findApprovedMaterialsByCategory(testCategory);
+    }
+
+
+
 
 }

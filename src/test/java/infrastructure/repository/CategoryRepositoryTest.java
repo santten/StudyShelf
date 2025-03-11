@@ -1,14 +1,14 @@
 package infrastructure.repository;
 
-import domain.model.Category;
-import domain.model.RoleType;
-import domain.model.User;
-import domain.model.Role;
+import domain.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import org.junit.jupiter.api.*;
 import util.TestPersistenceUtil;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -134,6 +134,137 @@ class CategoryRepositoryTest {
 
         assertNull(deletedCategory);
     }
+
+
+
+    @Test
+    void testCountMaterialsByCategory() {
+        entityManager.getTransaction().begin();
+        Category savedCategory = repository.save(testCategory);
+
+        // Create and save study materials for this category
+        StudyMaterialRepository materialRepository = new StudyMaterialRepository(TestPersistenceUtil.getEntityManagerFactory());
+
+        StudyMaterial material1 = new StudyMaterial(
+                creator,
+                "Java Basics",
+                "Introduction to Java",
+                "materials/java-basics.pdf",
+                1.5f,
+                "PDF",
+                LocalDateTime.now(),
+                MaterialStatus.APPROVED
+        );
+        material1.setCategory(savedCategory);
+        materialRepository.save(material1);
+
+        StudyMaterial material2 = new StudyMaterial(
+                creator,
+                "Advanced Java",
+                "Advanced Java concepts",
+                "materials/advanced-java.pdf",
+                2.5f,
+                "PDF",
+                LocalDateTime.now(),
+                MaterialStatus.PENDING
+        );
+        material2.setCategory(savedCategory);
+        materialRepository.save(material2);
+
+        entityManager.getTransaction().commit();
+
+        // Test countMaterialsByCategory
+        long count = repository.countMaterialsByCategory(savedCategory);
+
+        // Verify results
+        assertEquals(2, count);
+    }
+
+
+    @Test
+    void testCountPendingMaterialsByCategory() {
+        entityManager.getTransaction().begin();
+        Category savedCategory = repository.save(testCategory);
+
+        // Create and save study materials for this category
+        StudyMaterialRepository materialRepository = new StudyMaterialRepository(TestPersistenceUtil.getEntityManagerFactory());
+
+        StudyMaterial material1 = new StudyMaterial(
+                creator,
+                "Java Basics",
+                "Introduction to Java",
+                "materials/java-basics.pdf",
+                1.5f,
+                "PDF",
+                LocalDateTime.now(),
+                MaterialStatus.APPROVED
+        );
+        material1.setCategory(savedCategory);
+        materialRepository.save(material1);
+
+        StudyMaterial material2 = new StudyMaterial(
+                creator,
+                "Advanced Java",
+                "Advanced Java concepts",
+                "materials/advanced-java.pdf",
+                2.5f,
+                "PDF",
+                LocalDateTime.now(),
+                MaterialStatus.PENDING
+        );
+        material2.setCategory(savedCategory);
+        materialRepository.save(material2);
+
+        StudyMaterial material3 = new StudyMaterial(
+                creator,
+                "Java Debugging",
+                "Debugging Java applications",
+                "materials/debugging.pdf",
+                3.0f,
+                "PDF",
+                LocalDateTime.now(),
+                MaterialStatus.PENDING
+        );
+        material3.setCategory(savedCategory);
+        materialRepository.save(material3);
+
+        entityManager.getTransaction().commit();
+
+        // Test countPendingMaterialsByCategory
+        long pendingCount = repository.countPendingMaterialsByCategory(savedCategory);
+
+        // Verify results
+        assertEquals(2, pendingCount);
+    }
+
+    @Test
+    void testUpdateCategoryTitle() {
+        entityManager.getTransaction().begin();
+        Category savedCategory = repository.save(testCategory);
+        int categoryId = savedCategory.getCategoryId();
+        entityManager.getTransaction().commit();
+
+        // Update title
+        String newTitle = "Updated Java Category";
+        entityManager.getTransaction().begin();
+        repository.updateCategoryTitle(categoryId, newTitle);
+        entityManager.getTransaction().commit();
+
+        // Verify the update
+        Category updatedCategory = repository.findById(categoryId);
+        assertEquals(newTitle, updatedCategory.getCategoryName());
+    }
+
+    @Test
+    void testCategoryRepository_Constructor() {
+        // Test both constructors
+        CategoryRepository defaultRepo = new CategoryRepository();
+        assertNotNull(defaultRepo, "Default constructor should create a valid repository");
+
+        // The parameterized constructor is already tested throughout the test class
+        assertNotNull(repository, "Parameterized constructor should create a valid repository");
+    }
+
 
     @AfterAll
     void tearDown() {

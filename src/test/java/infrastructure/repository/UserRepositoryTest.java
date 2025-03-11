@@ -3,9 +3,14 @@ package infrastructure.repository;
 import domain.model.RoleType;
 import domain.model.User;
 import domain.model.Role;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import org.junit.jupiter.api.*;
 import util.TestPersistenceUtil;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,6 +19,7 @@ class UserRepositoryTest {
     private UserRepository repository;
     private User testUser;
     private RoleRepository roleRepo;
+    private Role testRole;
 
 
     @BeforeAll
@@ -54,6 +60,113 @@ class UserRepositoryTest {
         assertNotNull(foundUser);
         assertEquals(savedUser.getUserId(), foundUser.getUserId());
         assertEquals(savedUser.getEmail(), foundUser.getEmail());
+    }
+
+    @Test
+    void testFindByEmail() {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+
+        try {
+            RoleRepository roleRepo = new RoleRepository(emf);
+            Role role = roleRepo.findByName(RoleType.STUDENT);
+            if (role == null) {
+                role = new Role(RoleType.STUDENT);
+                role = roleRepo.save(role);
+            }
+
+            String uniqueEmail = "test.user" + System.currentTimeMillis() + "@example.com";
+            User testUser = new User("Test", "User", uniqueEmail, "password", role);
+            testUser = repository.save(testUser);
+
+            em.flush();
+            tx.commit();
+
+            em.clear();
+
+            User foundByEmail = repository.findByEmail(uniqueEmail);
+            assertNotNull(foundByEmail, "Should find user by email");
+            assertEquals(testUser.getUserId(), foundByEmail.getUserId());
+            assertEquals(uniqueEmail, foundByEmail.getEmail());
+
+            User notFound = repository.findByEmail("nonexistent" + System.currentTimeMillis() + "@example.com");
+            assertNull(notFound, "Should return null for non-existent email");
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+
+    @Test
+    void testFindAll() {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+
+        try {
+            RoleRepository roleRepo = new RoleRepository(emf);
+            Role role = roleRepo.findByName(RoleType.STUDENT);
+            if (role == null) {
+                role = new Role(RoleType.STUDENT);
+                role = roleRepo.save(role);
+            }
+
+            String uniquePrefix = "FindAll" + System.currentTimeMillis();
+
+            List<User> initialUsers = repository.findAll();
+            int initialCount = initialUsers.size();
+
+            User user1 = new User("First", "User", uniquePrefix + "1@example.com", "password", role);
+            User user2 = new User("Second", "User", uniquePrefix + "2@example.com", "password", role);
+            User user3 = new User("Third", "User", uniquePrefix + "3@example.com", "password", role);
+
+            repository.save(user1);
+            repository.save(user2);
+            repository.save(user3);
+
+            em.flush();
+
+            tx.commit();
+
+            em.clear();
+
+            UserRepository freshRepo = new UserRepository(emf);
+            List<User> allUsers = freshRepo.findAll();
+
+            assertNotNull(allUsers);
+            assertEquals(initialCount + 3, allUsers.size(),
+                    "Should find all users including the 3 newly added (initial: " + initialCount + ")");
+
+            List<String> allEmails = allUsers.stream()
+                    .map(User::getEmail)
+                    .collect(Collectors.toList());
+
+            assertTrue(allEmails.contains(user1.getEmail()), "Results should include user1");
+            assertTrue(allEmails.contains(user2.getEmail()), "Results should include user2");
+            assertTrue(allEmails.contains(user3.getEmail()), "Results should include user3");
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        UserRepository defaultRepo = new UserRepository();
+        assertNotNull(defaultRepo, "Default constructor should create a non-null repository");
+
+        List<User> users = defaultRepo.findAll();
+        assertNotNull(users, "Repository created with default constructor should work");
     }
 
     @AfterAll
