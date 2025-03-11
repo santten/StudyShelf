@@ -3,6 +3,7 @@ package infrastructure.repository;
 import domain.model.RoleType;
 import domain.model.User;
 import domain.model.Role;
+import domain.service.PasswordService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -167,6 +168,84 @@ class UserRepositoryTest {
 
         List<User> users = defaultRepo.findAll();
         assertNotNull(users, "Repository created with default constructor should work");
+    }
+
+    @Test
+    void testUpdateUserFirstName() {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+
+        try {
+            User savedUser = repository.save(testUser);
+            em.flush();
+            tx.commit();
+
+            repository.updateUserFirstName(savedUser.getUserId(), "NewFirstName");
+
+            User updatedUser = repository.findById(savedUser.getUserId());
+            assertNotNull(updatedUser);
+            assertEquals("NewFirstName", updatedUser.getFirstName());
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    void testUpdateUserLastName() {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+
+        try {
+            User savedUser = repository.save(testUser);
+            em.flush();
+            tx.commit();
+
+            repository.updateUserLastName(savedUser.getUserId(), "NewLastName");
+
+            User updatedUser = repository.findById(savedUser.getUserId());
+            assertNotNull(updatedUser);
+            assertEquals("NewLastName", updatedUser.getLastName());
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    void testUpdateUserEmail() {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+
+        try {
+            User savedUser = repository.save(testUser);
+            em.flush();
+            tx.commit();
+
+            repository.updateUserEmail(savedUser.getUserId(), "new@example.com");
+
+            User updatedUser = repository.findById(savedUser.getUserId());
+            assertNotNull(updatedUser);
+            assertEquals("new@example.com", updatedUser.getEmail());
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 
     @AfterAll

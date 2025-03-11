@@ -17,9 +17,6 @@ import static presentation.view.Screen.*;
 public class LoginController {
     SceneManager sm = SceneManager.getInstance();
 
-    public LoginController() throws IOException {
-    }
-
     @FXML
     private Button btn_login;
     @FXML
@@ -66,9 +63,12 @@ public class LoginController {
                 }
             } else {
                 // Show login error message
-                errorLabel.setText("Invalid email or password");
+                errorLabel.setText("Wrong password");
                 errorLabel.setVisible(true);
             }
+        } else {
+            errorLabel.setText("Invalid e-mail");
+            errorLabel.setVisible(true);
         }
     }
 }
