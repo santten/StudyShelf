@@ -70,17 +70,42 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public boolean checkPassword(String providedPassword, String actualPassword) {
-        return passwordService.checkPassword(providedPassword, actualPassword);
-    }
-
-    public void updateUserPassword(User user, String newPassword) {
-        if (newPassword != null && !newPassword.isEmpty()) {
-            String hashedPassword = passwordService.hashPassword(newPassword);
-            user.setPassword(hashedPassword);
-            userRepository.update(user);
+    public void updateUserFirstName(User user, String firstName) {
+        User curUser = Session.getInstance().getCurrentUser();
+        if (user.getUserId() != curUser.getUserId() && !curUser.isAdmin()) {
+            throw new IllegalArgumentException("You can't change someone else's first name unless you're an admin.");
         }
+
+        userRepository.updateUserFirstName(user.getUserId(), firstName);
+        Session.getInstance().getCurrentUser().setFirstName(firstName);
+    }
+
+    public void updateUserLastName(User user, String lastName) {
+        User curUser = Session.getInstance().getCurrentUser();
+        if (user.getUserId() != curUser.getUserId() && !curUser.isAdmin()) {
+            throw new IllegalArgumentException("You can't change someone else's last name unless you're an admin.");
+        }
+
+        userRepository.updateUserLastName(user.getUserId(), lastName);
+        Session.getInstance().getCurrentUser().setLastName(lastName);
+    }
+
+    public void updateUserEmail(User user, String email) {
+        User curUser = Session.getInstance().getCurrentUser();
+        if (user.getUserId() != curUser.getUserId() && !curUser.isAdmin()) {
+            throw new IllegalArgumentException("You can't change someone else's email unless you're an admin.");
+        }
+
+        userRepository.updateUserEmail(user.getUserId(), email);
+        Session.getInstance().getCurrentUser().setEmail(email);
     }
 
 
+    public boolean updateUserPassword(User user, String oldPassword, String newPassword) {
+        if (user.getUserId() != Session.getInstance().getCurrentUser().getUserId()) {
+            throw new IllegalArgumentException("You can only change your own password.");
+        }
+
+        return userRepository.changePassword(user.getUserId(), oldPassword, newPassword);
+    }
 }

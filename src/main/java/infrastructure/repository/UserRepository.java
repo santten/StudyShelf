@@ -1,7 +1,9 @@
 package infrastructure.repository;
 
 import domain.model.Permission;
+import domain.model.StudyMaterial;
 import domain.model.User;
+import domain.service.PasswordService;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -44,6 +46,89 @@ public class UserRepository extends BaseRepository<User> {
         EntityManager em = getEntityManager();
         try {
             return em.createQuery("SELECT u FROM User u", User.class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void updateUserFirstName(int userId, String name) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user != null) {
+                user.setFirstName(name);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void updateUserLastName(int userId, String name) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user != null) {
+                user.setLastName(name);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void updateUserEmail(int userId, String email) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user != null) {
+                user.setEmail(email);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public boolean changePassword(int userId, String oldPassword, String newPassword) {
+        EntityManager em = getEntityManager();
+        PasswordService pwServ = new PasswordService();
+
+        try {
+            em.getTransaction().begin();
+            User user = em.find(User.class, userId);
+            if (user != null && pwServ.checkPassword(oldPassword, user.getPassword())) {
+                user.setPassword(pwServ.hashPassword(newPassword));
+                em.getTransaction().commit();
+                return true;
+            } else {
+                em.getTransaction().rollback();
+                return false;
+            }
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+                return false;
+            }
+            throw e;
         } finally {
             em.close();
         }

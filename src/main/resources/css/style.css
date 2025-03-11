@@ -139,6 +139,18 @@
     -fx-fill: -light;
 }
 
+.btnPlain {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 0;
+    -fx-background-radius: 8;
+}
+
+.btnPlain .text {
+    -fx-font-family: "Calistoga";
+    -fx-font-size: 14;
+    -fx-fill: -dark;
+}
+
 .btnXS {
     -fx-background-color: -secondary-light;
     -fx-padding: 0 8px;
@@ -258,10 +270,6 @@
     -fx-fill: -primary-light;
 }
 
-
-.text-field {
-    -fx-focus-fill: -primary-light;
-}
 
 .context-menu {
     -fx-effect: null;
@@ -428,8 +436,11 @@
     -fx-fill: -light-darker;
     -fx-clip-rule: even-odd;
 }
+.text-field, .password-field {
+    -fx-focus-fill: -primary-light;
+}
 
-.text-area, .text-field {
+.text-area, .text-field, .password-field {
     -fx-background-color: transparent;
     -fx-control-inner-background: transparent;
     -fx-background-insets: 0;
@@ -442,7 +453,7 @@
     -fx-faint-focus-color: transparent;
 }
 
-.text-area:focused, .text-field:focused {
+.text-area:focused, .text-field:focused, .password-field:focused {
     -fx-border-color: -primary-light;
 }
 

@@ -3,9 +3,7 @@ package presentation.components;
 import domain.model.*;
 import domain.service.*;
 
-import infrastructure.repository.CategoryRepository;
-import infrastructure.repository.RatingRepository;
-import infrastructure.repository.StudyMaterialRepository;
+import infrastructure.repository.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -20,7 +18,7 @@ import presentation.controller.CategoryController;
 import presentation.controller.RatingController;
 
 import presentation.utility.CustomAlert;
-import presentation.utility.GUILogger;
+import presentation.utility.PasswordFieldToggleable;
 import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
 import presentation.view.SubScreen;
@@ -28,6 +26,7 @@ import presentation.view.SubScreen;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import static presentation.view.Screen.*;
 import static presentation.view.SubScreen.*;
@@ -106,9 +105,10 @@ public class MyProfilePage {
         link.setOnAction(e -> BaseController.logout());
 
         link.getStyleClass().add("profileLink");
-        getMenuVBox().getChildren().addAll(new Separator(), link, new Separator());
+        getMenuVBox().getChildren().addAll(new Separator(), new Separator(), link, new Separator());
 
         getMenuVBox().setSpacing(4);
+        getMenuVBox().setMaxHeight(100);
     }
 
     private void setUpContent(SubScreen subScreen) {
@@ -208,10 +208,150 @@ public class MyProfilePage {
     private VBox getRatingContainer() { return this.ratingContainer; }
 
     private void setUpMySettings(VBox base) {
-        Text heading = new Text("Settings");
+        Text heading = new Text("Display Settings");
         heading.getStyleClass().addAll("heading3", "error");
+        base.getChildren().addAll(heading, new Text("Your first and last name are visible to other users."));
+        base.setSpacing(8);
 
-        base.getChildren().add(heading);
+        User curUser = Session.getInstance().getCurrentUser();
+        UserService uServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
+
+        TextField firstNameField = new TextField(curUser.getFirstName());
+        base.getChildren().add(createFieldBox("First Name", firstNameField, curUser::getFirstName, () -> {
+            try {
+                uServ.updateUserFirstName(curUser, firstNameField.getText());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }));
+
+        TextField lastNameField = new TextField(curUser.getLastName());
+        base.getChildren().add(createFieldBox("Last Name", lastNameField, curUser::getLastName, () -> {
+            try {
+                uServ.updateUserLastName(curUser, lastNameField.getText());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }));
+
+        TextField emailField = new TextField(curUser.getEmail());
+        base.getChildren().add(createFieldBox("E-Mail", emailField, curUser::getEmail, () -> {
+            try {
+                uServ.updateUserEmail(curUser, emailField.getText());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }));
+
+        setUpPasswordSettings(base);
+    }
+
+    private HBox createFieldBox(String labelText, TextField textField, Supplier<String> valueSupplier, Runnable action) {
+        Label label = new Label(labelText);
+        label.getStyleClass().addAll("label4");
+        label.setMinWidth(100);
+        label.setMaxWidth(100);
+
+        textField.setMinWidth(300);
+
+        Button button = new Button("✔");
+        button.getStyleClass().add("btnPlain");
+        button.setDisable(true);
+
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(valueSupplier.get())) {
+                button.setDisable(true);
+                button.setText("✔");
+                button.getStyleClass().removeAll("btnS");
+                button.getStyleClass().add("btnPlain");
+                button.setDisable(true);
+            } else {
+                button.setDisable(false);
+                button.setText("Save");
+                button.getStyleClass().removeAll("btnPlain");
+                button.getStyleClass().add("btnS");
+            }
+        });
+
+        button.setOnAction(e -> {
+            action.run();
+            button.setText("✔");
+            button.getStyleClass().removeAll("btnS");
+            button.getStyleClass().add("btnPlain");
+            button.setDisable(true);
+        });
+
+        HBox box = new HBox(label, textField, button);
+        box.setSpacing(8);
+        return box;
+    }
+
+    private void setUpPasswordSettings(VBox base){
+        User curUser = Session.getInstance().getCurrentUser();
+        UserService uServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
+
+        Text headingPW = new Text("Change Password");
+        headingPW.getStyleClass().addAll("heading3", "error");
+        base.getChildren().addAll(headingPW);
+
+        Label labelOldPW = new Label("Old Password");
+        labelOldPW.getStyleClass().addAll("label4");
+        labelOldPW.setMinWidth(120);
+        labelOldPW.setMaxWidth(120);
+
+        PasswordField oldPWField = new PasswordField();
+        oldPWField.setPromptText("New Password");
+        oldPWField.setMinWidth(280);
+
+        Label labelNewPW = new Label("New Password");
+        labelNewPW.getStyleClass().addAll("label4");
+        labelNewPW.setMinWidth(120);
+        labelNewPW.setMaxWidth(120);
+
+        PasswordField newPWField = new PasswordField();
+        newPWField.setPromptText("New Password");
+        newPWField.setMinWidth(280);
+
+        Label pwLabel = new Label("");
+        pwLabel.getStyleClass().addAll("secondary-light");
+
+        Button pwButton = new Button("Change Password");
+        pwButton.setOnAction(e -> {
+            if (uServ.updateUserPassword(curUser, oldPWField.getText(), newPWField.getText())){
+                pwLabel.getStyleClass().clear();
+                pwLabel.getStyleClass().addAll("secondary-light");
+                pwLabel.setText("Password changed successfully!");
+                pwButton.setDisable(true);
+            } else {
+                pwLabel.getStyleClass().clear();
+                pwLabel.getStyleClass().addAll("error");
+                pwLabel.setText("Your old password is wrong.");
+                pwButton.setDisable(true);
+            }
+        });
+        pwButton.setDisable(true);
+
+        oldPWField.textProperty().addListener((observable, oldValue, newValue) -> {
+            pwButton.setDisable(newValue.isEmpty() || newPWField.getText().isEmpty());
+            pwLabel.setText("");
+        });
+
+        newPWField.textProperty().addListener((observable, oldValue, newValue) -> {
+            pwButton.setDisable(newValue.isEmpty() || oldPWField.getText().isEmpty());
+            pwLabel.setText("");
+        });
+
+        pwButton.getStyleClass().add("btnS");
+
+        HBox oldPWHBox = new HBox(labelOldPW, PasswordFieldToggleable.create(oldPWField, 280));
+        oldPWHBox.setSpacing(8);
+        HBox newPWHBox = new HBox(labelNewPW, PasswordFieldToggleable.create(newPWField, 280));
+        newPWHBox.setSpacing(8);
+        HBox savePWhbox = new HBox(pwButton, pwLabel);
+        savePWhbox.setSpacing(8);
+        savePWhbox.setAlignment(Pos.CENTER_LEFT);
+
+        base.getChildren().addAll(oldPWHBox, newPWHBox, savePWhbox);
     }
 
     private void setUpMyRatings(VBox base) {

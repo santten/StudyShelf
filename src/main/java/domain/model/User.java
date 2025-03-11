@@ -58,21 +58,6 @@ public class User {
         this.role = role;
     }
 
-
-    // Checks if user has permission
-//    public boolean hasPermission(PermissionType permissionType) {
-//        if (role == null) {
-//            return false;
-//        }
-//        return role.getPermissions().stream()
-//                .anyMatch(permission -> permission.getName().equals(permissionType));
-//    }
-//    public boolean hasPermission(PermissionType permissionType) {
-//        if (role == null || role.getPermissions() == null) {
-//            return false;
-//        }
-//        return role.getPermissions().contains(permissionType);
-//    }
     public boolean hasPermission(PermissionType permissionType) {
         if (role == null || role.getPermissions() == null) {
             return false;
@@ -102,23 +87,26 @@ public class User {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public String getEmail() {
         return email;
     }
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getPassword() { return password; }
     public void setPassword(String password) {
         this.password = password;
     }
-//    public Role setRole() { return role; }
+
      public Role getRole() { return role; }
      public void setRole(Role role) { this.role = role; }
 
