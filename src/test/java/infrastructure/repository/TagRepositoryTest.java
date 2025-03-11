@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import util.TestPersistenceUtil;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TagRepositoryTest {
@@ -62,6 +65,20 @@ class TagRepositoryTest {
         assertEquals(savedTag.getTagName(), foundTag.getTagName());
         assertEquals(creator.getUserId(), foundTag.getCreator().getUserId());
     }
+
+
+    @Test
+    void testDefaultConstructor() {
+        // Test the default constructor
+        TagRepository defaultRepo = new TagRepository();
+        assertNotNull(defaultRepo, "Default constructor should create a non-null repository");
+
+        // Try to perform a simple operation to ensure it works
+        List<Tag> tags = defaultRepo.findAll();
+        assertNotNull(tags, "Repository created with default constructor should work");
+    }
+
+
     @AfterAll
     static void tearDown() {
         TestPersistenceUtil.closeEntityManagerFactory();

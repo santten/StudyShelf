@@ -89,6 +89,7 @@ public class StudyMaterialService {
         return repository.save(existingMaterial);
     }
 
+
     // READ_RESOURCES
     public List<StudyMaterial> getAllResources(User user) {
         if (!permissionService.hasPermission(user, PermissionType.READ_RESOURCES)) {

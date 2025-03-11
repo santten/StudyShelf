@@ -112,6 +112,148 @@ class StudyMaterialServiceTest {
         verify(materialRepository, times(1)).updateMaterialStatus(testMaterial.getMaterialId(), MaterialStatus.APPROVED);
     }
 
+    @Test
+    void updateMaterial_AsUser_Success() {
+        StudyMaterial updatedMaterial = new StudyMaterial(
+                uploader,
+                "Updated Java Basics",
+                "Updated Introduction to Java",
+                "https://drive.google.com/file/test-updated",
+                1.5f,
+                "text/plain",
+                java.time.LocalDateTime.now(),
+                MaterialStatus.APPROVED
+        );
+        updatedMaterial.setMaterialId(1);
+
+        // Setup permission check
+        when(permissionService.hasPermissionOnEntity(uploader, PermissionType.UPDATE_OWN_RESOURCE, uploader.getUserId()))
+                .thenReturn(true);
+        when(materialRepository.findById(updatedMaterial.getMaterialId())).thenReturn(testMaterial);
+        when(materialRepository.save(any(StudyMaterial.class))).thenReturn(updatedMaterial);
+
+        StudyMaterial result = materialService.updateMaterial(uploader, updatedMaterial);
+
+        assertNotNull(result);
+        assertEquals("Updated Java Basics", result.getName());
+        assertEquals("Updated Introduction to Java", result.getDescription());
+        assertEquals(MaterialStatus.PENDING, testMaterial.getStatus());
+
+        verify(materialRepository).findById(updatedMaterial.getMaterialId());
+        verify(materialRepository).save(testMaterial);
+    }
+
+    @Test
+    void updateMaterial_NoPermission() {
+        // Setup
+        StudyMaterial updatedMaterial = new StudyMaterial();
+        updatedMaterial.setMaterialId(1);
+
+        when(materialRepository.findById(updatedMaterial.getMaterialId())).thenReturn(testMaterial);
+        when(permissionService.hasPermissionOnEntity(uploader, PermissionType.UPDATE_OWN_RESOURCE, uploader.getUserId()))
+                .thenReturn(false);
+
+        // Execute & Verify
+        assertThrows(SecurityException.class, () ->
+                materialService.updateMaterial(uploader, updatedMaterial)
+        );
+
+        verify(materialRepository).findById(updatedMaterial.getMaterialId());
+        verify(materialRepository, never()).save(any());
+    }
+
+    @Test
+    void updateMaterial_MaterialNotFound() {
+        // Setup
+        StudyMaterial updatedMaterial = new StudyMaterial();
+        updatedMaterial.setMaterialId(999); // Non-existent ID
+
+        when(materialRepository.findById(999)).thenReturn(null);
+
+        // Execute & Verify
+        assertThrows(RuntimeException.class, () ->
+                materialService.updateMaterial(uploader, updatedMaterial)
+        );
+
+        verify(materialRepository).findById(999);
+        verify(materialRepository, never()).save(any());
+    }
+
+    @Test
+    void getPendingMaterialsForReview_Success() {
+        // Setup
+        List<StudyMaterial> pendingMaterials = List.of(testMaterial);
+        when(permissionService.hasPermission(adminUser, PermissionType.REVIEW_PENDING_RESOURCES))
+                .thenReturn(true);
+        when(materialRepository.findByStatus(MaterialStatus.PENDING)).thenReturn(pendingMaterials);
+
+        // Execute
+        List<StudyMaterial> result = materialService.getPendingMaterialsForReview(adminUser);
+
+        // Verify
+        assertEquals(1, result.size());
+        assertEquals(testMaterial, result.get(0));
+        verify(materialRepository).findByStatus(MaterialStatus.PENDING);
+    }
+
+    @Test
+    void getPendingMaterialsForReview_NoPermission() {
+        // Setup
+        when(permissionService.hasPermission(uploader, PermissionType.REVIEW_PENDING_RESOURCES))
+                .thenReturn(false);
+
+        // Execute & Verify
+        assertThrows(SecurityException.class, () ->
+                materialService.getPendingMaterialsForReview(uploader)
+        );
+
+        verify(materialRepository, never()).findByStatus(any());
+    }
+
+    @Test
+    void getAllResources_Success() {
+        // Setup
+        List<StudyMaterial> allMaterials = List.of(testMaterial);
+        when(permissionService.hasPermission(adminUser, PermissionType.READ_RESOURCES))
+                .thenReturn(true);
+        when(materialRepository.findAll()).thenReturn(allMaterials);
+
+        // Execute
+        List<StudyMaterial> result = materialService.getAllResources(adminUser);
+
+        // Verify
+        assertEquals(1, result.size());
+        assertEquals(testMaterial, result.get(0));
+        verify(materialRepository).findAll();
+    }
+
+    @Test
+    void getAllResources_NoPermission() {
+        // Setup
+        when(permissionService.hasPermission(uploader, PermissionType.READ_RESOURCES))
+                .thenReturn(false);
+
+        // Execute & Verify
+        assertThrows(SecurityException.class, () ->
+                materialService.getAllResources(uploader)
+        );
+
+        verify(materialRepository, never()).findAll();
+    }
+
+    @Test
+    void updateMaterial_Repository() {
+        // Setup
+        when(materialRepository.update(testMaterial)).thenReturn(testMaterial);
+
+        // Execute
+        StudyMaterial result = materialService.updateMaterial(testMaterial);
+
+        // Verify
+        assertNotNull(result);
+        assertEquals(testMaterial, result);
+        verify(materialRepository).update(testMaterial);
+    }
 
 
     @Test
@@ -210,6 +352,63 @@ class StudyMaterialServiceTest {
 
         assertEquals(MaterialStatus.REJECTED, testMaterial.getStatus());
         verify(materialRepository, times(1)).updateMaterialStatus(testMaterial.getMaterialId(), MaterialStatus.REJECTED);
+    }
+
+    @Test
+    void rejectMaterial_MaterialAlreadyProcessed() {
+        // Setup
+        testMaterial.setStatus(MaterialStatus.APPROVED);
+        when(permissionService.hasApprovalPermission(adminUser)).thenReturn(true);
+
+        // Execute & Verify
+        assertThrows(IllegalStateException.class, () ->
+                materialService.rejectMaterial(adminUser, testMaterial)
+        );
+
+        verify(materialRepository, never()).updateMaterialStatus(anyInt(), any());
+    }
+
+    @Test
+    void getApprovedMaterials_NoPermission() {
+        // Setup
+        when(permissionService.hasPermission(uploader, PermissionType.READ_RESOURCES))
+                .thenReturn(false);
+
+        // Execute & Verify
+        assertThrows(SecurityException.class, () ->
+                materialService.getApprovedMaterials(uploader)
+        );
+
+        verify(materialRepository, never()).findByStatus(any());
+    }
+
+    @Test
+    void approveMaterial_MaterialAlreadyProcessed() {
+        // Setup
+        testMaterial.setStatus(MaterialStatus.REJECTED);
+        when(permissionService.hasApprovalPermission(adminUser)).thenReturn(true);
+
+        // Execute & Verify
+        assertThrows(IllegalStateException.class, () ->
+                materialService.approveMaterial(adminUser, testMaterial)
+        );
+
+        verify(materialRepository, never()).updateMaterialStatus(anyInt(), any());
+    }
+
+    @Test
+    void deleteMaterial_AsCourseOwner_Success() {
+        User courseOwner = new User(3, "Course", "Owner", "course@example.com", "password", new Role(RoleType.TEACHER));
+        Category category = new Category("Java Course", courseOwner);
+        testMaterial.setCategory(category);
+
+        when(permissionService.hasPermission(courseOwner, PermissionType.DELETE_COURSE_RESOURCE)).thenReturn(true);
+        when(permissionService.hasPermission(courseOwner, PermissionType.DELETE_OWN_RESOURCE)).thenReturn(false);
+        when(permissionService.hasPermission(courseOwner, PermissionType.DELETE_ANY_RESOURCE)).thenReturn(false);
+
+        materialService.deleteMaterial(courseOwner, testMaterial);
+
+        verify(materialRepository).delete(testMaterial);
     }
 
     @Test

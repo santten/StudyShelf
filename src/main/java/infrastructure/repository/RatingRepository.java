@@ -122,4 +122,6 @@ public class RatingRepository extends BaseRepository<Rating> {
             em.close();
         }
     }
+
+
 }
