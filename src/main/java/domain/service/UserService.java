@@ -92,7 +92,7 @@ public class UserService {
 
     public void updateUserEmail(User user, String email) {
         User curUser = Session.getInstance().getCurrentUser();
-        if (user.getUserId() != curUser.getUserId() && !curUser.isAdmin()) {
+        if ((user.getUserId() != curUser.getUserId()) && !curUser.isAdmin()) {
             throw new IllegalArgumentException("You can't change someone else's email unless you're an admin.");
         }
 
@@ -107,5 +107,9 @@ public class UserService {
         }
 
         return userRepository.changePassword(user.getUserId(), oldPassword, newPassword);
+    }
+
+    public boolean checkPassword(String rawPassword, String hashedPassword) {
+        return passwordService.checkPassword(rawPassword, hashedPassword);
     }
 }

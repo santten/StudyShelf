@@ -138,25 +138,24 @@ class UserServiceTest {
     }
 
     @Test
-    void testUpdateUserPassword_ValidPassword() {
+    void testUpdateUserPassword_Success() {
         User user = new User("Test", "User", "test@example.com", "oldPassword", new Role(RoleType.STUDENT));
-        String newPassword = "newPassword123";
-        String hashedPassword = "hashedNewPassword";
+        Session.getInstance().setCurrentUser(user);
 
-        when(passwordService.hashPassword(newPassword)).thenReturn(hashedPassword);
+        when(userRepository.changePassword(user.getUserId(), "oldPassword", "newPassword")).thenReturn(true);
 
-        userService.updateUserPassword(user, newPassword);
+        boolean result = userService.updateUserPassword(user, "oldPassword", "newPassword");
 
-        assertEquals(hashedPassword, user.getPassword());
-        verify(passwordService).hashPassword(newPassword);
-        verify(userRepository).update(user);
+        assertTrue(result);
+        verify(userRepository).changePassword(user.getUserId(), "oldPassword", "newPassword");
     }
 
     @Test
     void testUpdateUserPassword_NullPassword() {
         User user = new User("Test", "User", "test@example.com", "oldPassword", new Role(RoleType.STUDENT));
 
-        userService.updateUserPassword(user, null);
+        Session.getInstance().setCurrentUser(user);
+        userService.updateUserPassword(user, "oldPassword", null);
 
         assertEquals("oldPassword", user.getPassword());
         verify(passwordService, never()).hashPassword(any());
@@ -167,7 +166,8 @@ class UserServiceTest {
     void testUpdateUserPassword_EmptyPassword() {
         User user = new User("Test", "User", "test@example.com", "oldPassword", new Role(RoleType.STUDENT));
 
-        userService.updateUserPassword(user, "");
+        Session.getInstance().setCurrentUser(user);
+        userService.updateUserPassword(user, "oldPassword", "");
 
         assertEquals("oldPassword", user.getPassword());
         verify(passwordService, never()).hashPassword(any());
@@ -244,4 +244,83 @@ class UserServiceTest {
         verify(userRepository).findAll();
     }
 
+    @Test
+    void testUpdateUserFirstName_Success() {
+        User user = new User("Old", "Name", "email@example.com", "password", new Role(RoleType.STUDENT));
+        Session.getInstance().setCurrentUser(user);
+
+        userService.updateUserFirstName(user, "NewFirstName");
+
+        verify(userRepository).updateUserFirstName(user.getUserId(), "NewFirstName");
+        assertEquals("NewFirstName", Session.getInstance().getCurrentUser().getFirstName());
+    }
+
+    @Test
+    void testUpdateUserFirstName_NotAuthorized() {
+        User user = new User("Old", "Name", "email@example.com", "password", new Role(RoleType.STUDENT));
+        User anotherUser = new User("Another", "User", "another@example.com", "password", new Role(RoleType.STUDENT));
+        user.setUserId(1231251);
+        anotherUser.setUserId(146161);
+        Session.getInstance().setCurrentUser(anotherUser);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                userService.updateUserFirstName(user, "NewFirstName"));
+
+        assertEquals("You can't change someone else's first name unless you're an admin.", exception.getMessage());
+        verify(userRepository, never()).updateUserFirstName(anyInt(), anyString());
+    }
+
+    @Test
+    void testUpdateUserLastName_Success() {
+        User user = new User("First", "OldLastName", "email@example.com", "password", new Role(RoleType.STUDENT));
+        Session.getInstance().setCurrentUser(user);
+
+        userService.updateUserLastName(user, "NewLastName");
+
+        verify(userRepository).updateUserLastName(user.getUserId(), "NewLastName");
+        assertEquals("NewLastName", Session.getInstance().getCurrentUser().getLastName());
+    }
+
+    @Test
+    void testUpdateUserLastName_NotAuthorized() {
+        User user = new User("First", "OldLastName", "email@example.com", "password", new Role(RoleType.STUDENT));
+        User anotherUser = new User("Another", "User", "another@example.com", "password", new Role(RoleType.STUDENT));
+        Session.getInstance().setCurrentUser(anotherUser);
+
+        user.setUserId(1231251);
+        anotherUser.setUserId(146161);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                userService.updateUserLastName(user, "NewLastName"));
+
+        assertEquals("You can't change someone else's last name unless you're an admin.", exception.getMessage());
+        verify(userRepository, never()).updateUserLastName(anyInt(), anyString());
+    }
+
+    @Test
+    void testUpdateUserEmail_Success() {
+        User user = new User("First", "Last", "old@example.com", "password", new Role(RoleType.STUDENT));
+        Session.getInstance().setCurrentUser(user);
+
+        userService.updateUserEmail(user, "new@example.com");
+
+        verify(userRepository).updateUserEmail(user.getUserId(), "new@example.com");
+        assertEquals("new@example.com", Session.getInstance().getCurrentUser().getEmail());
+    }
+
+    @Test
+    void testUpdateUserEmail_NotAuthorized() {
+        User user = new User("First", "Last", "old@example.com", "password", new Role(RoleType.STUDENT));
+        User anotherUser = new User("Another", "User", "another@example.com", "password", new Role(RoleType.STUDENT));
+        Session.getInstance().setCurrentUser(anotherUser);
+
+        user.setUserId(1231251);
+        anotherUser.setUserId(146161);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                userService.updateUserEmail(user, "new@example.com"));
+
+        assertEquals("You can't change someone else's email unless you're an admin.", exception.getMessage());
+        verify(userRepository, never()).updateUserEmail(anyInt(), anyString());
+    }
 }

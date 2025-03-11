@@ -81,6 +81,8 @@ public class User {
 
     // Getters and Setters
     public int getUserId() { return userId; }
+    public void setUserId(int i) { this.userId = i; };
+
     public String getFirstName() {
         return firstName;
     }
@@ -110,5 +112,5 @@ public class User {
      public Role getRole() { return role; }
      public void setRole(Role role) { this.role = role; }
 
-    public String getFullName() {return firstName + " " + lastName;}
+     public String getFullName() {return firstName + " " + lastName;}
 }
