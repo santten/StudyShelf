@@ -21,7 +21,7 @@ public class UserService {
         this.jwtService = jwtService;
     }
 
-    public User registerUser(String firstName, String lastName, String email,   String password, RoleType roleType) {
+    public User registerUser(String firstName, String lastName, String email,  String password, RoleType roleType) {
         Role role = roleRepository.findByName(roleType);
 
         if (role == null) {
@@ -54,16 +54,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User updateUser(User user, String firstName, String lastName, String email) {
-        if (email != null && !email.equals(user.getEmail()) && userRepository.findByEmail(email) != null) {
-            throw new IllegalArgumentException("Email already taken!");
-        }
-
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-
-        return userRepository.update(user);
+    public User updateUser(int userId, String firstName, String lastName, String email) {
+        return userRepository.updateUserFields(userId, firstName, lastName, email);
     }
 
     public void deleteUser(User user) {
@@ -74,11 +66,12 @@ public class UserService {
         return passwordService.checkPassword(providedPassword, actualPassword);
     }
 
-    public void updateUserPassword(User user, String newPassword) {
-        if (newPassword != null && !newPassword.isEmpty()) {
-            String hashedPassword = passwordService.hashPassword(newPassword);
-            user.setPassword(hashedPassword);
-            userRepository.update(user);
+    public void updateUserPassword(int userId, String newPassword) {
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty.");
         }
+        String hashedPassword = passwordService.hashPassword(newPassword);
+        userRepository.updateUserPassword(userId, hashedPassword);
     }
+
 }

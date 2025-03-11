@@ -56,12 +56,22 @@ public class UserController extends BaseController {
     private void updateUserInfo() {
         if (currentUser == null) return;
 
-        currentUser.setFirstName(firstNameField.getText());
-        currentUser.setLastName(lastNameField.getText());
-        currentUser.setEmail(emailField.getText());
+        String newFirstName = firstNameField.getText();
+        String newLastName = lastNameField.getText();
+        String newEmail = emailField.getText();
+
+        if (!newEmail.equals(currentUser.getEmail()) && userService.findByEmail(newEmail) != null) {
+            showAlert(Alert.AlertType.ERROR, "Email Already Exists", "This email is already in use.");
+            return;
+        }
 
         try {
-            userService.updateUser(currentUser,currentUser.getFirstName(), currentUser.getLastName(), currentUser.getEmail());
+            userService.updateUser(currentUser.getUserId(),currentUser.getFirstName(), currentUser.getLastName(), currentUser.getEmail());
+
+            currentUser.setFirstName(newFirstName);
+            currentUser.setLastName(newLastName);
+            currentUser.setEmail(newEmail);
+
             showAlert(Alert.AlertType.INFORMATION, "Success", "Profile updated successfully.");
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Update Failed", "Failed to update profile: " + e.getMessage());
@@ -88,7 +98,7 @@ public class UserController extends BaseController {
         currentUser.setPassword(hashedNewPassword);
 
         try {
-            userService.updateUserPassword(currentUser, newPassword);
+            userService.updateUserPassword(currentUser.getUserId(), newPassword);
             showAlert(Alert.AlertType.INFORMATION, "Success", "Password updated successfully.");
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Password Update Failed", "Failed to update password: " + e.getMessage());

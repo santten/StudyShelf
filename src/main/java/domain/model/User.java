@@ -49,7 +49,7 @@ public class User {
     }
 
     // Constructor for existing users
-    public User(int userId, String firstName, String lastName, String email, String password , Role role) {
+    public User(Integer  userId, String firstName, String lastName, String email, String password , Role role) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -121,6 +121,6 @@ public class User {
 //    public Role setRole() { return role; }
      public Role getRole() { return role; }
      public void setRole(Role role) { this.role = role; }
-
+     public void setUserId(int userId) { this.userId = this.userId; }
     public String getFullName() {return firstName + " " + lastName;}
 }

@@ -47,7 +47,7 @@ public abstract class BaseRepository<T> {
     public T findById(int id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(entityClass, id);
+            return em.find(entityClass,  Integer.valueOf(id));
         } finally {
             em.close();
         }
