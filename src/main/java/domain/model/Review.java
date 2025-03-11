@@ -33,6 +33,7 @@ public class Review {
     public int getReviewId() {
         return reviewId;
     }
+    public void setReviewId(int reviewId) { this.reviewId = reviewId; }
     public String getReviewText() {
         return reviewText;
     }

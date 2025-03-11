@@ -57,15 +57,15 @@ public class RatingService {
 
     public void deleteRating(User user, Rating rating) {
         // DELETE_OWN_RATING
-        boolean isOwner = rating.getUser().equals(user);
+        boolean isOwner = rating.getUser().getUserId() == user.getUserId();
         boolean canDeleteOwn = isOwner && permissionService.hasPermission(user, PermissionType.DELETE_OWN_RATING);
         // DELETE_ANY_RATING
         boolean canDeleteAny = permissionService.hasPermission(user, PermissionType.DELETE_ANY_RATING);
 
-        if (!(canDeleteOwn || canDeleteAny)) {
+        if (!canDeleteOwn && !canDeleteAny) {
             throw new SecurityException("You do not have permission to delete this rating.");
         }
-        ratingRepository.delete(rating);
+        ratingRepository.deleteById(rating.getRatingId());
     }
 
     public boolean hasUserRatedMaterial(User user, StudyMaterial sm){
@@ -74,5 +74,13 @@ public class RatingService {
         } else {
             return ratingRepository.hasUserReviewedMaterial(user, sm);
         }
+    }
+
+    public List<Rating> getRatingsByUser(User user) {
+        return ratingRepository.findByUser(user);
+    }
+
+    public List<Rating> findRatingByUserAndMaterial(User user, StudyMaterial sm) {
+        return ratingRepository.findByUserAndMaterial(user, sm);
     }
 }
