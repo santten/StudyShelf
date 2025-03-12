@@ -21,6 +21,7 @@ DB_ROOT_PASSWORD=<yourDBrootpassword>
 DOWNLOADS_DIR=C:/Users/<yourusername>/Downloads
 - or you can choose other folder. Folder will be shared with docker image to store dowloaded files and upload files.
 
+
 Start Docker Desktop
  
 Start run-remote-studyshelf-full.bat in project root folder.
