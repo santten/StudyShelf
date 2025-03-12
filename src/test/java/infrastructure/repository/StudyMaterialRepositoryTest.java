@@ -86,13 +86,13 @@ class StudyMaterialRepositoryTest {
         assertEquals(MaterialStatus.APPROVED, updatedMaterial.getStatus());
     }
 
-//    @Test
-//    void deleteMaterial() {
-//        repository.delete(testMaterial);
-//
-//        StudyMaterial deletedMaterial = repository.findById(testMaterial.getMaterialId());
-//        assertNull(deletedMaterial);
-//    }
+    @Test
+    void deleteMaterial() {
+        repository.delete(testMaterial);
+
+        StudyMaterial deletedMaterial = repository.findById(testMaterial.getMaterialId());
+        assertNull(deletedMaterial);
+    }
 
     @Test
     void findByStatus() {

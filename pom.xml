@@ -117,6 +117,9 @@
                         <exclude>sun/util/resources/**</exclude>
                         <exclude>sun/text/resources/**</exclude>
                         <exclude>sun/util/cldr/**</exclude>
+                        <exclude>**/</exclude>
+                        <exclude>**/presentation/**</exclude>
+                        <exclude>**/infrastructure/config/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
