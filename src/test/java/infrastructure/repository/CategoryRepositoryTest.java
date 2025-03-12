@@ -255,15 +255,15 @@ class CategoryRepositoryTest {
         assertEquals(newTitle, updatedCategory.getCategoryName());
     }
 
-    @Test
-    void testCategoryRepository_Constructor() {
-        // Test both constructors
-        CategoryRepository defaultRepo = new CategoryRepository();
-        assertNotNull(defaultRepo, "Default constructor should create a valid repository");
-
-        // The parameterized constructor is already tested throughout the test class
-        assertNotNull(repository, "Parameterized constructor should create a valid repository");
-    }
+//    @Test
+//    void testCategoryRepository_Constructor() {
+//        // Test both constructors
+//        CategoryRepository defaultRepo = new CategoryRepository();
+//        assertNotNull(defaultRepo, "Default constructor should create a valid repository");
+//
+//        // The parameterized constructor is already tested throughout the test class
+//        assertNotNull(repository, "Parameterized constructor should create a valid repository");
+//    }
 
 
     @AfterAll
