@@ -2,4 +2,4 @@
 
 Java-based Classroom Resource Platform
 
-Group 6 at Metropolia UAS 2025
+Group 6 at Metropolia UAS 2
