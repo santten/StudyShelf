@@ -16,9 +16,9 @@ In terminal: set DISPLAY=<Your-IP-Address>:0.0
 
 Create .env file in project root folder:
 
-DB_PASSWORD=<youruserDBpassword>
-DB_ROOT_PASSWORD=<yourDBrootpassword>
-DOWNLOADS_DIR=C:/Users/<yourusername>/Downloads
+- DB_PASSWORD = "youruserDBpassword"
+- DB_ROOT_PASSWORD = "yourDBrootpassword"
+- DOWNLOADS_DIR=C:/Users/<yourusername>/Downloads
 - or you can choose other folder. Folder will be shared with docker image to store dowloaded files and upload files.
 
 
