@@ -12,7 +12,7 @@ Install https://sourceforge.net/projects/vcxsrv/ (windows)
 - Choose "Start no client" and click "Next".
 - Ensure "Disable access control" is checked and click "Finish"
 
-In terminal: set DISPLAY=<Your-IP-Address>:0.0
+In terminal: set DISPLAY="Your-IP-Address":0.0
 
 Create .env file in project root folder:
 
