@@ -7,24 +7,24 @@ making it easier for teachers and students to collaborate and access useful stud
 
 ## Key Features
 
-    1. User Role Management
-
-   - Multiple user roles
-   - Differentiated access and permissions
-   - Secure authentication and authorization
-
-    2. Course Management
-
-   - Techer can create and manage courses/categories
-   - Teacher can approve/reject pending materials
-
-    3. Study Material Interactions
+#### Study Material Interactions
 
    - Download educational resources
    - Upload and organize study materials
    - Write and read reviews
    - Rate materials
    - Material engagement tracking
+
+#### Course Management
+
+   - Techer can create and manage courses/categories
+   - Teacher can approve/reject pending materials
+
+#### User Role Management
+
+   - Multiple user roles
+   - Differentiated access and permissions
+   - Secure authentication and authorization
 
 ## Technical Architecture
 
