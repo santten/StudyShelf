@@ -1,4 +1,4 @@
-package presentation.view;
+package presentation.controller;
 
 public enum SubScreen {
     PROFILE_FILES,

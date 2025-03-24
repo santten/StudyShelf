@@ -7,7 +7,6 @@ import domain.service.SearchService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.TagRepository;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -15,9 +14,7 @@ import presentation.components.ListItem;
 
 import java.util.List;
 
-import static presentation.components.ListItem.listItemGraphic;
-
-public class SearchController extends BaseController{
+public class SearchController {
 
     private final SearchService searchService = new SearchService(
             new StudyMaterialRepository(),

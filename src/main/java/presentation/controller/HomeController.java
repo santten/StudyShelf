@@ -2,7 +2,8 @@ package presentation.controller;
 
 import domain.model.Category;
 import domain.model.StudyMaterial;
-import domain.service.*;
+import domain.service.CategoryService;
+import domain.service.PermissionService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
+import presentation.view.CurrentUserManager;
 import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
 
@@ -38,7 +40,7 @@ public class HomeController {
         mainVBoxHome.setSpacing(10);
 
         loadHeader();
-        if (Session.getInstance().getCurrentUser().getRole().getName() != STUDENT){
+        if (CurrentUserManager.get().getRole().getName() != STUDENT){
             loadPendingApprovalScreen();
         }
         loadLatestMaterials();
@@ -50,7 +52,7 @@ public class HomeController {
     private void loadHeader() {
         HBox header = new HBox();
 
-        Text title = new Text("Welcome, " + Session.getInstance().getCurrentUser().getFullName() + "!");
+        Text title = new Text("Welcome, " + CurrentUserManager.get().getFullName() + "!");
         title.getStyleClass().addAll("heading2", "error");
         header.getChildren().add(title);
 
@@ -58,7 +60,7 @@ public class HomeController {
     }
 
     private void loadPendingApprovalScreen() {
-        List<Category> pendingCategories = categoryServ.getOwnedCategoriesWithPending(Session.getInstance().getCurrentUser());
+        List<Category> pendingCategories = categoryServ.getOwnedCategoriesWithPending(CurrentUserManager.get());
 
         if (!pendingCategories.isEmpty()){
             VBox vbox = new VBox();
@@ -131,7 +133,7 @@ public class HomeController {
     }
 
     private void loadRecentlyReviewedMaterials() {
-        List<StudyMaterial> list = smRepository.findReviewedMaterialsByUserLatest10(Session.getInstance().getCurrentUser());
+        List<StudyMaterial> list = smRepository.findReviewedMaterialsByUserLatest10(CurrentUserManager.get());
         if (!list.isEmpty()) {
             VBox vbox = new VBox();
 

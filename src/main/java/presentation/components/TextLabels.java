@@ -4,8 +4,6 @@ import domain.model.RoleType;
 import domain.model.User;
 import javafx.scene.control.Label;
 
-import static domain.model.RoleType.*;
-
 public class TextLabels {
     public static Label getUserRoleLabel(User u){
         RoleType role = u.getRole().getName();

@@ -5,6 +5,7 @@ import domain.model.RoleType;
 import domain.model.User;
 import infrastructure.repository.RoleRepository;
 import infrastructure.repository.UserRepository;
+import presentation.view.CurrentUserManager;
 
 import java.util.List;
 
@@ -71,38 +72,38 @@ public class UserService {
     }
 
     public void updateUserFirstName(User user, String firstName) {
-        User curUser = Session.getInstance().getCurrentUser();
+        User curUser = CurrentUserManager.get();
         if (user.getUserId() != curUser.getUserId() && !curUser.isAdmin()) {
             throw new IllegalArgumentException("You can't change someone else's first name unless you're an admin.");
         }
 
         userRepository.updateUserFirstName(user.getUserId(), firstName);
-        Session.getInstance().getCurrentUser().setFirstName(firstName);
+        CurrentUserManager.get().setFirstName(firstName);
     }
 
     public void updateUserLastName(User user, String lastName) {
-        User curUser = Session.getInstance().getCurrentUser();
+        User curUser = CurrentUserManager.get();
         if (user.getUserId() != curUser.getUserId() && !curUser.isAdmin()) {
             throw new IllegalArgumentException("You can't change someone else's last name unless you're an admin.");
         }
 
         userRepository.updateUserLastName(user.getUserId(), lastName);
-        Session.getInstance().getCurrentUser().setLastName(lastName);
+        CurrentUserManager.get().setLastName(lastName);
     }
 
     public void updateUserEmail(User user, String email) {
-        User curUser = Session.getInstance().getCurrentUser();
+        User curUser = CurrentUserManager.get();
         if ((user.getUserId() != curUser.getUserId()) && !curUser.isAdmin()) {
             throw new IllegalArgumentException("You can't change someone else's email unless you're an admin.");
         }
 
         userRepository.updateUserEmail(user.getUserId(), email);
-        Session.getInstance().getCurrentUser().setEmail(email);
+        CurrentUserManager.get().setEmail(email);
     }
 
 
     public boolean updateUserPassword(User user, String oldPassword, String newPassword) {
-        if (user.getUserId() != Session.getInstance().getCurrentUser().getUserId()) {
+        if (user.getUserId() != CurrentUserManager.get().getUserId()) {
             throw new IllegalArgumentException("You can only change your own password.");
         }
 

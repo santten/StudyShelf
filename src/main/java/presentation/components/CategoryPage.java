@@ -3,7 +3,10 @@ package presentation.components;
 import domain.model.Category;
 import domain.model.StudyMaterial;
 import domain.model.User;
-import domain.service.*;
+import domain.service.CategoryService;
+import domain.service.GoogleDriveService;
+import domain.service.PermissionService;
+import domain.service.StudyMaterialService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.geometry.Insets;
@@ -17,6 +20,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import presentation.controller.CategoryController;
+import presentation.controller.UploadController;
+import presentation.view.CurrentUserManager;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
@@ -111,7 +116,7 @@ public class CategoryPage {
 
         addMaterialButton.setOnAction(e -> {
             ScrollPane scrollPane = new ScrollPane();
-            UploadPage page = new UploadPage();
+            UploadController page = new UploadController();
             page.initialize(scrollPane, c);
             SceneManager sm = SceneManager.getInstance();
             sm.setCenter(scrollPane);
@@ -122,7 +127,7 @@ public class CategoryPage {
         addMaterialHBox.setSpacing(8);
         addMaterialButton.setGraphic(addMaterialHBox);
 
-        User u = Session.getInstance().getCurrentUser();
+        User u = CurrentUserManager.get();
 
         boolean isEditable = u.getUserId() == c.getCreator().getUserId() || u.isAdmin();
 
@@ -170,7 +175,7 @@ public class CategoryPage {
 
                 CategoryService categoryServ = new CategoryService(new CategoryRepository(), new PermissionService());
                 saveTitle.setOnAction(e2 -> {
-                    categoryServ.updateTitle(Session.getInstance().getCurrentUser(), c, titleArea.getText());
+                    categoryServ.updateTitle(CurrentUserManager.get(), c, titleArea.getText());
 
                     title.setText(titleArea.getText());
 
@@ -193,7 +198,7 @@ public class CategoryPage {
         }
 
         CategoryService cServ = new CategoryService(new CategoryRepository(), new PermissionService());
-        List<StudyMaterial> approvedMaterials = cServ.getApprovedMaterialsByCategory(Session.getInstance().getCurrentUser(), c);
+        List<StudyMaterial> approvedMaterials = cServ.getApprovedMaterialsByCategory(CurrentUserManager.get(), c);
 
         setOwnerMaterials(approvedMaterials.stream()
                 .filter(sm -> sm.getUploader().getUserId() == c.getCreator().getUserId())
@@ -222,7 +227,7 @@ public class CategoryPage {
 
     public void setUpApproveView(Category c, VBox page){
         CategoryService cServ = new CategoryService(new CategoryRepository(), new PermissionService());
-        setPendingMaterials(cServ.getPendingMaterialsByCategory(Session.getInstance().getCurrentUser(), c));
+        setPendingMaterials(cServ.getPendingMaterialsByCategory(CurrentUserManager.get(), c));
         GUILogger.info(pendingMaterials.size() + " materials found pending approval.");
 
         Text pendingTitle = new Text("Pending materials");
@@ -264,7 +269,7 @@ public class CategoryPage {
         Button approvalButton = new Button();
         approvalButton.setOnAction(e -> {
             StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
-            smServ.approveMaterial(Session.getInstance().getCurrentUser(), s);
+            smServ.approveMaterial(CurrentUserManager.get(), s);
             getPendingContainer().getChildren().remove(base);
             pendingMaterials.remove(s);
             otherMaterials.add(s);
@@ -283,7 +288,7 @@ public class CategoryPage {
         Button rejectButton = new Button();
         rejectButton.setOnAction(e -> {
             StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
-            smServ.rejectMaterial(Session.getInstance().getCurrentUser(), s);
+            smServ.rejectMaterial(CurrentUserManager.get(), s);
             getPendingContainer().getChildren().remove(base);
             pendingMaterials.remove(s);
             otherMaterials.add(s);

@@ -1,8 +1,7 @@
-package presentation.components;
+package presentation.controller;
 
 import domain.model.*;
 import domain.service.*;
-
 import infrastructure.repository.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,27 +10,22 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
-
-import presentation.controller.BaseController;
-import presentation.controller.StudyMaterialController;
-import presentation.controller.CategoryController;
-import presentation.controller.RatingController;
-
+import presentation.view.CurrentUserManager;
 import presentation.utility.CustomAlert;
-import presentation.utility.PasswordFieldToggleable;
+import presentation.components.PasswordFieldToggle;
 import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
-import presentation.view.SubScreen;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import static presentation.view.Screen.*;
-import static presentation.view.SubScreen.*;
+import static presentation.controller.SubScreen.*;
+import static presentation.view.Screen.SCREEN_PROFILE;
+import static presentation.view.Screen.SCREEN_UPLOAD;
 
-public class MyProfilePage {
+public class MyProfileController {
     private HBox hBoxBase;
     private VBox menuVBox;
     private VBox contentVBox;
@@ -90,7 +84,7 @@ public class MyProfilePage {
         headingMyProfile.getStyleClass().addAll("heading3", "light");
 
         addMenuLink("My Materials", PROFILE_FILES);
-        if (Session.getInstance().getCurrentUser().hasPermission(PermissionType.CREATE_CATEGORY)) {
+        if (CurrentUserManager.get().hasPermission(PermissionType.CREATE_CATEGORY)) {
             addMenuLink("My Courses", PROFILE_COURSES);
         }
         addMenuLink("My Ratings", PROFILE_REVIEWS);
@@ -102,7 +96,7 @@ public class MyProfilePage {
         addMenuLink("Profile Settings", PROFILE_SETTINGS);
 
         Hyperlink link = new Hyperlink("Log Out");
-        link.setOnAction(e -> BaseController.logout());
+        link.setOnAction(e -> CurrentUserManager.logout());
 
         link.getStyleClass().add("profileLink");
         getMenuVBox().getChildren().addAll(new Separator(), new Separator(), link, new Separator());
@@ -133,7 +127,7 @@ public class MyProfilePage {
         Text heading = new Text("My Materials");
         heading.getStyleClass().addAll("heading3", "primary-light");
 
-        User user = Session.getInstance().getCurrentUser();
+        User user = CurrentUserManager.get();
         StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
         List<StudyMaterial> materials = smServ.findByUser(user);
 
@@ -213,7 +207,7 @@ public class MyProfilePage {
         base.getChildren().addAll(heading, new Text("Your first and last name are visible to other users."));
         base.setSpacing(8);
 
-        User curUser = Session.getInstance().getCurrentUser();
+        User curUser = CurrentUserManager.get();
         UserService uServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
 
         TextField firstNameField = new TextField(curUser.getFirstName());
@@ -287,7 +281,7 @@ public class MyProfilePage {
     }
 
     private void setUpPasswordSettings(VBox base){
-        User curUser = Session.getInstance().getCurrentUser();
+        User curUser = CurrentUserManager.get();
         UserService uServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
 
         Text headingPW = new Text("Change Password");
@@ -343,9 +337,9 @@ public class MyProfilePage {
 
         pwButton.getStyleClass().add("btnS");
 
-        HBox oldPWHBox = new HBox(labelOldPW, PasswordFieldToggleable.create(oldPWField, 280));
+        HBox oldPWHBox = new HBox(labelOldPW, PasswordFieldToggle.create(oldPWField, 280));
         oldPWHBox.setSpacing(8);
-        HBox newPWHBox = new HBox(labelNewPW, PasswordFieldToggleable.create(newPWField, 280));
+        HBox newPWHBox = new HBox(labelNewPW, PasswordFieldToggle.create(newPWField, 280));
         newPWHBox.setSpacing(8);
         HBox savePWhbox = new HBox(pwButton, pwLabel);
         savePWhbox.setSpacing(8);
@@ -358,7 +352,7 @@ public class MyProfilePage {
         Text heading = new Text("My Ratings");
         heading.getStyleClass().addAll("heading3", "warning");
 
-        User user = Session.getInstance().getCurrentUser();
+        User user = CurrentUserManager.get();
         RatingService rServ = new RatingService(new RatingRepository(), new PermissionService());
         List<Rating> ratings = rServ.getRatingsByUser(user);
 
@@ -412,7 +406,7 @@ public class MyProfilePage {
 
             deleteBtn.setOnAction(e -> {
                 if (CustomAlert.confirm("Deleting Review", "Are you sure you want do delete your review for this Study Material?", "This can not be undone, but you can always write a new one.", true)) {
-                    if (new RatingController().deleteRatingAndReview(Session.getInstance().getCurrentUser(), r.getStudyMaterial())) {
+                    if (new RatingController().deleteRatingAndReview(CurrentUserManager.get(), r.getStudyMaterial())) {
                         getRatingContainer().getChildren().remove(item);
                     }
 
@@ -436,7 +430,7 @@ public class MyProfilePage {
         Text heading = new Text("My Courses");
         heading.getStyleClass().addAll("heading3", "secondary-light");
 
-        User user = Session.getInstance().getCurrentUser();
+        User user = CurrentUserManager.get();
         CategoryService cServ = new CategoryService(new CategoryRepository(), new PermissionService());
         List<Category> courses = cServ.getCategoriesByUser(user);
 

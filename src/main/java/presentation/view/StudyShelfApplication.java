@@ -2,11 +2,11 @@ package presentation.view;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import presentation.utility.GUILogger;
 
 import java.io.IOException;
 
 import static presentation.view.Screen.SCREEN_LOGIN;
-import presentation.utility.GUILogger;
 
 public class StudyShelfApplication extends Application {
     @Override

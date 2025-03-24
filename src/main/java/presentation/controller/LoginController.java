@@ -4,15 +4,14 @@ import domain.model.User;
 import domain.service.PasswordService;
 import domain.service.Session;
 import infrastructure.repository.UserRepository;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
 
-import static presentation.view.Screen.*;
+import static presentation.view.Screen.SCREEN_SIGNUP;
 
 public class LoginController {
     SceneManager sm = SceneManager.getInstance();
@@ -29,7 +28,7 @@ public class LoginController {
     private PasswordField passwordField;
 
     @FXML
-    private void initialize() {
+    public void initialize(BorderPane base) {
         btn_login.setOnAction((e) -> {
             handleLogin();
         });

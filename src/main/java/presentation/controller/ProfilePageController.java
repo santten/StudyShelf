@@ -1,4 +1,4 @@
-package presentation.components;
+package presentation.controller;
 
 import domain.model.Category;
 import domain.model.StudyMaterial;
@@ -7,10 +7,11 @@ import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
+import presentation.components.ListItem;
+import presentation.components.TextLabels;
 import presentation.view.SceneManager;
 
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ import java.util.Objects;
 
 import static presentation.components.ListItem.listItemGraphic;
 
-public class ProfilePage {
+public class ProfilePageController {
     public static void setPage(User u){
         VBox base = new VBox();
-        base.getStylesheets().add(Objects.requireNonNull(ProfilePage.class.getResource("/css/style.css")).toExternalForm());
+        base.getStylesheets().add(Objects.requireNonNull(ProfilePageController.class.getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
         base.setPadding(new Insets(20, 20, 20, 20));
 

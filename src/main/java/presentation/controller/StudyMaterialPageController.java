@@ -1,14 +1,14 @@
-package presentation.components;
+package presentation.controller;
 
 import domain.model.*;
 import domain.service.*;
-import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.RatingRepository;
 import infrastructure.repository.ReviewRepository;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import infrastructure.repository.StudyMaterialRepository;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -19,12 +19,14 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
-import presentation.controller.StudyMaterialController;
+import presentation.components.CategoryPage;
+import presentation.components.Stars;
+import presentation.components.TagButton;
+import presentation.components.TextLabels;
+import presentation.view.CurrentUserManager;
 import presentation.utility.GUILogger;
-import presentation.utility.CustomAlert;
 import presentation.utility.SVGContents;
 import presentation.view.SceneManager;
-
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -32,12 +34,12 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static domain.model.MaterialStatus.*;
+import static domain.model.MaterialStatus.APPROVED;
+import static domain.model.MaterialStatus.REJECTED;
 import static domain.model.RoleType.ADMIN;
-import static javafx.scene.control.Alert.AlertType.*;
 
 
-public class MaterialPage {
+public class StudyMaterialPageController {
     private final HBox fileContainer;
 
     private final VBox reviewContainer;
@@ -59,7 +61,7 @@ public class MaterialPage {
     private final ReviewService reviewSer = new ReviewService(new ReviewRepository(), new PermissionService());
     private final StudyMaterialService materialServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
 
-    public MaterialPage(StudyMaterial material) {
+    public StudyMaterialPageController(StudyMaterial material) {
         this.material = material;
         this.fileContainer = new HBox();
 
@@ -141,13 +143,13 @@ public class MaterialPage {
         base.setSpacing(12);
         base.setPadding(new Insets(20, 20, 20, 20));
 
-        boolean isOwned = Session.getInstance().getCurrentUser().getUserId() == getMaterial().getUploader().getUserId();
-        boolean isAdmin = (Session.getInstance().getCurrentUser().getRole().getName() == ADMIN);
+        boolean isOwned = CurrentUserManager.get().getUserId() == getMaterial().getUploader().getUserId();
+        boolean isAdmin = (CurrentUserManager.get().getRole().getName() == ADMIN);
 
         setUpFileContainer(isOwned || isAdmin);
         base.getChildren().add(getFileContainer());
 
-        if (!isOwned && !ratingServ.hasUserRatedMaterial(Session.getInstance().getCurrentUser(), getMaterial())) {
+        if (!isOwned && !ratingServ.hasUserRatedMaterial(CurrentUserManager.get(), getMaterial())) {
             setUpReviewWriting();
             base.getChildren().add(getReviewWritingContainer());
         }
@@ -177,12 +179,11 @@ public class MaterialPage {
                 base.getChildren().add(rejectedText);
                 break;
             case PENDING:
-                User u = Session.getInstance().getCurrentUser();
+                User u = CurrentUserManager.get();
                 if (u.getUserId() != getMaterial().getCategory().getCreator().getUserId()) {
                     Text pendingText = new Text("Please note: This material is still pending approval from the course owner.");
                     pendingText.getStyleClass().add("primary-light");
                     base.getChildren().add(pendingText);
-                    break;
                 } else {
                     VBox decisionVBox = new VBox();
 
@@ -207,7 +208,7 @@ public class MaterialPage {
                     Button approvalButton = new Button();
                     approvalButton.setOnAction(e -> {
                         StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
-                        smServ.approveMaterial(Session.getInstance().getCurrentUser(), sm);
+                        smServ.approveMaterial(CurrentUserManager.get(), sm);
                         setPendingStatus(APPROVED);
                         setUpApprovalStatus();
                     });
@@ -229,7 +230,7 @@ public class MaterialPage {
                     Button rejectButton = new Button();
                     rejectButton.setOnAction(e -> {
                         StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
-                        smServ.rejectMaterial(Session.getInstance().getCurrentUser(), sm);
+                        smServ.rejectMaterial(CurrentUserManager.get(), sm);
                         setPendingStatus(REJECTED);
                         setUpApprovalStatus();
                     });
@@ -253,8 +254,8 @@ public class MaterialPage {
                     decisionVBox.getStyleClass().add("decisionVBox");
                     decisionVBox.setSpacing(10);
                     base.getChildren().addAll(decisionVBox);
-                    break;
                 }
+                break;
         }
     }
 
@@ -265,7 +266,7 @@ public class MaterialPage {
         StudyMaterial s = getMaterial();
 
         VBox base = new VBox();
-        base.getStylesheets().add(Objects.requireNonNull(MaterialPage.class.getResource("/css/style.css")).toExternalForm());
+        base.getStylesheets().add(Objects.requireNonNull(StudyMaterialPageController.class.getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
         base.setPadding(new Insets(20, 20, 20, 20));
         VBox left = new VBox();
@@ -302,7 +303,7 @@ public class MaterialPage {
                 saveTitle.setGraphic(svgSave);
 
                 saveTitle.setOnAction(ev -> {
-                    materialServ.updateTitle(Session.getInstance().getCurrentUser(), s, titleArea.getText());
+                    materialServ.updateTitle(CurrentUserManager.get(), s, titleArea.getText());
 
                     title.setText(titleArea.getText());
 
@@ -350,7 +351,7 @@ public class MaterialPage {
                             new StudyMaterialRepository(),
                             new PermissionService()
                     );
-                    materialService.downloadMaterial(Session.getInstance().getCurrentUser(), s, saveLocation);
+                    materialService.downloadMaterial(CurrentUserManager.get(), s, saveLocation);
                     GUILogger.info("Successfully downloaded " + s.getName());
                 }
             } catch (IOException e) {
@@ -378,7 +379,7 @@ public class MaterialPage {
                 Button saveDesc = new Button("Save Description");
                 saveDesc.getStyleClass().add("btnXSPrimary");
                 saveDesc.setOnAction(ev -> {
-                    materialServ.updateDescription(Session.getInstance().getCurrentUser(), s, descArea.getText());
+                    materialServ.updateDescription(CurrentUserManager.get(), s, descArea.getText());
                     fileDescContainer.getChildren().clear();
 
                     fileDesc.getChildren().clear();
@@ -500,7 +501,7 @@ public class MaterialPage {
                 String reviewText = getCurRatingText().trim();
                 if (!reviewText.isEmpty()) {
                     reviewSer.addReview(
-                            Session.getInstance().getCurrentUser(),
+                            CurrentUserManager.get(),
                             material,
                             reviewText
                     );
@@ -509,7 +510,7 @@ public class MaterialPage {
 
             int rating = getCurRatingNum();
             if (rating > 0) {
-                ratingServ.rateMaterial(rating, getMaterial(), Session.getInstance().getCurrentUser());
+                ratingServ.rateMaterial(rating, getMaterial(), CurrentUserManager.get());
             }
 
             getReviewWritingContainer().getChildren().clear();

@@ -1,12 +1,13 @@
-package presentation.utility;
+package presentation.components;
 
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.SVGPath;
+import presentation.utility.SVGContents;
 
-public class PasswordFieldToggleable {
+public class PasswordFieldToggle {
     public static HBox create(PasswordField passwordField, int fixedWidth) {
         ToggleButton toggleButton = new ToggleButton();
 
