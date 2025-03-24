@@ -17,21 +17,16 @@ import static presentation.view.Screen.SCREEN_LOGIN;
 public class SignupController {
     SceneManager sm = SceneManager.getInstance();
 
-    @FXML private TextField emailField;
-    @FXML private TextField firstNameField;
-    @FXML private TextField lastNameField;
-    @FXML private PasswordField passwordField;
-    @FXML private PasswordField reenterPasswordField;
-    @FXML private MenuButton roleMenuButton;
-    @FXML private Button btn_signup;
-    @FXML public Hyperlink link_toLogin;
+    private TextField emailField;
+    private TextField firstNameField;
+    private TextField lastNameField;
+    private PasswordField passwordField;
+    private PasswordField reenterPasswordField;
+    private MenuButton roleMenuButton;
+    private Button btn_signup;
+    public Hyperlink link_toLogin;
 
-    public SignupController() throws IOException {
-    }
-
-    @FXML
     private void initialize() {
-
         for (MenuItem item : roleMenuButton.getItems()) {
             item.setOnAction(e -> roleMenuButton.setText(item.getText()));
         }

@@ -55,7 +55,8 @@ public class SceneManager {
     }
 
     private void initializeComponents() throws IOException {
-        setLogin();
+        setPrimaryStage(new Stage());
+        setScreen(SCREEN_LOGIN);
         instance.header = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/header.fxml")));
         instance.footer = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/footer.fxml")));
         instance.logged = false;
@@ -63,7 +64,11 @@ public class SceneManager {
 
     public void displayCategory(int id) {
         if (CurrentUserManager.get() == null){
-            setLogin();
+            try {
+                setScreen(SCREEN_LOGIN);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
 
@@ -80,7 +85,11 @@ public class SceneManager {
 
     public void displayMaterial(int id) {
         if (CurrentUserManager.get() == null){
-            setLogin();
+            try {
+                setScreen(SCREEN_LOGIN);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
 
@@ -99,7 +108,11 @@ public class SceneManager {
 
     public void displayProfile(int id) {
         if (CurrentUserManager.get() == null){
-            setLogin();
+            try {
+                setScreen(SCREEN_LOGIN);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
 
@@ -166,14 +179,10 @@ public class SceneManager {
         instance.current.setCenter(vbox);
     }
 
-    public void setLogin(){
-        LoginController lPage = new LoginController();
-        lPage.initialize(instance.current);
-    }
-
     public void setScreen(Screen screen) throws IOException {
-        if (!instance.logged){
-            setLogin();
+        if (!instance.logged || screen == SCREEN_LOGIN) {
+            LoginController lPage = new LoginController();
+            instance.current = lPage.initialize();
         } else {
             BorderPane bp = new BorderPane();
             bp.setTop(instance.header);
@@ -232,10 +241,14 @@ public class SceneManager {
         }
     }
 
-    public void logout() throws IOException {
+    public void logout() {
         if (instance.logged){
             instance.logged = false;
-            setLogin();
+            try {
+                setScreen(SCREEN_LOGIN);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             GUILogger.warn("User is already logged out");
         }

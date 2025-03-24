@@ -16,12 +16,7 @@ public class CurrentUserManager {
     public static void logout(){
         if (CustomAlert.confirm("Logging out", "Log out from StudyShelf?", "You're welcome back anytime!", true)) {
             Session.getInstance().logout();
-            try {
-                SceneManager.getInstance().logout();
-            } catch (IOException ex) {
-                SceneManager.getInstance().displayErrorPage("Something went wrong when logging out...", SCREEN_PROFILE, "Go back");
-                throw new RuntimeException(ex);
-            }
+            SceneManager.getInstance().logout();
         }
     }
 }
