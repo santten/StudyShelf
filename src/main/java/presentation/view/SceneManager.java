@@ -180,7 +180,11 @@ public class SceneManager {
     }
 
     public void setScreen(Screen screen) throws IOException {
-        if (!instance.logged || screen == SCREEN_LOGIN) {
+        if (screen == SCREEN_SIGNUP){
+            SignupController sPage = new SignupController();
+            instance.current = sPage.initialize();
+        }
+        else if (!instance.logged || screen == SCREEN_LOGIN) {
             LoginController lPage = new LoginController();
             instance.current = lPage.initialize();
         } else {

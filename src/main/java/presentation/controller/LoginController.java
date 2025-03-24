@@ -31,7 +31,6 @@ public class LoginController {
     private PasswordField passwordField;
 
     public BorderPane initialize() {
-        GUILogger.info("initializing");
         BorderPane bp = new BorderPane();
 
         VBox vbox = new VBox();
