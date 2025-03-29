@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import presentation.components.ListItem;
 import presentation.components.TextLabels;
@@ -72,6 +73,8 @@ public class ProfilePageController {
             base.getChildren().addAll(mTitle, mView);
         }
 
-        SceneManager.getInstance().setCenter(base);
+        ScrollPane wrapper = new ScrollPane(base);
+        wrapper.setFitToWidth(true);
+        SceneManager.getInstance().setCenter(wrapper);
     }
 }

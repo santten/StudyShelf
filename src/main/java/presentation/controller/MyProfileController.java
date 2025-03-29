@@ -3,13 +3,19 @@ package presentation.controller;
 import domain.model.*;
 import domain.service.*;
 import infrastructure.repository.*;
+import jakarta.persistence.RollbackException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import presentation.view.CurrentUserManager;
 import presentation.utility.CustomAlert;
 import presentation.components.PasswordFieldToggle;
@@ -17,6 +23,7 @@ import presentation.utility.SVGContents;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -24,8 +31,7 @@ import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
 import static presentation.controller.SubScreen.*;
-import static presentation.view.Screen.SCREEN_PROFILE;
-import static presentation.view.Screen.SCREEN_UPLOAD;
+import static presentation.view.Screen.*;
 
 public class MyProfileController {
     private HBox hBoxBase;
@@ -98,6 +104,7 @@ public class MyProfileController {
         headingSettings.getStyleClass().addAll("heading3", "light");
 
         addMenuLink(rb.getString("profileSettings"), PROFILE_SETTINGS);
+        addMenuLink(rb.getString("profileDelete"), PROFILE_DELETE);
 
         Hyperlink link = new Hyperlink(rb.getString("logOut"));
         link.setOnAction(e -> CurrentUserManager.logout());
@@ -121,6 +128,9 @@ public class MyProfileController {
                 break;
             case PROFILE_SETTINGS:
                 setUpMySettings(base);
+                break;
+            case PROFILE_DELETE:
+                setUpProfileDelete(base);
                 break;
             default:
                 setUpMyMaterials(base);
@@ -214,37 +224,78 @@ public class MyProfileController {
         User curUser = CurrentUserManager.get();
         UserService uServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
 
+        Text warningField = new Text("");
+        warningField.getStyleClass().add("error");
+
         TextField firstNameField = new TextField(curUser.getFirstName());
-        base.getChildren().add(createFieldBox(rb.getString("firstName"), firstNameField, curUser::getFirstName, () -> {
-            try {
-                uServ.updateUserFirstName(curUser, firstNameField.getText());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }));
+        base.getChildren().add(createFieldBox(rb.getString("firstName"),
+                firstNameField,
+                curUser::getFirstName,
+                () -> uServ.updateUserFirstName(curUser, firstNameField.getText()),
+                warningField,
+                rb.getString("error.cantSaveFirstName"))
+        );
 
         TextField lastNameField = new TextField(curUser.getLastName());
-        base.getChildren().add(createFieldBox(rb.getString("lastName"), lastNameField, curUser::getLastName, () -> {
-            try {
-                uServ.updateUserLastName(curUser, lastNameField.getText());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }));
+        base.getChildren().add(createFieldBox(rb.getString("lastName"),
+                lastNameField,
+                curUser::getLastName, () ->
+                uServ.updateUserLastName(curUser, lastNameField.getText()),
+                warningField,
+                rb.getString("error.cantSaveLastName")
+        ));
 
         TextField emailField = new TextField(curUser.getEmail());
-        base.getChildren().add(createFieldBox(rb.getString("eMail"), emailField, curUser::getEmail, () -> {
-            try {
-                uServ.updateUserEmail(curUser, emailField.getText());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }));
+        base.getChildren().addAll(createFieldBox(rb.getString("eMail"),
+                emailField,
+                curUser::getEmail,
+                () -> uServ.updateUserEmail(curUser, emailField.getText()),
+                warningField,
+                rb.getString("error.emailAlreadyRegistered")));
 
         setUpPasswordSettings(base);
     }
 
-    private HBox createFieldBox(String labelText, TextField textField, Supplier<String> valueSupplier, Runnable action) {
+    private void setUpProfileDelete(VBox base) {
+        Text heading = new Text(rb.getString("profileDelete"));
+        heading.getStyleClass().addAll("heading3", "error");
+
+        TextFlow disclaimer = new TextFlow(new Text(rb.getString("profileDeleteDisclaimer")));
+        disclaimer.setPrefWidth(500);
+        disclaimer.setMaxWidth(500);
+        disclaimer.setMinWidth(500);
+
+        Button buttonDelete = new Button(rb.getString("profileDelete"));
+        buttonDelete.setDisable(true);
+        buttonDelete.getStyleClass().add("btnSError");
+
+        buttonDelete.setOnAction(e -> {
+            User user = CurrentUserManager.get();
+            UserService userServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
+            userServ.deleteOwnUser(user);
+            try {
+                SceneManager.getInstance().setScreen(SCREEN_LOGIN);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        CheckBox checkbox = new CheckBox(rb.getString("profileDeleteCheckbox"));
+
+        checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            buttonDelete.setDisable(!newValue);
+        });
+
+        base.setSpacing(8);
+        base.getChildren().addAll(heading, disclaimer, checkbox, buttonDelete);
+    }
+
+    private HBox createFieldBox(String labelText,
+                                TextField textField,
+                                Supplier<String> valueSupplier,
+                                Runnable action,
+                                Text warningField,
+                                String warningString) {
         Label label = new Label(labelText);
         label.getStyleClass().addAll("label4");
         label.setMinWidth(100);
@@ -272,11 +323,15 @@ public class MyProfileController {
         });
 
         button.setOnAction(e -> {
-            action.run();
-            button.setText("✔");
-            button.getStyleClass().removeAll("btnS");
-            button.getStyleClass().add("btnPlain");
-            button.setDisable(true);
+            try {
+                action.run();
+                button.setText("✔");
+                button.getStyleClass().removeAll("btnS");
+                button.getStyleClass().add("btnPlain");
+                button.setDisable(true);
+            } catch (Exception ex) {
+                warningField.setText("ok");
+            }
         });
 
         HBox box = new HBox(label, textField, button);

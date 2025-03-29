@@ -71,6 +71,15 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    public void deleteOwnUser(User user){
+        User curUser = CurrentUserManager.get();
+        if (user.getUserId() != curUser.getUserId() && !curUser.isAdmin()) {
+            throw new IllegalArgumentException("You can't delete someone else's user unless you're an admin.");
+        }
+
+        userRepository.deleteUser(curUser);
+    }
+
     public void updateUserFirstName(User user, String firstName) {
         User curUser = CurrentUserManager.get();
         if (user.getUserId() != curUser.getUserId() && !curUser.isAdmin()) {

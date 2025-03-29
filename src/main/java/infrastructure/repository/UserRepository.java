@@ -133,4 +133,31 @@ public class UserRepository extends BaseRepository<User> {
             em.close();
         }
     }
+
+    public void deleteUser(User user) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            new StudyMaterialRepository().deleteByUser(user);
+            new CategoryRepository().deleteByUser(user);
+            new ReviewRepository().deleteByUser(user);
+            new RatingRepository().deleteByUser(user);
+            new TagRepository().deleteByUser(user);
+
+            User managedUser = em.find(User.class, user.getUserId());
+            if (managedUser != null) {
+                em.remove(managedUser);
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }
