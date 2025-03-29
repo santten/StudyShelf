@@ -55,7 +55,7 @@ public class SignupController {
         vbox.getStylesheets().add(Objects.requireNonNull(SceneManager.class.getResource("/css/style.css")).toExternalForm());
 
         /* StudyShelf logo */
-        logoLabel = new Text(rb.getString("appName"));
+        logoLabel = new Text("StudyShelf");
         logoLabel.getStyleClass().add("error");
         logoLabel.getStyleClass().add("title");
         vbox.getChildren().add(logoLabel);

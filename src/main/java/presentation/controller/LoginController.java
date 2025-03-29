@@ -47,7 +47,7 @@ public class LoginController {
         VBox vbox = new VBox();
         vbox.getStylesheets().add(Objects.requireNonNull(SceneManager.class.getResource("/css/style.css")).toExternalForm());
 
-        logo = new Text(rb.getString("appName"));
+        logo = new Text("StudyShelf");
         logo.getStyleClass().add("error");
         logo.getStyleClass().add("title");
 
@@ -116,7 +116,7 @@ public class LoginController {
         LanguageManager.getInstance().setLanguage(locale);
         rb = LanguageManager.getInstance().getBundle();
 
-        logo.setText(rb.getString("appName"));
+        logo.setText("StudyShelf");
         pwLabel.setText(rb.getString("password"));
         btn_login.setText(rb.getString("login"));
 

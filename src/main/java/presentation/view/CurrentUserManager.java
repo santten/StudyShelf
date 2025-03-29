@@ -5,6 +5,7 @@ import domain.service.Session;
 import presentation.utility.CustomAlert;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 import static presentation.view.Screen.SCREEN_PROFILE;
 
@@ -14,7 +15,8 @@ public class CurrentUserManager {
     }
 
     public static void logout(){
-        if (CustomAlert.confirm("Logging out", "Log out from StudyShelf?", "You're welcome back anytime!", true)) {
+        ResourceBundle rb = LanguageManager.getInstance().getBundle();
+        if (CustomAlert.confirm(rb.getString("alertLoggingOut"), rb.getString("alertAreYouSure"), rb.getString("alertLogoutSubtitle"), true)) {
             Session.getInstance().logout();
             SceneManager.getInstance().logout();
         }

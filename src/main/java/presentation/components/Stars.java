@@ -7,7 +7,6 @@ import javafx.scene.shape.SVGPath;
 import presentation.utility.SVGContents;
 
 public class Stars {
-
     public static HBox StarRow(double fillAmount, double scale, int spacing){
         HBox base = new HBox();
 
@@ -34,20 +33,5 @@ public class Stars {
         }
         base.setSpacing(spacing);
         return base;
-    }
-    public interface RatingCallback {
-        void onRatingSelected(int rating);
-    }
-    private static void updateStarFill(HBox starContainer, int rating) {
-        for (int i = 0; i < starContainer.getChildren().size(); i++) {
-            StackPane starPane = (StackPane) starContainer.getChildren().get(i);
-            SVGPath filledStar = (SVGPath) starPane.getChildren().get(1);
-
-            Rectangle clip = new Rectangle();
-            double fillPercentage = Math.max(0, Math.min(1, rating - i));
-            clip.setWidth(filledStar.getBoundsInLocal().getWidth() * fillPercentage);
-            clip.setHeight(filledStar.getBoundsInLocal().getHeight());
-            filledStar.setClip(clip);
-        }
     }
 }
