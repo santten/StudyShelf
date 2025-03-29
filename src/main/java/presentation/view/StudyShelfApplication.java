@@ -5,7 +5,9 @@ import javafx.stage.Stage;
 import presentation.utility.GUILogger;
 
 import java.io.IOException;
+import java.util.Locale;
 
+import static java.util.Locale.ENGLISH;
 import static presentation.view.Screen.SCREEN_LOGIN;
 
 public class StudyShelfApplication extends Application {
@@ -13,6 +15,8 @@ public class StudyShelfApplication extends Application {
     public void start(Stage primaryStage) throws IOException {
         GUILogger.setWarVisibility(true);
         GUILogger.setInfoVisibility(true);
+
+        LanguageManager.getInstance().setLanguage(new Locale("en", "US"));
 
         SceneManager sm = SceneManager.getInstance();
         sm.setPrimaryStage(primaryStage);

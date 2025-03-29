@@ -12,15 +12,19 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import presentation.components.ListItem;
 import presentation.components.TextLabels;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import static presentation.components.ListItem.listItemGraphic;
 
 public class ProfilePageController {
+    public static ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
     public static void setPage(User u){
         VBox base = new VBox();
         base.getStylesheets().add(Objects.requireNonNull(ProfilePageController.class.getResource("/css/style.css")).toExternalForm());
@@ -39,7 +43,7 @@ public class ProfilePageController {
         List<Category> userCategories = cRepo.findCategoriesByUser(u);
 
         if (!userCategories.isEmpty()) {
-            Label cTitle = new Label("Courses");
+            Label cTitle = new Label(rb.getString("courses"));
             cTitle.getStyleClass().add("label4");
             cTitle.getStyleClass().add("secondary");
 
@@ -56,7 +60,7 @@ public class ProfilePageController {
         List<StudyMaterial> userMaterials = sRepo.findByUser(u);
 
         if (!userMaterials.isEmpty()) {
-            Label mTitle = new Label("Materials");
+            Label mTitle = new Label(rb.getString("materials"));
             mTitle.getStyleClass().add("label4");
             mTitle.getStyleClass().add("primary-light");
 

@@ -12,23 +12,34 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import presentation.components.LanguageSelection;
 import presentation.components.PasswordFieldToggle;
 import presentation.utility.GUILogger;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
+
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import static presentation.view.Screen.SCREEN_SIGNUP;
 
 public class LoginController {
     SceneManager sm = SceneManager.getInstance();
 
+    private Text logo;
     private Button btn_login;
     public Hyperlink link_toSignup;
     private Label errorLabel;
     private TextField emailField;
     private PasswordField passwordField;
+
+    private Label emailLabel;
+    private Label pwLabel;
+
+    ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
     public BorderPane initialize() {
         BorderPane bp = new BorderPane();
@@ -36,18 +47,18 @@ public class LoginController {
         VBox vbox = new VBox();
         vbox.getStylesheets().add(Objects.requireNonNull(SceneManager.class.getResource("/css/style.css")).toExternalForm());
 
-        Text logo = new Text("StudyShelf");
+        logo = new Text(rb.getString("appName"));
         logo.getStyleClass().add("error");
         logo.getStyleClass().add("title");
 
-        Label emailLabel = new Label("E-mail");
+        emailLabel = new Label(rb.getString("eMail"));
 
         emailField = new TextField();
         emailField.setMaxWidth(240);
 
         VBox emailBox = new VBox(emailLabel, emailField);
 
-        Label pwLabel = new Label("Password");
+        pwLabel = new Label(rb.getString("password"));
 
         passwordField = new PasswordField();
 
@@ -56,10 +67,10 @@ public class LoginController {
         errorLabel = new Label();
         errorLabel.getStyleClass().add("error");
 
-        btn_login = new Button("Login");
+        btn_login = new Button(rb.getString("login"));
         btn_login.getStyleClass().add("btnS");
 
-        link_toSignup = new Hyperlink("New here? Sign up now!");
+        link_toSignup = new Hyperlink(rb.getString("loginToSignup"));
 
         HBox hbox = new HBox(btn_login, link_toSignup);
         hbox.setSpacing(8);
@@ -70,7 +81,8 @@ public class LoginController {
                 pwBox,
                 errorLabel,
                 btn_login,
-                link_toSignup);
+                link_toSignup,
+                getLanguageSelection());
         vbox.setSpacing(4);
         vbox.setAlignment(Pos.CENTER);
 
@@ -96,6 +108,24 @@ public class LoginController {
         return bp;
     }
 
+    private HBox getLanguageSelection() {
+        return new LanguageSelection().getLanguageSelection(this::switchLanguage);
+    }
+
+    private void switchLanguage(Locale locale){
+        LanguageManager.getInstance().setLanguage(locale);
+        rb = LanguageManager.getInstance().getBundle();
+
+        logo.setText(rb.getString("appName"));
+        pwLabel.setText(rb.getString("password"));
+        btn_login.setText(rb.getString("login"));
+
+        emailLabel.setText(rb.getString("eMail"));
+        link_toSignup.setText(rb.getString("loginToSignup"));
+
+        errorLabel.setText("");
+    }
+
     @FXML
     private void handleLogin() {
         errorLabel.setText("");
@@ -115,11 +145,11 @@ public class LoginController {
                     throw new RuntimeException(ex);
                 }
             } else {
-                errorLabel.setText("Wrong password!");
+                errorLabel.setText(rb.getString("error.wrongPassword"));
                 errorLabel.setVisible(true);
             }
         } else {
-            errorLabel.setText("E-Mail isn't registered to StudyShelf");
+            errorLabel.setText(rb.getString("error.emailNotRegistered"));
             errorLabel.setVisible(true);
         }
     }

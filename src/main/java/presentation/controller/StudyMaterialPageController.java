@@ -19,13 +19,13 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
-import presentation.components.CategoryPage;
 import presentation.components.Stars;
 import presentation.components.TagButton;
 import presentation.components.TextLabels;
 import presentation.view.CurrentUserManager;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.io.ByteArrayInputStream;
@@ -61,6 +61,8 @@ public class StudyMaterialPageController {
     private final ReviewService reviewSer = new ReviewService(new ReviewRepository(), new PermissionService());
     private final StudyMaterialService materialServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
 
+    ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
     public StudyMaterialPageController(StudyMaterial material) {
         this.material = material;
         this.fileContainer = new HBox();
@@ -80,7 +82,7 @@ public class StudyMaterialPageController {
     }
 
     private HBox makeReviewTitleHBox() {
-        Text title = new Text("Reviews");
+        Text title = new Text(rb.getString("reviews"));
         title.getStyleClass().addAll("heading3", "primary-light");
 
         HBox stars = Stars.StarRow(getAvgRating(), 1, 4);
@@ -139,7 +141,7 @@ public class StudyMaterialPageController {
 
     public void displayPage() {
         VBox base = new VBox();
-        base.getStylesheets().add(Objects.requireNonNull(CategoryPage.class.getResource("/css/style.css")).toExternalForm());
+        base.getStylesheets().add(Objects.requireNonNull(CategoryPageController.class.getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
         base.setPadding(new Insets(20, 20, 20, 20));
 
@@ -169,25 +171,25 @@ public class StudyMaterialPageController {
 
         switch (sm.getStatus()) {
             case APPROVED:
-                Text approvedText = new Text("This material has been approved by the course's owner " + sm.getCategory().getCreator().getFullName());
+                Text approvedText = new Text(String.format(rb.getString("approvedMaterial"), sm.getCategory().getCreator().getFullName()));
                 approvedText.getStyleClass().add("secondary-light");
                 base.getChildren().add(approvedText);
                 break;
             case REJECTED:
-                Text rejectedText = new Text("Please note: This material has been rejected for the course it was submitted to.");
+                Text rejectedText = new Text(rb.getString("rejectedMaterial"));
                 rejectedText.getStyleClass().add("error");
                 base.getChildren().add(rejectedText);
                 break;
             case PENDING:
                 User u = CurrentUserManager.get();
                 if (u.getUserId() != getMaterial().getCategory().getCreator().getUserId()) {
-                    Text pendingText = new Text("Please note: This material is still pending approval from the course owner.");
+                    Text pendingText = new Text(rb.getString("pendingMaterial"));
                     pendingText.getStyleClass().add("primary-light");
                     base.getChildren().add(pendingText);
                 } else {
                     VBox decisionVBox = new VBox();
 
-                    Text title = new Text("Waiting for approval!");
+                    Text title = new Text(rb.getString("waitingForApproval"));
                     title.getStyleClass().addAll("error", "heading3");
 
                     Hyperlink courseHyperLink = new Hyperlink(sm.getCategory().getCategoryName());
@@ -197,7 +199,7 @@ public class StudyMaterialPageController {
                     });
 
                     TextFlow textFlow = new TextFlow(
-                            new Text("This material is waiting for your approval under your course "),
+                            new Text(rb.getString("waitingForApprovalUnder") + " "),
                             courseHyperLink);
 
                     HBox buttons = new HBox();
@@ -219,7 +221,7 @@ public class StudyMaterialPageController {
                     approveSvg.getStyleClass().addAll("btnHover", "secondary-light");
                     approveSvg.setFillRule(FillRule.EVEN_ODD);
 
-                    Label approveLabel = new Label("Approve Material");
+                    Label approveLabel = new Label(rb.getString("approveMaterial"));
                     approveLabel.getStyleClass().addAll("label5", "secondary-light");
 
                     HBox approvalGraphic = new HBox(approveSvg, approveLabel);
@@ -241,7 +243,7 @@ public class StudyMaterialPageController {
                     rejectSvg.getStyleClass().addAll("btnHover", "error");
                     rejectSvg.setFillRule(FillRule.EVEN_ODD);
 
-                    Label rejectLabel = new Label("Reject Material");
+                    Label rejectLabel = new Label(rb.getString("rejectMaterial"));
                     rejectLabel.getStyleClass().addAll("label5", "error");
 
                     HBox rejectGraphic = new HBox(rejectSvg, rejectLabel);
@@ -318,7 +320,7 @@ public class StudyMaterialPageController {
         }
 
         TextFlow uploaderLabels = new TextFlow();
-        Text author = new Text("Uploaded by ");
+        Text author = new Text(rb.getString("uploadedBy") + " ");
         author.setStyle("-fx-font-size: 1.2em;");
 
         Hyperlink authorLink = new Hyperlink(s.getUploader().getFullName());
@@ -330,14 +332,14 @@ public class StudyMaterialPageController {
         uploaderLabels.getChildren().addAll(author, authorLink, new Text("  "), TextLabels.getUserRoleLabel(s.getUploader()), new Text("  "));
 
         if (s.getUploader() == s.getCategory().getCreator()) {
-            Label categoryOwnerLabel = new Label("Course Owner");
+            Label categoryOwnerLabel = new Label(rb.getString("categoryOwner"));
             categoryOwnerLabel.getStyleClass().add("primaryTagLabel");
             uploaderLabels.getChildren().add(categoryOwnerLabel);
         }
 
         Text fileDetails = new Text(Math.round(s.getFileSize()) + " KB " + s.getFileType());
 
-        Button downloadBtn = new Button("Download");
+        Button downloadBtn = new Button(rb.getString("download"));
         downloadBtn.getStyleClass().add("btnDownload");
         downloadBtn.setOnAction(event -> {
             try {
@@ -368,7 +370,7 @@ public class StudyMaterialPageController {
         fileDesc.setMaxWidth(580);
 
         if (isEditable) {
-            Button editDesc = new Button("Edit Description");
+            Button editDesc = new Button(rb.getString("editDescription"));
             editDesc.getStyleClass().add("btnXSPrimary");
             fileDescContainer.getChildren().addAll(fileDesc, editDesc);
             editDesc.setOnAction(e -> {
@@ -376,7 +378,7 @@ public class StudyMaterialPageController {
                 TextArea descArea = new TextArea(s.getDescription());
 
                 descArea.setWrapText(true);
-                Button saveDesc = new Button("Save Description");
+                Button saveDesc = new Button(rb.getString("saveDescription"));
                 saveDesc.getStyleClass().add("btnXSPrimary");
                 saveDesc.setOnAction(ev -> {
                     materialServ.updateDescription(CurrentUserManager.get(), s, descArea.getText());
@@ -404,7 +406,7 @@ public class StudyMaterialPageController {
             sm.displayCategory(s.getCategory().getCategoryId());
         });
 
-        TextFlow course = new TextFlow(new Text("Uploaded under course "), courseLink, new Text(" on " + formattedTimestamp));
+        TextFlow course = new TextFlow(new Text(rb.getString("uploadedUnderCourse") + " "), courseLink, new Text(" " + String.format(rb.getString("time"), formattedTimestamp)));
         course.getStyleClass().add("primary");
 
         TextFlow tagContainer = new TextFlow();
@@ -475,12 +477,12 @@ public class StudyMaterialPageController {
         getReviewWritingContainer().getChildren().clear();
         VBox base = new VBox();
 
-        Text title = new Text("Add Your Review");
+        Text title = new Text(rb.getString("addYourReview"));
         title.getStyleClass().addAll("heading3", "primary");
 
         HBox starContainer = new HBox();
         starContainer.setSpacing(4);
-        Button sendReviewButton = new Button("Send Review");
+        Button sendReviewButton = new Button(rb.getString("sendReview"));
 
         for (int i = 0; i < 5; i++) {
             Button btn = getStarButton(i, starContainer, sendReviewButton);
@@ -488,7 +490,7 @@ public class StudyMaterialPageController {
         }
 
         TextField comment = new TextField();
-        comment.setPromptText("Add text to your review");
+        comment.setPromptText(rb.getString("addTextToReview"));
 
         comment.textProperty().addListener((observable, oldValue, newValue) -> {
             setCurRatingText(newValue);
@@ -576,7 +578,7 @@ public class StudyMaterialPageController {
         GUILogger.info(ratings.size() + " ratings found");
 
         if (ratings.isEmpty()) {
-            getReviewContainer().getChildren().add(new Text("No ratings left yet!"));
+            getReviewContainer().getChildren().add(new Text(rb.getString("noRatings")));
             return;
         }
 

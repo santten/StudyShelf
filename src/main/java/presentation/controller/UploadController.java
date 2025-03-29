@@ -30,15 +30,13 @@ import javafx.util.StringConverter;
 import presentation.view.CurrentUserManager;
 import presentation.utility.GUILogger;
 import presentation.utility.UITools;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,6 +57,7 @@ public class UploadController {
     private final TagService tagService = new TagService(new TagRepository(), new PermissionService());
     private final Set<String> pendingTags = new HashSet<>();
 
+    public final ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
     public void initialize(ScrollPane wrapper) {
         initialize(wrapper, null);
@@ -99,17 +98,17 @@ public class UploadController {
         User user = CurrentUserManager.get();
 
         /* title area */
-        Text title = new Text("Upload File");
+        Text title = new Text(rb.getString("uploadFile"));
         title.getStyleClass().addAll("heading3", "primary-light");
         getVBox().getChildren().add(title);
 
         /* create upload button box */
         HBox uploadButtonHBox = new HBox();
-        btn_uploadMaterial = new Button("Upload");
+        btn_uploadMaterial = new Button(rb.getString("upload"));
         btn_uploadMaterial.getStyleClass().add("btnS");
         btn_uploadMaterial.setDisable(true);
 
-        Text text_uploadingAs = new Text("Uploading As " + user.getFullName());
+        Text text_uploadingAs = new Text(String.format(rb.getString("uploadingAs"), user.getFullName()));
         text_uploadingAs.getStyleClass().addAll("primary-light");
         uploadButtonHBox.setSpacing(8);
         uploadButtonHBox.setAlignment(Pos.CENTER_LEFT);
@@ -118,7 +117,7 @@ public class UploadController {
         /* create fileChooser */
         HBox chooseFileHBox = new HBox();
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Add Material File");
+        fileChooser.setTitle(rb.getString("addMaterialFile"));
         fileChooser.getExtensionFilters().addAll();
         Text fileTitle = new Text("");
         Button btn_getFile = getBtnGetFile(fileChooser, fileTitle, btn_uploadMaterial);
@@ -187,7 +186,7 @@ public class UploadController {
         tagArea.setSpacing(12);
         tagArea.getChildren().addAll(manualTagInput, tagChips);
 
-        uploadAgreement = new CheckBox("By uploading this file, I declare that this material goes along with the rules of StudyShelf.");
+        uploadAgreement = new CheckBox(rb.getString("uploadAgreement"));
         uploadAgreement.selectedProperty().addListener((obs, wasSelected, isSelected) ->
                 btn_uploadMaterial.setDisable(checkUploadButtonCondition())
         );
@@ -244,19 +243,19 @@ public class UploadController {
 
         gp.getColumnConstraints().addAll(col1, col2);
 
-        gp.add(gridLabel("File", true), 0, 0);
+        gp.add(gridLabel(rb.getString("fileFieldLabel"), true), 0, 0);
         gp.add(chooseFileHBox, 1, 0);
 
-        gp.add(gridLabel("Title", true), 0, 1);
+        gp.add(gridLabel(rb.getString("titleFieldLabel"), true), 0, 1);
         gp.add(field_title, 1, 1);
 
-        gp.add(gridLabel("Description", false), 0, 2);
+        gp.add(gridLabel(rb.getString("descriptionFieldLabel"), false), 0, 2);
         gp.add(field_description, 1, 2);
 
-        gp.add(gridLabel("Course", true), 0, 3);
+        gp.add(gridLabel(rb.getString("courseFieldLabel"), true), 0, 3);
         gp.add(choice_category, 1, 3);
 
-        gp.add(gridLabel("Tags", false), 0, 4);
+        gp.add(gridLabel(rb.getString("tags"), false), 0, 4);
         gp.add(tagArea, 1, 4);
 
         gp.add(uploadAgreement, 1, 5);
@@ -296,7 +295,7 @@ public class UploadController {
     }
 
     private Button getBtnGetFile(FileChooser fileChooser, Text fileTitle, Button btn_uploadMaterial) {
-        Button btn_getFile = new Button("Choose File");
+        Button btn_getFile = new Button(rb.getString("chooseFile"));
         btn_getFile.setOnAction(e -> {
             File selectedFile = fileChooser.showOpenDialog(null);
             if (selectedFile != null) {
@@ -337,7 +336,7 @@ public class UploadController {
     }
 
     private void setUpCourseCreation() {
-        Text title = new Text("Create Course");
+        Text title = new Text(rb.getString("createCourse"));
         title.getStyleClass().addAll("heading3", "secondary-light");
         getVBox().getChildren().add(title);
 
@@ -356,9 +355,9 @@ public class UploadController {
 
         gp.add(field_courseName, 1, 0);
 
-        gp.add(gridLabel("Course Name", true), 0, 0);
+        gp.add(gridLabel(rb.getString("courseName"), true), 0, 0);
 
-        Button btn = new Button("Create Course");
+        Button btn = new Button(rb.getString("createCourse"));
         btn.getStyleClass().add("btnS");
         btn.setDisable(true);
 
@@ -372,7 +371,7 @@ public class UploadController {
         field_courseName.textProperty().addListener((obs, oldText, newText) -> {
             boolean bool = checkDoubleCategoryName(field_courseName.getText(), allOwned);
             btn.setDisable(newText == null || newText.isEmpty() || bool);
-            warningText.setText(bool ? "You already have a course with this name." : "");
+            warningText.setText(bool ? rb.getString("duplicateCourseWarning") : "");
         });
 
         btn.setOnAction(e -> {

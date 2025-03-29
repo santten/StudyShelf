@@ -9,8 +9,10 @@ import infrastructure.repository.ReviewRepository;
 import presentation.view.CurrentUserManager;
 import presentation.utility.CustomAlert;
 import presentation.utility.GUILogger;
+import presentation.view.LanguageManager;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static javafx.scene.control.Alert.AlertType.WARNING;
 
@@ -28,7 +30,8 @@ public class RatingController {
         boolean canDeleteAny = curUser.hasPermission(PermissionType.DELETE_ANY_RATING);
 
         if (!canDeleteOwn && !canDeleteAny) {
-            CustomAlert.show(WARNING, "Permission Denied", "You do not have permission to delete this rating.");
+            ResourceBundle rb = LanguageManager.getInstance().getBundle();
+            CustomAlert.show(WARNING, rb.getString("alertPermissionDenied"), rb.getString("alertPermissionDeniedSub"));
             return false;
         }
 

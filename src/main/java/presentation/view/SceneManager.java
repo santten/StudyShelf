@@ -21,7 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import presentation.components.CategoryPage;
+import presentation.controller.CategoryPageController;
 import presentation.components.ListItem;
 import presentation.controller.*;
 import presentation.utility.GUILogger;
@@ -78,7 +78,7 @@ public class SceneManager {
             GUILogger.warn("DNE: Tried to go to category with id " + id);
             displayErrorPage("This category does not exist.", SCREEN_HOME, "Go to home page");
         } else {
-            CategoryPage page = new CategoryPage();
+            CategoryPageController page = new CategoryPageController();
             page.setPage(c);
         }
     }

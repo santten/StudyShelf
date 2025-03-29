@@ -9,21 +9,28 @@ import infrastructure.repository.UserRepository;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import presentation.components.LanguageSelection;
 import presentation.components.PasswordFieldToggle;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import static presentation.view.Screen.SCREEN_LOGIN;
-import static presentation.view.Screen.SCREEN_SIGNUP;
 
 public class SignupController {
     SceneManager sm = SceneManager.getInstance();
+    ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
     private TextField emailField;
     private TextField firstNameField;
@@ -33,7 +40,13 @@ public class SignupController {
     private MenuButton roleMenuButton;
     private Button btn_signup;
     public Hyperlink link_toLogin;
+
+    private Text logoLabel;
+    private Label emailLabel;
     private Label errorLabel;
+    private Label pwLabel;
+    private Label reEnterLabel;
+    private Label roleMenuLabel;
 
     public BorderPane initialize() {
         BorderPane bp = new BorderPane();
@@ -42,13 +55,13 @@ public class SignupController {
         vbox.getStylesheets().add(Objects.requireNonNull(SceneManager.class.getResource("/css/style.css")).toExternalForm());
 
         /* StudyShelf logo */
-        Text logo = new Text("StudyShelf");
-        logo.getStyleClass().add("error");
-        logo.getStyleClass().add("title");
-        vbox.getChildren().add(logo);
+        logoLabel = new Text(rb.getString("appName"));
+        logoLabel.getStyleClass().add("error");
+        logoLabel.getStyleClass().add("title");
+        vbox.getChildren().add(logoLabel);
 
         /* e-mail */
-        Label emailLabel = new Label("E-mail");
+        emailLabel = new Label(rb.getString("eMail"));
         emailField = new TextField();
         emailField.setMaxWidth(240);
         VBox emailBox = new VBox(emailLabel, emailField);
@@ -57,34 +70,34 @@ public class SignupController {
         /* first name */
         firstNameField = new TextField();
         firstNameField.setMaxWidth(240);
-        Label firstNameLabel = new Label("First Name");
+        Label firstNameLabel = new Label(rb.getString("firstName"));
         VBox firstNameBox = new VBox(firstNameLabel, firstNameField);
         vbox.getChildren().add(firstNameBox);
 
         /* last name */
         lastNameField = new TextField();
         lastNameField.setMaxWidth(240);
-        Label lastNameLabel = new Label("Last Name");
+        Label lastNameLabel = new Label(rb.getString("lastName"));
         VBox lastNameBox = new VBox(lastNameLabel, lastNameField);
         vbox.getChildren().add(lastNameBox);
 
         /* password */
-        Label pwLabel = new Label("Password");
+        pwLabel = new Label(rb.getString("password"));
         passwordField = new PasswordField();
         VBox passwordBox = new VBox(pwLabel, (PasswordFieldToggle.create(passwordField, 240)));
 
-        Label reEnterLabel = new Label("Re-enter Password");
+        reEnterLabel = new Label(rb.getString("passwordAgain"));
         reenterPasswordField = new PasswordField();
         VBox reEnterBox = new VBox(reEnterLabel, (PasswordFieldToggle.create(reenterPasswordField, 240)));
 
         vbox.getChildren().addAll(passwordBox, reEnterBox);
 
         /* role menu */
-        Label roleMenuLabel = new Label("Role");
-        roleMenuButton = new MenuButton("Choose Your Role");
+        roleMenuLabel = new Label(rb.getString("role"));
+        roleMenuButton = new MenuButton(rb.getString("rolePrompt"));
         roleMenuButton.getItems().addAll(
-                new MenuItem("Student"),
-                new MenuItem("Teacher")
+                new MenuItem(rb.getString("student")),
+                new MenuItem(rb.getString("teacher"))
         );
         roleMenuButton.setMinWidth(240);
         for (MenuItem item : roleMenuButton.getItems()) {
@@ -99,7 +112,7 @@ public class SignupController {
         vbox.getChildren().add(errorLabel);
 
         /* sign up*/
-        btn_signup = new Button("Sign Up");
+        btn_signup = new Button(rb.getString("signup"));
         btn_signup.getStyleClass().add("btnS");
         btn_signup.setOnAction(e -> {
             if (validateForm()) {
@@ -114,7 +127,7 @@ public class SignupController {
         vbox.getChildren().add(btn_signup);
 
         /* link to login */
-        link_toLogin = new Hyperlink("New here? Sign up now!");
+        link_toLogin = new Hyperlink(rb.getString("signupToLogin"));
         link_toLogin.setOnAction(e -> {
             try {
                 sm.setScreen(SCREEN_LOGIN);
@@ -123,8 +136,7 @@ public class SignupController {
             }
         });
 
-        vbox.getChildren().add(link_toLogin);
-
+        vbox.getChildren().addAll(link_toLogin);
         vbox.setSpacing(4);
         vbox.setAlignment(Pos.CENTER);
 
@@ -137,23 +149,23 @@ public class SignupController {
         bp.setMinHeight(600);
 
         return bp;
-    };
+    }
 
     private boolean validateForm() {
         boolean firstNameExists = !firstNameField.getText().isEmpty();
-        if (!firstNameExists) { errorLabel.setText("First name is required"); }
+        if (!firstNameExists) { errorLabel.setText(rb.getString("error.noFirstName")); }
 
         boolean lastNameExists = !lastNameField.getText().isEmpty();
-        if (!lastNameExists) { errorLabel.setText("Last name is required"); }
+        if (!lastNameExists) { errorLabel.setText(rb.getString("error.noLastName")); }
 
         boolean validEmail = emailField.getText().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
-        if (!validEmail){ errorLabel.setText("Invalid email address"); }
+        if (!validEmail){ errorLabel.setText(rb.getString("error.invalidEmail")); }
 
         boolean passwordMatch = passwordField.getText().equals(reenterPasswordField.getText());
-        if (!passwordMatch){ errorLabel.setText("Re-entered password doesn't match"); }
+        if (!passwordMatch){ errorLabel.setText(rb.getString("error.pwMatch")); }
 
         boolean roleChosen = !roleMenuButton.getText().equals("Choose Your Role");
-        if (!roleChosen){ errorLabel.setText("You must choose a role"); }
+        if (!roleChosen){ errorLabel.setText(rb.getString("error.noRole")); }
 
         return firstNameExists && lastNameExists &&
                 validEmail && passwordMatch && roleChosen;
@@ -165,11 +177,22 @@ public class SignupController {
             String firstName = firstNameField.getText();
             String lastName = lastNameField.getText();
             String password = passwordField.getText();
-            String selectedRole = roleMenuButton.getText();
 
+            String displayedRole = roleMenuButton.getText();
+
+            // Mapping of displayed role names to English role names
+            Map<String, String> roleMapping = Map.of(
+                    rb.getString("student"), "Student",
+                    rb.getString("teacher"), "Teacher"
+            );
+
+            String selectedRole = roleMapping.get(displayedRole);
+            if (selectedRole == null) {
+                System.out.println("[DB] Invalid role selected: " + displayedRole);
+                return;
+            }
 
             System.out.println("[DB] Starting user creation transaction");
-
 
             RoleType roleType;
             try {

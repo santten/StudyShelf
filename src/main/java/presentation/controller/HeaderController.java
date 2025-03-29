@@ -3,6 +3,7 @@ package presentation.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 import presentation.view.Screen;
 

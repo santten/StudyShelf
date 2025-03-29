@@ -1,4 +1,4 @@
-package presentation.components;
+package presentation.controller;
 
 import domain.model.Category;
 import domain.model.StudyMaterial;
@@ -19,24 +19,25 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
-import presentation.controller.CategoryController;
-import presentation.controller.UploadController;
+import presentation.components.MaterialCard;
 import presentation.view.CurrentUserManager;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static javafx.scene.shape.FillRule.EVEN_ODD;
 import static presentation.view.Screen.SCREEN_COURSES;
 import static presentation.view.Screen.SCREEN_HOME;
 
-public class CategoryPage {
+public class CategoryPageController {
     private List<StudyMaterial> pendingMaterials;
     private List<StudyMaterial> ownerMaterials;
     private List<StudyMaterial> otherMaterials;
@@ -47,7 +48,9 @@ public class CategoryPage {
 
     private final HBox titleLabelHBox;
 
-    public CategoryPage() {
+    public ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
+    public CategoryPageController() {
         this.pendingMaterials = new ArrayList<>();
         this.ownerMaterials = new ArrayList<>();
         this.otherMaterials = new ArrayList<>();
@@ -92,7 +95,7 @@ public class CategoryPage {
     public void setPage(Category c){
         VBox vbox = new VBox();
 
-        vbox.getStylesheets().add(Objects.requireNonNull(CategoryPage.class.getResource("/css/style.css")).toExternalForm());
+        vbox.getStylesheets().add(Objects.requireNonNull(CategoryPageController.class.getResource("/css/style.css")).toExternalForm());
         vbox.setSpacing(12);
         vbox.setPadding(new Insets(20, 20, 20, 20));
 
@@ -100,7 +103,7 @@ public class CategoryPage {
         title.getStyleClass().addAll("heading3", "secondary-light");
         getTitleLabelHBox().getChildren().add(title);
 
-        Text author = new Text("Course by " + c.getCreator().getFullName());
+        Text author = new Text(String.format(rb.getString("courseBy"), c.getCreator().getFullName()));
         VBox header = new VBox();
 
         Button addMaterialButton = new Button();
@@ -111,7 +114,7 @@ public class CategoryPage {
         addSVG.setContent(SVGContents.create());
         addSVG.getStyleClass().addAll("light");
 
-        Text addText = new Text("Add Your Material to this Course");
+        Text addText = new Text(rb.getString("addMaterialToThisCourse"));
         addText.getStyleClass().addAll("heading5", "light");
 
         addMaterialButton.setOnAction(e -> {
@@ -145,7 +148,7 @@ public class CategoryPage {
                     try {
                         SceneManager.getInstance().setScreen(SCREEN_HOME);
                     } catch (IOException e) {
-                        SceneManager.getInstance().displayErrorPage("Something went wrong when navigating to the home page...", SCREEN_COURSES, "Go to courses page");
+                        SceneManager.getInstance().displayErrorPage(rb.getString("error.vague"), SCREEN_COURSES, rb.getString("redirectAllCourses"));
                         throw new RuntimeException(e);
                     }
                 }
@@ -205,7 +208,7 @@ public class CategoryPage {
                 .collect(Collectors.toList()));
 
         if (!getOwnerMaterials().isEmpty()) {
-            Text text = new Text("Materials from " + c.getCreator().getFullName());
+            Text text = new Text(String.format(rb.getString("materialsFromCourseCreator"), c.getCreator().getFullName()));
             text.getStyleClass().add("heading4");
             text.getStyleClass().add("primary");
 
@@ -230,7 +233,7 @@ public class CategoryPage {
         setPendingMaterials(cServ.getPendingMaterialsByCategory(CurrentUserManager.get(), c));
         GUILogger.info(pendingMaterials.size() + " materials found pending approval.");
 
-        Text pendingTitle = new Text("Pending materials");
+        Text pendingTitle = new Text(rb.getString("pendingMaterials"));
         pendingTitle.getStyleClass().add("heading4");
         pendingTitle.getStyleClass().add("warning");
 
@@ -256,8 +259,18 @@ public class CategoryPage {
         Label materialTitle = new Label(s.getName());
         materialTitle.getStyleClass().addAll("label4", "primary-light");
 
-        String role = s.getUploader().getRole().getName().toString();
-        Text materialInfo = new Text(s.getFileType() + " uploaded by "+ s.getUploader().getFullName() + " (" + role.charAt(0) + role.substring(1).toLowerCase() + ")");
+        String role;
+        switch (s.getUploader().getRole().getName()) {
+            case TEACHER:
+                role = rb.getString("teacher");
+                break;
+            case ADMIN:
+                role = rb.getString("admin");
+                break;
+            default:
+                role = rb.getString("student");
+        }
+        Text materialInfo = new Text(String.format(rb.getString("fileTypeUploadedByUserWithRole"), s.getFileType(), s.getUploader().getFullName(), role));
 
         HBox graphic = new HBox(materialTitle, materialInfo);
         graphic.setSpacing(12);
@@ -309,10 +322,10 @@ public class CategoryPage {
 
     public void setMaterialAmountLabel() {
         if (getPendingMaterials().isEmpty()) {
-            pendingMaterialLabel.setText("Relax! This course doesn't have materials waiting for your approval right now.");
+            pendingMaterialLabel.setText(rb.getString("noPending"));
             pendingMaterialLabel.getStyleClass().add("primary-light");
         } else {
-            pendingMaterialLabel.setText("You have " + getPendingMaterials().size() + " materials pending approval.");
+            pendingMaterialLabel.setText(String.format(rb.getString("xMaterialsPendingApproval"), getPendingMaterials().size()));
             pendingMaterialLabel.getStyleClass().clear();
         }
     }
@@ -321,7 +334,7 @@ public class CategoryPage {
         getOtherMaterialsContainer().getChildren().clear();
 
         if (!getOtherMaterials().isEmpty()) {
-            Text text = new Text("Materials from others");
+            Text text = new Text(rb.getString("materialsFromOthers"));
             text.getStyleClass().add("heading4");
             text.getStyleClass().add("secondary");
 

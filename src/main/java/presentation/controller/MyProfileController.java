@@ -14,11 +14,13 @@ import presentation.view.CurrentUserManager;
 import presentation.utility.CustomAlert;
 import presentation.components.PasswordFieldToggle;
 import presentation.utility.SVGContents;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
 import static presentation.controller.SubScreen.*;
@@ -32,6 +34,8 @@ public class MyProfileController {
     private final VBox materialContainer = new VBox();
     private final VBox courseContainer = new VBox();
     private final VBox ratingContainer = new VBox();
+
+    ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
     public void initialize(ScrollPane wrapper) {
         initialize(wrapper, PROFILE_FILES);
@@ -79,23 +83,23 @@ public class MyProfileController {
         base.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/profile.css")).toExternalForm());
         base.getStyleClass().add("menuBox");
 
-        Text headingMyProfile = new Text("My profile");
+        Text headingMyProfile = new Text(rb.getString("myProfile"));
         base.getChildren().add(headingMyProfile);
         headingMyProfile.getStyleClass().addAll("heading3", "light");
 
-        addMenuLink("My Materials", PROFILE_FILES);
+        addMenuLink(rb.getString("myMaterials"), PROFILE_FILES);
         if (CurrentUserManager.get().hasPermission(PermissionType.CREATE_CATEGORY)) {
-            addMenuLink("My Courses", PROFILE_COURSES);
+            addMenuLink(rb.getString("myCourses"), PROFILE_COURSES);
         }
-        addMenuLink("My Ratings", PROFILE_REVIEWS);
+        addMenuLink(rb.getString("myRatings"), PROFILE_REVIEWS);
 
-        Text headingSettings = new Text("Settings");
+        Text headingSettings = new Text(rb.getString("settings"));
         base.getChildren().addAll(new Separator(), headingSettings);
         headingSettings.getStyleClass().addAll("heading3", "light");
 
-        addMenuLink("Profile Settings", PROFILE_SETTINGS);
+        addMenuLink(rb.getString("profileSettings"), PROFILE_SETTINGS);
 
-        Hyperlink link = new Hyperlink("Log Out");
+        Hyperlink link = new Hyperlink(rb.getString("logOut"));
         link.setOnAction(e -> CurrentUserManager.logout());
 
         link.getStyleClass().add("profileLink");
@@ -124,7 +128,7 @@ public class MyProfileController {
     }
 
     private void setUpMyMaterials(VBox base) {
-        Text heading = new Text("My Materials");
+        Text heading = new Text(rb.getString("myMaterials"));
         heading.getStyleClass().addAll("heading3", "primary-light");
 
         User user = CurrentUserManager.get();
@@ -134,15 +138,15 @@ public class MyProfileController {
         getMaterialContainer().getChildren().clear();
 
         if (materials.isEmpty()) {
-            Hyperlink link = new Hyperlink("Upload a material");
+            Hyperlink link = new Hyperlink(rb.getString("uploadMaterialPrompt"));
             link.setOnAction(evt -> {
                 try {
                     SceneManager.getInstance().setScreen(SCREEN_UPLOAD);
                 } catch (IOException e) {
-                    SceneManager.getInstance().displayErrorPage("Something went wrong", SCREEN_PROFILE, "Go back");
+                    SceneManager.getInstance().displayErrorPage(rb.getString("error.vague"), SCREEN_PROFILE, rb.getString("redirectBack"));
                 }
             });
-            getMaterialContainer().getChildren().addAll(new Text("You haven't uploaded any materials yet!"), link);
+            getMaterialContainer().getChildren().addAll(new Text(rb.getString("noMyMaterials")), link);
         }
 
 
@@ -183,7 +187,7 @@ public class MyProfileController {
                 }
 
                 if (getMaterialContainer().getChildren().isEmpty()) {
-                    getMaterialContainer().getChildren().add(new Text("No materials left!"));
+                    getMaterialContainer().getChildren().add(new Text(rb.getString("noMyMaterials")));
                 }
             });
 
@@ -202,16 +206,16 @@ public class MyProfileController {
     private VBox getRatingContainer() { return this.ratingContainer; }
 
     private void setUpMySettings(VBox base) {
-        Text heading = new Text("Display Settings");
+        Text heading = new Text(rb.getString("displaySettings"));
         heading.getStyleClass().addAll("heading3", "error");
-        base.getChildren().addAll(heading, new Text("Your first and last name are visible to other users."));
+        base.getChildren().addAll(heading, new Text(rb.getString("nameDisclaimer")));
         base.setSpacing(8);
 
         User curUser = CurrentUserManager.get();
         UserService uServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
 
         TextField firstNameField = new TextField(curUser.getFirstName());
-        base.getChildren().add(createFieldBox("First Name", firstNameField, curUser::getFirstName, () -> {
+        base.getChildren().add(createFieldBox(rb.getString("firstName"), firstNameField, curUser::getFirstName, () -> {
             try {
                 uServ.updateUserFirstName(curUser, firstNameField.getText());
             } catch (Exception ex) {
@@ -220,7 +224,7 @@ public class MyProfileController {
         }));
 
         TextField lastNameField = new TextField(curUser.getLastName());
-        base.getChildren().add(createFieldBox("Last Name", lastNameField, curUser::getLastName, () -> {
+        base.getChildren().add(createFieldBox(rb.getString("lastName"), lastNameField, curUser::getLastName, () -> {
             try {
                 uServ.updateUserLastName(curUser, lastNameField.getText());
             } catch (Exception ex) {
@@ -229,7 +233,7 @@ public class MyProfileController {
         }));
 
         TextField emailField = new TextField(curUser.getEmail());
-        base.getChildren().add(createFieldBox("E-Mail", emailField, curUser::getEmail, () -> {
+        base.getChildren().add(createFieldBox(rb.getString("eMail"), emailField, curUser::getEmail, () -> {
             try {
                 uServ.updateUserEmail(curUser, emailField.getText());
             } catch (Exception ex) {
@@ -261,7 +265,7 @@ public class MyProfileController {
                 button.setDisable(true);
             } else {
                 button.setDisable(false);
-                button.setText("Save");
+                button.setText(rb.getString("save"));
                 button.getStyleClass().removeAll("btnPlain");
                 button.getStyleClass().add("btnS");
             }
@@ -284,42 +288,42 @@ public class MyProfileController {
         User curUser = CurrentUserManager.get();
         UserService uServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
 
-        Text headingPW = new Text("Change Password");
+        Text headingPW = new Text(rb.getString("changePassword"));
         headingPW.getStyleClass().addAll("heading3", "error");
         base.getChildren().addAll(headingPW);
 
-        Label labelOldPW = new Label("Old Password");
+        Label labelOldPW = new Label(rb.getString("oldPassword"));
         labelOldPW.getStyleClass().addAll("label4");
         labelOldPW.setMinWidth(120);
         labelOldPW.setMaxWidth(120);
 
         PasswordField oldPWField = new PasswordField();
-        oldPWField.setPromptText("New Password");
+        oldPWField.setPromptText(rb.getString("oldPassword"));
         oldPWField.setMinWidth(280);
 
-        Label labelNewPW = new Label("New Password");
+        Label labelNewPW = new Label(rb.getString("newPassword"));
         labelNewPW.getStyleClass().addAll("label4");
         labelNewPW.setMinWidth(120);
         labelNewPW.setMaxWidth(120);
 
         PasswordField newPWField = new PasswordField();
-        newPWField.setPromptText("New Password");
+        newPWField.setPromptText(rb.getString("newPassword"));
         newPWField.setMinWidth(280);
 
         Label pwLabel = new Label("");
         pwLabel.getStyleClass().addAll("secondary-light");
 
-        Button pwButton = new Button("Change Password");
+        Button pwButton = new Button(rb.getString("changePassword"));
         pwButton.setOnAction(e -> {
             if (uServ.updateUserPassword(curUser, oldPWField.getText(), newPWField.getText())){
                 pwLabel.getStyleClass().clear();
                 pwLabel.getStyleClass().addAll("secondary-light");
-                pwLabel.setText("Password changed successfully!");
+                pwLabel.setText(rb.getString("pwChangeSuccess"));
                 pwButton.setDisable(true);
             } else {
                 pwLabel.getStyleClass().clear();
                 pwLabel.getStyleClass().addAll("error");
-                pwLabel.setText("Your old password is wrong.");
+                pwLabel.setText(rb.getString("pwChangeFailOldWrong"));
                 pwButton.setDisable(true);
             }
         });
@@ -349,7 +353,7 @@ public class MyProfileController {
     }
 
     private void setUpMyRatings(VBox base) {
-        Text heading = new Text("My Ratings");
+        Text heading = new Text(rb.getString("myRatings"));
         heading.getStyleClass().addAll("heading3", "warning");
 
         User user = CurrentUserManager.get();
@@ -359,7 +363,7 @@ public class MyProfileController {
         getRatingContainer().getChildren().clear();
 
         if (ratings.isEmpty()) {
-            getRatingContainer().getChildren().addAll(new Text("You haven't created any ratings yet! \nFind a Study Material to start."));
+            getRatingContainer().getChildren().addAll(new Text(rb.getString("noRatingsCTA")));
         }
 
         for (Rating r : ratings) {
@@ -405,13 +409,13 @@ public class MyProfileController {
             deleteBtn.setGraphic(svgPathDelete);
 
             deleteBtn.setOnAction(e -> {
-                if (CustomAlert.confirm("Deleting Review", "Are you sure you want do delete your review for this Study Material?", "This can not be undone, but you can always write a new one.", true)) {
+                if (CustomAlert.confirm(rb.getString("alertHeadingDeleteReview"), rb.getString("alertAreYouSureDeleteReview"), rb.getString("alertNoUndoDeleteReview"), true)) {
                     if (new RatingController().deleteRatingAndReview(CurrentUserManager.get(), r.getStudyMaterial())) {
                         getRatingContainer().getChildren().remove(item);
                     }
 
                     if (getRatingContainer().getChildren().isEmpty()) {
-                        getRatingContainer().getChildren().add(new Text("No ratings left!"));
+                        getRatingContainer().getChildren().add(new Text(rb.getString("noRatingsCTA")));
                     }
                 }
             });
@@ -427,7 +431,7 @@ public class MyProfileController {
     }
 
     private void setUpMyCourses(VBox base) {
-        Text heading = new Text("My Courses");
+        Text heading = new Text(rb.getString("myCourses"));
         heading.getStyleClass().addAll("heading3", "secondary-light");
 
         User user = CurrentUserManager.get();
@@ -437,15 +441,15 @@ public class MyProfileController {
         getCourseContainer().getChildren().clear();
 
         if (courses.isEmpty()) {
-            Hyperlink link = new Hyperlink("Make a course");
+            Hyperlink link = new Hyperlink(rb.getString("makeCourse"));
             link.setOnAction(evt -> {
                 try {
                     SceneManager.getInstance().setScreen(SCREEN_UPLOAD);
                 } catch (IOException e) {
-                    SceneManager.getInstance().displayErrorPage("Something went wrong", SCREEN_PROFILE, "Go back");
+                    SceneManager.getInstance().displayErrorPage(rb.getString("error.vague"), SCREEN_PROFILE, rb.getString("redirectBack"));
                 }
             });
-            getCourseContainer().getChildren().addAll(new Text("You haven't created any courses yet!"), link);
+            getCourseContainer().getChildren().addAll(new Text(rb.getString("noMyCourses")), link);
         }
 
         for (Category c : courses) {
@@ -485,7 +489,7 @@ public class MyProfileController {
                 }
 
                 if (getCourseContainer().getChildren().isEmpty()) {
-                    getCourseContainer().getChildren().add(new Text("No courses left!"));
+                    getCourseContainer().getChildren().add(new Text(rb.getString("noMyCourses")));
                 }
             });
 

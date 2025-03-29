@@ -10,9 +10,12 @@ import infrastructure.repository.TagRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import presentation.components.ListItem;
+import presentation.view.LanguageManager;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class SearchController {
 
@@ -24,15 +27,26 @@ public class SearchController {
     public CheckBox checkbox_includeMaterials;
     public CheckBox checkbox_includeCategories;
     public CheckBox checkbox_includeTags;
+    public Text searchPageTitle;
 
     @FXML private TextField searchField;
     @FXML private Button searchButton;
     
     @FXML private ListView<Button> resultsListView;
 
+    ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
     @FXML
     private void initialize() {
+        searchPageTitle.setText(rb.getString("search"));
+
+        checkbox_includeMaterials.setText(rb.getString("materials"));;
+        checkbox_includeCategories.setText(rb.getString("courses"));;
+        checkbox_includeTags.setText(rb.getString("tags"));;
+
         searchButton.setOnAction(e -> performSearch());
+        searchButton.setText(rb.getString("search"));
+
         searchField.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 performSearch();
