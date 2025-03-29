@@ -14,10 +14,16 @@ public class LanguageSelection {
         Button usButton = LanguageButton.createButton("/images/gb.png", "English");
         usButton.setOnAction(e -> switchLanguage.accept(new Locale("en", "US")));
 
-        Button fiButton = LanguageButton.createButton("/images/fi.png", "Finnish");
+        Button fiButton = LanguageButton.createButton("/images/fi.png", "Suomi/Finnish");
         fiButton.setOnAction(e -> switchLanguage.accept(new Locale("fi", "FI")));
 
-        languageSwitcher.getChildren().addAll(usButton, fiButton);
+        Button ruButton = LanguageButton.createButton("/images/ru.png", "Russian");
+        ruButton.setOnAction(e -> switchLanguage.accept(new Locale("ru", "RU")));
+
+        Button cnButton = LanguageButton.createButton("/images/cn.png", "Chinese");
+        cnButton.setOnAction(e -> switchLanguage.accept(new Locale("zh", "CN")));
+
+        languageSwitcher.getChildren().addAll(usButton, fiButton, ruButton, cnButton);
         languageSwitcher.setAlignment(Pos.CENTER);
 
         return languageSwitcher;
