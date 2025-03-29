@@ -229,4 +229,32 @@ public class StudyMaterialRepository extends BaseRepository<StudyMaterial> {
             em.close();
         }
     }
+
+    public void deleteByUser(User user) {
+        EntityManager em = getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            List<StudyMaterial> materials = em.createQuery("SELECT m FROM StudyMaterial m WHERE m.uploader = :user", StudyMaterial.class)
+                    .setParameter("user", user)
+                    .getResultList();
+
+            for (StudyMaterial material : materials) {
+                new ReviewRepository().deleteByMaterial(material);
+                new RatingRepository().deleteByMaterial(material);
+                StudyMaterial mergedMaterial = em.merge(material);
+                em.remove(mergedMaterial);
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }

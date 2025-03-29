@@ -3,22 +3,33 @@ package presentation.components;
 import domain.model.RoleType;
 import domain.model.User;
 import javafx.scene.control.Label;
+import presentation.view.LanguageManager;
 
-import static domain.model.RoleType.*;
+import java.util.ResourceBundle;
 
 public class TextLabels {
     public static Label getUserRoleLabel(User u){
+        ResourceBundle rb = LanguageManager.getInstance().getBundle();
         RoleType role = u.getRole().getName();
-        String formatted = role.toString().charAt(0) + role.toString().substring(1).toLowerCase();
-
-        Label roleLabel = new Label(formatted);
-        String styleClass = switch (role) {
-            case TEACHER -> "errorTagLabel";
-            case ADMIN -> "warningTagLabel";
-            default -> "secondaryTagLabel"; // student
+        String styleClass;
+        String roleName = switch (role) {
+            case TEACHER -> {
+                styleClass = "errorTagLabel";
+                yield rb.getString("teacher");
+            }
+            case ADMIN -> {
+                styleClass = "warningTagLabel";
+                yield rb.getString("admin");
+            }
+            default -> {
+                styleClass = "secondaryTagLabel";
+                yield rb.getString("student");
+                // student
+            }
         };
-        roleLabel.getStyleClass().add(styleClass);
 
+        Label roleLabel = new Label(roleName);
+        roleLabel.getStyleClass().add(styleClass);
 
         return roleLabel;
     }

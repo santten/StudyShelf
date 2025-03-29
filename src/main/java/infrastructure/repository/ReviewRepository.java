@@ -110,4 +110,30 @@ public class ReviewRepository extends BaseRepository<Review> {
             em.close();
         }
     }
+
+    public void deleteByUser(User user) {
+        EntityManager em = getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            List<Review> reviews = em.createQuery("SELECT r FROM Review r WHERE r.user = :user", Review.class)
+                    .setParameter("user", user)
+                    .getResultList();
+
+            for (Review review : reviews) {
+                Review mergedReview = em.merge(review);
+                em.remove(mergedReview);
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }

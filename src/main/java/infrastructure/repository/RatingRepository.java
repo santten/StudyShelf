@@ -123,5 +123,29 @@ public class RatingRepository extends BaseRepository<Rating> {
         }
     }
 
+    public void deleteByUser(User user) {
+        EntityManager em = getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
 
+            List<Rating> ratings = em.createQuery("SELECT r FROM Rating r WHERE r.user = :user", Rating.class)
+                    .setParameter("user", user)
+                    .getResultList();
+
+            for (Rating rating : ratings) {
+                Rating mergedRating = em.merge(rating);
+                em.remove(mergedRating);
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }

@@ -2,7 +2,8 @@ package presentation.controller;
 
 import domain.model.Category;
 import domain.model.StudyMaterial;
-import domain.service.*;
+import domain.service.CategoryService;
+import domain.service.PermissionService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.fxml.FXML;
@@ -14,11 +15,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
+import presentation.view.CurrentUserManager;
 import presentation.utility.SVGContents;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static domain.model.RoleType.STUDENT;
 import static presentation.view.Screen.SCREEN_COURSES;
@@ -33,12 +37,14 @@ public class HomeController {
 
     private final StudyMaterialRepository smRepository = new StudyMaterialRepository();
 
+    ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
     @FXML
     private void initialize() {
         mainVBoxHome.setSpacing(10);
 
         loadHeader();
-        if (Session.getInstance().getCurrentUser().getRole().getName() != STUDENT){
+        if (CurrentUserManager.get().getRole().getName() != STUDENT){
             loadPendingApprovalScreen();
         }
         loadLatestMaterials();
@@ -50,7 +56,7 @@ public class HomeController {
     private void loadHeader() {
         HBox header = new HBox();
 
-        Text title = new Text("Welcome, " + Session.getInstance().getCurrentUser().getFullName() + "!");
+        Text title = new Text(String.format(rb.getString("welcome"), CurrentUserManager.get().getFullName()));
         title.getStyleClass().addAll("heading2", "error");
         header.getChildren().add(title);
 
@@ -58,12 +64,12 @@ public class HomeController {
     }
 
     private void loadPendingApprovalScreen() {
-        List<Category> pendingCategories = categoryServ.getOwnedCategoriesWithPending(Session.getInstance().getCurrentUser());
+        List<Category> pendingCategories = categoryServ.getOwnedCategoriesWithPending(CurrentUserManager.get());
 
         if (!pendingCategories.isEmpty()){
             VBox vbox = new VBox();
 
-            Text title = new Text("You have courses with pending materials");
+            Text title = new Text(rb.getString("pendingMaterialsInfo"));
             title.getStyleClass().addAll("heading3", "primary");
 
             for (Category category : pendingCategories){
@@ -86,7 +92,7 @@ public class HomeController {
                 graphic.setAlignment(Pos.CENTER_LEFT);
 
                 int amount = cRepository.findPendingMaterialsByCategory(category).size();
-                Label sub = new Label(amount + " material" + (amount > 1 ? "s" : "") +  " waiting for approval");
+                Label sub = new Label(amount > 1 ? String.format(rb.getString("pendingAmountPlural"), amount) : rb.getString("pendingAmountSingular"));
 
                 graphic.getChildren().addAll(svg, label, sub);
 
@@ -105,7 +111,7 @@ public class HomeController {
         if (!list.isEmpty()) {
             VBox vbox = new VBox();
 
-            Text title = new Text("Newest Materials in StudyShelf");
+            Text title = new Text(rb.getString("latestMaterialsLabel"));
             title.getStyleClass().addAll("heading3", "primary-light");
 
             vbox.getChildren().addAll(title, MaterialCard.materialCardScrollHBox(list));
@@ -120,7 +126,7 @@ public class HomeController {
         if (!list.isEmpty()) {
             VBox vbox = new VBox();
 
-            Text title = new Text("Top Rated Materials in StudyShelf");
+            Text title = new Text(rb.getString("topRatedMaterialsLabel"));
             title.getStyleClass().addAll("heading3", "primary");
 
             vbox.getChildren().addAll(title, MaterialCard.materialCardScrollHBox(list));
@@ -131,11 +137,11 @@ public class HomeController {
     }
 
     private void loadRecentlyReviewedMaterials() {
-        List<StudyMaterial> list = smRepository.findReviewedMaterialsByUserLatest10(Session.getInstance().getCurrentUser());
+        List<StudyMaterial> list = smRepository.findReviewedMaterialsByUserLatest10(CurrentUserManager.get());
         if (!list.isEmpty()) {
             VBox vbox = new VBox();
 
-            Text title = new Text("Materials Reviewed by You Recently");
+            Text title = new Text(rb.getString("recentlyReviewedMaterialsLabel"));
             title.getStyleClass().addAll("heading3", "primary-light");
 
             vbox.getChildren().addAll(title, MaterialCard.materialCardScrollHBox(list));
@@ -153,16 +159,16 @@ public class HomeController {
         SVGContents.setScale(searchSvg, 1.3);
         searchSvg.getStyleClass().add("primary");
 
-        Text text = new Text("Looking for something else?");
+        Text text = new Text(rb.getString("somethingElse"));
         text.getStyleClass().addAll("heading3", "primary");
 
-        Button button = new Button("Go to Search");
+        Button button = new Button(rb.getString("redirectSearch"));
         button.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();
             try {
                 sm.setScreen(SCREEN_FIND);
             } catch (IOException ex) {
-                sm.displayErrorPage("Couldn't go to search screen...", SCREEN_COURSES, "Go Home");
+                sm.displayErrorPage(rb.getString("error.setScreenFail"), SCREEN_COURSES, rb.getString("redirectHome"));
             }
         });
         button.getStyleClass().addAll("btnS");

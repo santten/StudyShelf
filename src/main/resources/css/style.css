@@ -129,11 +129,18 @@
     -fx-cursor: hand;
 }
 
+.btnSError {
+    -fx-background-color: -error;
+    -fx-padding: 4px 8px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
 .btnS:hover, .btnS:focused {
     -fx-background-color: -secondary;
 }
 
-.btnS .text {
+.btnS .text, .btnSError .text {
     -fx-font-family: "Calistoga";
     -fx-font-size: 14;
     -fx-fill: -light;

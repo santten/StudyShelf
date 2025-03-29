@@ -6,6 +6,7 @@ import domain.model.User;
 import infrastructure.config.DatabaseConnection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -16,12 +17,12 @@ import java.util.List;
 import static domain.model.MaterialStatus.APPROVED;
 import static domain.model.MaterialStatus.PENDING;
 
-public class CategoryRepository extends BaseRepository<Category>  {
+public class CategoryRepository extends BaseRepository<Category> {
     public CategoryRepository() {
         super(Category.class);
     }
 
-//    constructor for testing
+    //    constructor for testing
     public CategoryRepository(EntityManagerFactory emf) {
         super(Category.class, emf);
     }
@@ -134,6 +135,39 @@ public class CategoryRepository extends BaseRepository<Category>  {
                 category.setCategoryName(title);
             }
             em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    public void deleteByUser(User user) {
+        EntityManager em = getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        try {
+            transaction.begin();
+
+            List<Category> categories = em.createQuery("SELECT c FROM Category c WHERE c.creator = :user", Category.class)
+                    .setParameter("user", user)
+                    .getResultList();
+
+            for (Category category : categories) {
+                List<StudyMaterial> materials = findMaterialsByCategory(category);
+                for (StudyMaterial material : materials) {
+                    new ReviewRepository().deleteByMaterial(material);
+                    new RatingRepository().deleteByMaterial(material);
+                    StudyMaterial mergedMaterial = em.merge(material);
+                    em.remove(mergedMaterial);
+                }
+                Category mergedCategory = em.merge(category);
+                em.remove(mergedCategory);
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
         } finally {
             em.close();
         }

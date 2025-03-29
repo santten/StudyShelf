@@ -1,25 +1,30 @@
 package presentation.view;
-import domain.model.StudyMaterial;
 
+import domain.model.Category;
+import domain.model.StudyMaterial;
 import domain.model.Tag;
 import domain.model.User;
-import domain.model.Category;
-
-import domain.service.Session;
+import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.TagRepository;
 import infrastructure.repository.UserRepository;
-import infrastructure.repository.CategoryRepository;
-
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import presentation.controller.CategoryPageController;
+import presentation.components.ListItem;
+import presentation.controller.*;
+import presentation.utility.GUILogger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,9 +32,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static presentation.view.Screen.*;
-
-import presentation.components.*;
-import presentation.utility.GUILogger;
 
 public class SceneManager {
     private static SceneManager instance;
@@ -53,16 +55,20 @@ public class SceneManager {
     }
 
     private void initializeComponents() throws IOException {
-        instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/login.fxml")));
+        setPrimaryStage(new Stage());
+        setScreen(SCREEN_LOGIN);
         instance.header = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/header.fxml")));
         instance.footer = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/footer.fxml")));
         instance.logged = false;
     }
 
     public void displayCategory(int id) {
-        if (Session.getInstance().getCurrentUser() == null){
-            try { setScreen(SCREEN_LOGIN); }
-            catch (IOException e){ throw new RuntimeException("Failed to load FXML components", e);}
+        if (CurrentUserManager.get() == null){
+            try {
+                setScreen(SCREEN_LOGIN);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
 
@@ -72,15 +78,18 @@ public class SceneManager {
             GUILogger.warn("DNE: Tried to go to category with id " + id);
             displayErrorPage("This category does not exist.", SCREEN_HOME, "Go to home page");
         } else {
-            CategoryPage page = new CategoryPage();
+            CategoryPageController page = new CategoryPageController();
             page.setPage(c);
         }
     }
 
     public void displayMaterial(int id) {
-        if (Session.getInstance().getCurrentUser() == null){
-            try { setScreen(SCREEN_LOGIN); }
-            catch (IOException e){ throw new RuntimeException("Failed to load FXML components", e);}
+        if (CurrentUserManager.get() == null){
+            try {
+                setScreen(SCREEN_LOGIN);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
 
@@ -93,14 +102,17 @@ public class SceneManager {
             return;
         }
 
-        MaterialPage page = new MaterialPage(s);
+        StudyMaterialPageController page = new StudyMaterialPageController(s);
         page.displayPage();
     }
 
     public void displayProfile(int id) {
-        if (Session.getInstance().getCurrentUser() == null){
-            try { setScreen(SCREEN_LOGIN); }
-            catch (IOException e){ throw new RuntimeException("Failed to load FXML components", e);}
+        if (CurrentUserManager.get() == null){
+            try {
+                setScreen(SCREEN_LOGIN);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return;
         }
 
@@ -113,7 +125,7 @@ public class SceneManager {
             return;
         }
 
-        ProfilePage.setPage(u);
+        ProfilePageController.setPage(u);
     }
 
     public void displayErrorPage(String errorText, Screen redirectScreen, String redirectLabel) {
@@ -168,8 +180,13 @@ public class SceneManager {
     }
 
     public void setScreen(Screen screen) throws IOException {
-        if (!instance.logged){
-            instance.current = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource(screen == SCREEN_SIGNUP ? "/fxml/signup.fxml" : "/fxml/login.fxml")));
+        if (screen == SCREEN_SIGNUP){
+            SignupController sPage = new SignupController();
+            instance.current = sPage.initialize();
+        }
+        else if (!instance.logged || screen == SCREEN_LOGIN) {
+            LoginController lPage = new LoginController();
+            instance.current = lPage.initialize();
         } else {
             BorderPane bp = new BorderPane();
             bp.setTop(instance.header);
@@ -188,11 +205,11 @@ public class SceneManager {
                     base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/search.fxml"))));
                     break;
                 case SCREEN_PROFILE:
-                    MyProfilePage pPage = new MyProfilePage();
+                    MyProfileController pPage = new MyProfileController();
                     pPage.initialize(base);
                     break;
                 case SCREEN_UPLOAD:
-                    UploadPage uPage = new UploadPage();
+                    UploadController uPage = new UploadController();
                     uPage.initialize(base);
                     break;
                 default:
@@ -228,10 +245,14 @@ public class SceneManager {
         }
     }
 
-    public void logout() throws IOException {
+    public void logout() {
         if (instance.logged){
             instance.logged = false;
-            instance.setScreen(SCREEN_LOGIN);
+            try {
+                setScreen(SCREEN_LOGIN);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             GUILogger.warn("User is already logged out");
         }
