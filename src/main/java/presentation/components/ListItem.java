@@ -18,19 +18,23 @@ import javafx.scene.shape.SVGPath;
 import javafx.util.Callback;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static presentation.components.ItemType.*;
 
 public class ListItem {
+    public static ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
     public static Button listItemGraphic(StudyMaterial s){
-        return layout(s.getName(), MATERIAL, s.getFileType() + ", uploaded by " + s.getUploader().getFullName(), s.getMaterialId());
+        return layout(s.getName(), MATERIAL, String.format(rb.getString("fileUploadedByName"), s.getFileType(), s.getUploader().getFullName()), s.getMaterialId());
     }
 
     public static Button listItemGraphic(Category c) {
-        return layout(c.getCategoryName(), CATEGORY, "Course by " + c.getCreator().getFullName(), c.getCategoryId());
+        return layout(c.getCategoryName(), CATEGORY, String.format(rb.getString("courseBy"), c.getCreator().getFullName()), c.getCategoryId());
     }
 
     public static Button listItemGraphic(User u) {
@@ -38,7 +42,7 @@ public class ListItem {
     }
 
     public static Button listItemGraphic(Tag t) {
-        String text = t.getMaterials().size() + " item" + (t.getMaterials().size() > 1 ? "s" : "") + " with this tag";
+        String text = t.getMaterials().size() > 1 ? String.format(rb.getString("tagContainsPluralMaterials"), t.getMaterials().size()) : rb.getString("tagContainsSingularMaterial");
         return layout(t.getTagName(), TAG, text, t.getTagId());
     }
 
@@ -77,7 +81,7 @@ public class ListItem {
                 break;
             default:
                 color = "error";
-                btn.setOnAction(e -> GUILogger.warn("This button layout type is set wrong: button shouldn't exist"));
+                btn.setOnAction(e -> GUILogger.warn(rb.getString("error.nonExistentButton")));
         }
 
         svg.setFillRule(FillRule.EVEN_ODD);

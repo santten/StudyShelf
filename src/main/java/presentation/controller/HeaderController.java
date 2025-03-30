@@ -3,13 +3,13 @@ package presentation.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
+import presentation.view.Screen;
 
 import java.io.IOException;
 
-import presentation.view.Screen;
-
-import static presentation.controller.BaseController.logout;
+import static presentation.view.CurrentUserManager.logout;
 import static presentation.view.Screen.*;
 
 public class HeaderController {

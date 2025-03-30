@@ -15,7 +15,7 @@
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
-   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
+   <Text fx:id="searchPageTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="Search">
       <styleClass>
          <String fx:value="heading3" />
          <String fx:value="secondary-light" />

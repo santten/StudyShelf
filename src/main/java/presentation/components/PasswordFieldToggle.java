@@ -1,13 +1,16 @@
-package presentation.utility;
+package presentation.components;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
+import presentation.utility.SVGContents;
 
-public class PasswordFieldToggleable {
-    public static HBox create(PasswordField passwordField, int fixedWidth) {
+public class PasswordFieldToggle {
+    public static StackPane create(PasswordField passwordField, int fixedWidth) {
         ToggleButton toggleButton = new ToggleButton();
 
         toggleButton.getStyleClass().add("buttonEmpty");
@@ -32,30 +35,35 @@ public class PasswordFieldToggleable {
         passwordField.managedProperty().bind(passwordField.visibleProperty());
         passwordField.visibleProperty().bind(toggleButton.selectedProperty().not());
 
-        HBox hbox = new HBox();
-        hbox.getChildren().add(0, passwordField);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(passwordField, toggleButton);
 
         toggleButton.setMinWidth(30);
         toggleButton.setMaxWidth(30);
 
-        hbox.getChildren().add(1, toggleButton);
+        stackPane.setMinWidth(fixedWidth);
+        stackPane.setMaxWidth(fixedWidth);
+
+        StackPane.setAlignment(toggleButton, Pos.CENTER_RIGHT);
+        StackPane.setMargin(toggleButton, new javafx.geometry.Insets(0, 5, 0, 0));
 
         toggleButton.setOnAction(e -> {
             svg.getStyleClass().add("primary-light");
 
             if (toggleButton.isSelected()) {
-                hbox.getChildren().remove(passwordField);
-                hbox.getChildren().add(0, textField);
+                stackPane.getChildren().remove(passwordField);
+                stackPane.getChildren().add(0, textField);
                 svg.setContent(SVGContents.noEye());
                 toggleButton.setGraphic(svg);
             } else {
-                hbox.getChildren().remove(textField);
-                hbox.getChildren().add(0, passwordField);
+                stackPane.getChildren().remove(textField);
+                stackPane.getChildren().add(0, passwordField);
                 svg.setContent(SVGContents.eye());
                 toggleButton.setGraphic(svg);
             }
         });
 
-        return hbox;
+        return stackPane;
     }
 }

@@ -11,12 +11,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
 import presentation.utility.GUILogger;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
- public class CoursesController {
+public class CoursesController {
     private final CategoryRepository categoryRepo = new CategoryRepository();
+    private ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
     @FXML private VBox mainVBoxCourses;
 
@@ -40,10 +43,10 @@ import java.util.List;
             title.getStyleClass().add("label3");
             title.getStyleClass().add("secondary");
 
-            Button button = new Button("See Course Page");
+            Button button = new Button(rb.getString("seeCoursePage"));
             button.getStyleClass().add("btnXS");
 
-            HBox hbox = new HBox(button, new Text("Course by " + c.getCreator().getFullName()));
+            HBox hbox = new HBox(button, new Text(String.format(rb.getString("courseBy"), c.getCreator().getFullName())));
             hbox.setSpacing(8);
 
             button.setOnAction(e -> {
@@ -55,7 +58,7 @@ import java.util.List;
             List<StudyMaterial> materials  = categoryRepo.findMaterialsByCategory(c);
             GUILogger.info("Loading materials " + materials.size() + " for category " + c.getCategoryName());
             if (materials.isEmpty()){
-                courseContainer.getChildren().add(new Text ("(This course doesn't contain any materials yet.)"));
+                courseContainer.getChildren().add(new Text (rb.getString("noMaterials")));
             } else {
                 courseContainer.getChildren().add(MaterialCard.materialCardScrollHBox(materials));
             }

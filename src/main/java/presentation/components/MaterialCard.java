@@ -16,15 +16,19 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
+import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
 import java.io.ByteArrayInputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import static javafx.scene.shape.FillRule.EVEN_ODD;
 
 public class MaterialCard {
+    public static ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
     public static Button materialCard(StudyMaterial s) {
         Button materialCard = new Button();
         HBox wrapper = new HBox();
@@ -94,11 +98,10 @@ public class MaterialCard {
         contentBox.getChildren().add(ratingBox);
         wrapper.getChildren().add(contentBox);
 
-        materialCard.setTooltip(new Tooltip("\"" + s.getName() + "\", uploaded by " + uploader.getFirstName() + " " + uploader.getLastName()));
+        materialCard.setTooltip(new Tooltip(String.format(rb.getString("fileUploadedByName"), s.getName(), uploader.getFullName())));
         materialCard.setGraphic(wrapper);
         materialCard.getStyleClass().add("materialCardM");
         materialCard.setOnAction(e -> {
-            GUILogger.info("MaterialCard " + s.getName() + " clicked.");
             SceneManager.getInstance().displayMaterial(s.getMaterialId());
         });
         return materialCard;

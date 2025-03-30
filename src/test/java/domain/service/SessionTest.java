@@ -43,7 +43,7 @@ class SessionTest {
         session.setCurrentUser(user);
         User retrievedUser = session.getCurrentUser();
 
-        assertSame(user, retrievedUser, "getCurrentUser should return the user that was set");
+        assertSame(user, retrievedUser, "get should return the user that was set");
     }
 
     @Test
