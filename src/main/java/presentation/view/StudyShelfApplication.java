@@ -20,6 +20,7 @@ public class StudyShelfApplication extends Application {
 
         SceneManager sm = SceneManager.getInstance();
         sm.setPrimaryStage(primaryStage);
-        sm.setScreen(SCREEN_LOGIN);
+// this is duplicated in SceneManager.initializeComponents
+//      sm.setScreen(SCREEN_LOGIN);
     }
 }
