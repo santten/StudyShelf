@@ -21,8 +21,4 @@ public class StudyShelfApplication extends Application {
         SceneManager sm = SceneManager.getInstance();
         sm.setScreen(SCREEN_LOGIN);
     }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 }

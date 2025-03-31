@@ -180,6 +180,7 @@ public class SceneManager {
     }
 
     public void setScreen(Screen screen) throws IOException {
+        GUILogger.info("Setting screen: " + screen + " called from: " + Thread.currentThread().getStackTrace()[2]);
         if (screen == SCREEN_SIGNUP){
             SignupController sPage = new SignupController();
             instance.current = sPage.initialize();
