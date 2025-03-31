@@ -19,8 +19,6 @@ public class StudyShelfApplication extends Application {
         LanguageManager.getInstance().setLanguage(new Locale("en", "US"));
 
         SceneManager sm = SceneManager.getInstance();
-        sm.setPrimaryStage(primaryStage);
-// this is duplicated in SceneManager.initializeComponents
-//      sm.setScreen(SCREEN_LOGIN);
+        sm.setScreen(SCREEN_LOGIN);
     }
 }
