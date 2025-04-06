@@ -5,6 +5,7 @@ import domain.service.*;
 import infrastructure.repository.RatingRepository;
 import infrastructure.repository.ReviewRepository;
 import infrastructure.repository.StudyMaterialRepository;
+import infrastructure.repository.StudyMaterialTranslationRepository;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -27,6 +28,7 @@ import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
+import domain.service.TranslationService;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -49,6 +51,8 @@ public class StudyMaterialPageController {
     private MaterialStatus pendingStatus;
 
     private final StudyMaterial material;
+    private final TranslationService translationService = new TranslationService();
+    private final StudyMaterialTranslationRepository translationRepository = new StudyMaterialTranslationRepository();
 
     private List<Review> reviews;
     private List<Rating> ratings;
@@ -267,6 +271,17 @@ public class StudyMaterialPageController {
         fileContainer.getChildren().clear();
         StudyMaterial s = getMaterial();
 
+
+        String currentLanguage = LanguageManager.getInstance().getCurrentLanguage();
+        Map<String, String> nameTranslations = translationRepository.getNameTranslations(s.getMaterialId());
+        Map<String, String> descTranslations = translationRepository.getDescriptionTranslations(s.getMaterialId());
+
+
+        String displayName = nameTranslations.containsKey(currentLanguage) ?
+                nameTranslations.get(currentLanguage) : s.getName();
+        String displayDescription = descTranslations.containsKey(currentLanguage) ?
+                descTranslations.get(currentLanguage) : s.getDescription();
+
         VBox base = new VBox();
         base.getStylesheets().add(Objects.requireNonNull(StudyMaterialPageController.class.getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
@@ -275,7 +290,7 @@ public class StudyMaterialPageController {
 
         /* FILE TITLE */
         TextFlow fileTitleContainer = new TextFlow();
-        Label title = new Label(s.getName() + " ");
+        Label title = new Label(displayName + " ");
         title.getStyleClass().add("label3");
         title.getStyleClass().add("primary-light");
         title.setWrapText(true);
@@ -366,7 +381,7 @@ public class StudyMaterialPageController {
 
         TextFlow fileDesc = new TextFlow();
         fileDesc.getChildren().clear();
-        fileDesc.getChildren().add(new Text(s.getDescription()));
+        fileDesc.getChildren().add(new Text(displayDescription));
         fileDesc.setMaxWidth(580);
 
         if (isEditable) {
@@ -621,7 +636,7 @@ public class StudyMaterialPageController {
     }
 
     private Node reviewCard(Rating rating, Review review) {
-        String commentText = (review != null) ? review.getReviewText() : "";
+        String commentText = (review != null) ? reviewSer.getTranslatedReviewText(review) : "";
 
         VBox base = new VBox();
         base.setSpacing(10);

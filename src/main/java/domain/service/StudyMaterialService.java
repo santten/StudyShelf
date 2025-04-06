@@ -2,15 +2,19 @@ package domain.service;
 
 import domain.model.*;
 import infrastructure.repository.StudyMaterialRepository;
+import infrastructure.repository.StudyMaterialTranslationRepository;
 import domain.model.PermissionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import presentation.view.LanguageManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.List;
 
@@ -29,7 +33,6 @@ public class StudyMaterialService {
         this.permissionService = permissionService;
     }
 
-    // CREATE_RESOURCE
     public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category, Set<Tag> tags) throws IOException {
         if (!permissionService.hasPermission(uploader, PermissionType.CREATE_RESOURCE)) {
             throw new SecurityException("You do not have permission to upload study materials.");
@@ -61,9 +64,65 @@ public class StudyMaterialService {
         material.setPreviewImage(preview);
         material.getTags().addAll(tags);
 
+        // Save the material first to get its ID
+        StudyMaterial savedMaterial = repository.save(material);
+
+        // Generate and save translations for name and description
+        try {
+            // Create a translation repository instance
+            StudyMaterialTranslationRepository translationRepo = new StudyMaterialTranslationRepository();
+
+            // Create translation service
+            TranslationService translationService = new TranslationService();
+
+            // Get the current language the user is using
+            String sourceLanguage = LanguageManager.getInstance().getCurrentLanguage();
+            if (sourceLanguage == null || sourceLanguage.isEmpty()) {
+                sourceLanguage = "en"; // Default to English if not set
+            }
+
+            // Use the languages from your LanguageSelection component
+            String[] targetLanguages = {"en", "fi", "ru", "zh"};
+
+            Map<String, String> nameTranslations = new HashMap<>();
+            Map<String, String> descriptionTranslations = new HashMap<>();
+
+            // Add original content in the source language
+            nameTranslations.put(sourceLanguage, name);
+            descriptionTranslations.put(sourceLanguage, description);
+
+            // Generate translations for each target language
+            for (String targetLanguage : targetLanguages) {
+                // Skip the source language as we already have that content
+                if (!targetLanguage.equals(sourceLanguage)) {
+                    try {
+                        String translatedName = translationService.translate(name, sourceLanguage, targetLanguage);
+
+                        String translatedDescription = "";
+                        if (description != null && !description.isEmpty()) {
+                            translatedDescription = translationService.translate(description, sourceLanguage, targetLanguage);
+                        }
+
+                        nameTranslations.put(targetLanguage, translatedName);
+                        descriptionTranslations.put(targetLanguage, translatedDescription);
+                    } catch (Exception e) {
+                        logger.error("Failed to translate study material from {} to {}: {}",
+                                sourceLanguage, targetLanguage, e.getMessage());
+                    }
+                }
+            }
+
+            // Save all translations using the existing repository method
+            translationRepo.saveTranslations(savedMaterial.getMaterialId(), nameTranslations, descriptionTranslations);
+            logger.info("Saved translations for material: {}", savedMaterial.getName());
+        } catch (Exception e) {
+            logger.error("Failed to generate and save translations for study material", e);
+        }
+
         logger.info("User {} uploaded new study material: {}", uploader.getEmail(), name);
-        return repository.save(material);
+        return savedMaterial;
     }
+
 
     // UPDATE_OWN_RESOURCE
     public StudyMaterial updateMaterial(User user, StudyMaterial updatedMaterial) {
