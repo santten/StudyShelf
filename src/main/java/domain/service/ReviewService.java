@@ -110,7 +110,7 @@ public class ReviewService {
 
     public void deleteReview(User user, Review review) {
         // DELETE_OWN_REVIEW
-        boolean isOwner = review.getUser().equals(user);
+        boolean isOwner = review.getUser().getUserId() == user.getUserId();
         boolean canDeleteOwn = isOwner && permissionService.hasPermission(user, PermissionType.DELETE_OWN_REVIEW);
         // DELETE_ANY_REVIEW
         boolean canDeleteAny = permissionService.hasPermission(user, PermissionType.DELETE_ANY_REVIEW);
@@ -135,5 +135,13 @@ public class ReviewService {
 
         // If no translation found, return original text
         return translatedText != null ? translatedText : review.getReviewText();
+    }
+
+    public String getOriginalReviewText(Review review) {
+        if (review == null) {
+            return "";
+        }
+
+        return review.getReviewText();
     }
 }
