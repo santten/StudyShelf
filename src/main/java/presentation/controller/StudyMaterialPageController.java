@@ -6,6 +6,8 @@ import infrastructure.repository.RatingRepository;
 import infrastructure.repository.ReviewRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.StudyMaterialTranslationRepository;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,6 +22,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
+import presentation.components.LanguageButton;
 import presentation.components.Stars;
 import presentation.components.TagButton;
 import presentation.components.TextLabels;
@@ -65,6 +68,8 @@ public class StudyMaterialPageController {
     private final ReviewService reviewSer = new ReviewService(new ReviewRepository(), new PermissionService());
     private final StudyMaterialService materialServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
 
+    private final BooleanProperty isTranslated;
+
     ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
     public StudyMaterialPageController(StudyMaterial material) {
@@ -78,8 +83,19 @@ public class StudyMaterialPageController {
         this.curRatingNum = 0;
         this.curRatingText = "";
 
+        this.isTranslated = new SimpleBooleanProperty(false);
+
         refresh();
     }
+
+    public boolean isTranslated() {
+        return isTranslated.get();
+    }
+
+    public void setTranslated(boolean translated) {
+        isTranslated.set(translated);
+    }
+
 
     private double getAvgRating() {
         return this.avgRating;
@@ -114,7 +130,6 @@ public class StudyMaterialPageController {
         RatingRepository ratingRepo = new RatingRepository();
         this.ratings = ratingRepo.findByMaterial(material);
         this.avgRating = ratingServ.getAverageRating(getMaterial());
-        ;
     }
 
     private StudyMaterial getMaterial() {
@@ -276,10 +291,9 @@ public class StudyMaterialPageController {
         Map<String, String> nameTranslations = translationRepository.getNameTranslations(s.getMaterialId());
         Map<String, String> descTranslations = translationRepository.getDescriptionTranslations(s.getMaterialId());
 
-
-        String displayName = nameTranslations.containsKey(currentLanguage) ?
+        String displayName = nameTranslations.containsKey(currentLanguage) && isTranslated() ?
                 nameTranslations.get(currentLanguage) : s.getName();
-        String displayDescription = descTranslations.containsKey(currentLanguage) ?
+        String displayDescription = descTranslations.containsKey(currentLanguage) && isTranslated() ?
                 descTranslations.get(currentLanguage) : s.getDescription();
 
         VBox base = new VBox();
@@ -411,7 +425,6 @@ public class StudyMaterialPageController {
             fileDescContainer.getChildren().add(fileDesc);
         }
 
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
         String formattedTimestamp = s.getTimestamp().format(formatter);
 
@@ -430,7 +443,8 @@ public class StudyMaterialPageController {
         tags.forEach(tag -> tagContainer.getChildren().addAll(TagButton.getBtn(tag), new Text("  ")));
 
         setUpApprovalStatus();
-        left.getChildren().addAll(fileTitleContainer, uploaderLabels, tagContainer, fileDetails, downloadBtn,
+        left.getChildren().addAll(fileTitleContainer, uploaderLabels, tagContainer,
+                fileDetails, downloadBtn,
                 course, fileDescContainer, getPendingStatusVBox());
         left.setMinWidth(580);
         left.setMaxWidth(580);
@@ -467,6 +481,26 @@ public class StudyMaterialPageController {
 
         getFileContainer().setSpacing(20);
         getFileContainer().getChildren().addAll(left, right);
+    }
+
+    public Button createTranslateButton(){
+        Button translateButton = new Button(String.format(isTranslated() ? rb.getString("showOriginal") : rb.getString("translateTo")));
+
+        translateButton.setOnAction(e -> {
+            setTranslated(!isTranslated());
+            translateButton.setText(String.format(isTranslated() ? rb.getString("showOriginal") : rb.getString("translateTo")));
+        });
+
+        String imagePath = "/images/google-translate-icon.png";
+        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(LanguageButton.class.getResourceAsStream(imagePath))));
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+
+        translateButton.setGraphic(imageView);
+        translateButton.getStyleClass().addAll("buttonEmpty", "primary-light");
+        translateButton.setMaxHeight(18);
+
+        return translateButton;
     }
 
     /* making reviews and ratings */
@@ -597,7 +631,8 @@ public class StudyMaterialPageController {
             return;
         }
 
-        getReviewContainer().getChildren().add(makeReviewTitleHBox());
+        getReviewContainer().getChildren().addAll(makeReviewTitleHBox(), createTranslateButton());
+
 
         List<Rating> leftOverRatings = new ArrayList<>(ratings);
 
@@ -636,7 +671,7 @@ public class StudyMaterialPageController {
     }
 
     private Node reviewCard(Rating rating, Review review) {
-        String commentText = (review != null) ? reviewSer.getTranslatedReviewText(review) : "";
+        String commentText = (review != null) ? reviewSer.getOriginalReviewText(review) : "";
 
         VBox base = new VBox();
         base.setSpacing(10);
@@ -655,6 +690,11 @@ public class StudyMaterialPageController {
 
         Text comment = new Text(commentText);
         comment.setWrappingWidth(320);
+
+        isTranslated.addListener((observable, oldValue, newValue) -> {
+            String updatedText = newValue ? reviewSer.getTranslatedReviewText(review) : reviewSer.getOriginalReviewText(review);
+            comment.setText(updatedText);
+        });
 
         base.getChildren().addAll(reviewerHBox, stars, comment);
         base.getStyleClass().add("reviewCard");
