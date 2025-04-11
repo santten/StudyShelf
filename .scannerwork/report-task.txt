@@ -1,0 +1,6 @@
+projectKey=StudyShelf
+serverUrl=http://localhost:9000
+serverVersion=25.4.0.105899
+dashboardUrl=http://localhost:9000/dashboard?id=StudyShelf
+ceTaskId=ec89e52a-7dee-4908-b9fd-e3b37d2d5f7f
+ceTaskUrl=http://localhost:9000/api/ce/task?id=ec89e52a-7dee-4908-b9fd-e3b37d2d5f7f

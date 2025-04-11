@@ -26,11 +26,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static presentation.view.Screen.SCREEN_LOGIN;
 
 public class SignupController {
     SceneManager sm = SceneManager.getInstance();
     ResourceBundle rb = LanguageManager.getInstance().getBundle();
+    private static final Logger logger = LoggerFactory.getLogger(SignupController.class);
 
     private TextField emailField;
     private TextField firstNameField;
@@ -218,14 +222,13 @@ public class SignupController {
             UserRepository userRepository = new UserRepository();
             User savedUser = userRepository.save(newUser);
 
-            System.out.println("[DB] User saved successfully - ID: " + savedUser.getUserId());
+            logger.info("User saved successfully - ID: {}", savedUser.getUserId());
             System.out.println("[DB] User details: " + firstName + " " + lastName + " (" + email + ")");
 
             sm.setScreen(SCREEN_LOGIN);
 
         } catch (Exception e) {
-            System.out.println("[DB] Error in user creation: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error in user creation: {}", e.getMessage(), e);
         }
     }
 }
