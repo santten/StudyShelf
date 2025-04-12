@@ -684,7 +684,7 @@ public class StudyMaterialPageController {
         comment.setWrappingWidth(320);
 
         isTranslated.addListener((observable, oldValue, newValue) -> {
-            String updatedText = newValue ? reviewSer.getTranslatedReviewText(review) : reviewSer.getOriginalReviewText(review);
+            String updatedText = Boolean.TRUE.equals(newValue) ? reviewSer.getTranslatedReviewText(review) : reviewSer.getOriginalReviewText(review);
             comment.setText(updatedText);
         });
 

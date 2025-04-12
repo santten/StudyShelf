@@ -189,14 +189,14 @@ public class SceneManager {
                     try {
                         base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/courses.fxml"))));
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw new IllegalStateException(e);
                     }
                     break;
                 case SCREEN_FIND:
                     try {
                         base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/search.fxml"))));
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw new IllegalStateException(e);
                     }
                     break;
                 case SCREEN_PROFILE:

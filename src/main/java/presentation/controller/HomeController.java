@@ -21,12 +21,10 @@ import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static domain.model.RoleType.STUDENT;
-import static presentation.view.Screen.SCREEN_COURSES;
 import static presentation.view.Screen.SCREEN_FIND;
 
 // HomeController is a controller class which controls the home page of the application.

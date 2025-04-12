@@ -85,7 +85,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>dependency/</classpathPrefix>
-                            <mainClass>Launcher</mainClass>
+                            <mainClass>launcher.Launcher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -300,7 +300,7 @@ public class UploadController {
                 choiceCategory.getValue() == null;
     }
 
-    private Button getBtnGetFile(FileChooser fileChooser, Text fileTitle, Button btn_uploadMaterial) {
+    private Button getBtnGetFile(FileChooser fileChooser, Text fileTitle, Button btnUploadMaterial) {
         Button btnGetFile = new Button(rb.getString("chooseFile"));
         btnGetFile.setOnAction(e -> {
             File selectedFile = fileChooser.showOpenDialog(null);
@@ -311,7 +311,7 @@ public class UploadController {
             } else {
                 setFile(null);
             }
-            btn_uploadMaterial.setDisable(checkUploadButtonCondition());
+            btnUploadMaterial.setDisable(checkUploadButtonCondition());
         });
         return btnGetFile;
     }

@@ -25,7 +25,8 @@ import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
 import static presentation.controller.SubScreen.*;
-import static presentation.view.Screen.*;
+import static presentation.view.Screen.SCREEN_LOGIN;
+import static presentation.view.Screen.SCREEN_UPLOAD;
 
 public class MyProfileController {
     private HBox hBoxBase;

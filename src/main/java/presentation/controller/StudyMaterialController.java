@@ -9,7 +9,6 @@ import infrastructure.repository.StudyMaterialRepository;
 import presentation.utility.CustomAlert;
 import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
-import presentation.view.SceneManager;
 
 import java.util.ResourceBundle;
 

@@ -17,7 +17,6 @@ import presentation.utility.StyleClasses;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -28,8 +27,8 @@ public class LoginController {
     SceneManager sm = SceneManager.getInstance();
 
     private Text logo;
-    private Button btn_login;
-    public Hyperlink link_toSignup;
+    private Button btnLogin;
+    private Hyperlink linkToSignup;
     private Label errorLabel;
     private TextField emailField;
     private PasswordField passwordField;
@@ -64,12 +63,12 @@ public class LoginController {
         errorLabel = new Label();
         errorLabel.getStyleClass().add(StyleClasses.ERROR);
 
-        btn_login = new Button(rb.getString("login"));
-        btn_login.getStyleClass().add(StyleClasses.BTN_S);
+        btnLogin = new Button(rb.getString("login"));
+        btnLogin.getStyleClass().add(StyleClasses.BTN_S);
 
-        link_toSignup = new Hyperlink(rb.getString("loginToSignup"));
+        linkToSignup = new Hyperlink(rb.getString("loginToSignup"));
 
-        HBox hbox = new HBox(btn_login, link_toSignup);
+        HBox hbox = new HBox(btnLogin, linkToSignup);
         hbox.setSpacing(8);
         hbox.setAlignment(Pos.CENTER_LEFT);
 
@@ -77,15 +76,15 @@ public class LoginController {
                 emailBox,
                 pwBox,
                 errorLabel,
-                btn_login,
-                link_toSignup,
+                btnLogin,
+                linkToSignup,
                 getLanguageSelection());
         vbox.setSpacing(4);
         vbox.setAlignment(Pos.CENTER);
 
-        btn_login.setOnAction((e) -> handleLogin());
+        btnLogin.setOnAction(e -> handleLogin());
 
-        link_toSignup.setOnAction((e) -> sm.setScreen(SCREEN_SIGNUP));
+        linkToSignup.setOnAction(e -> sm.setScreen(SCREEN_SIGNUP));
 
         vbox.setMaxWidth(200);
         vbox.setMaxHeight(200);
@@ -107,10 +106,10 @@ public class LoginController {
 
         logo.setText("StudyShelf");
         pwLabel.setText(rb.getString("password"));
-        btn_login.setText(rb.getString("login"));
+        btnLogin.setText(rb.getString("login"));
 
         emailLabel.setText(rb.getString("eMail"));
-        link_toSignup.setText(rb.getString("loginToSignup"));
+        linkToSignup.setText(rb.getString("loginToSignup"));
 
         errorLabel.setText("");
     }

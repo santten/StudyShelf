@@ -11,6 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import presentation.components.PasswordFieldToggle;
 import presentation.utility.GUILogger;
 import presentation.utility.StyleClasses;
@@ -21,9 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import static presentation.utility.EmailValidator.isValidEmail;
 import static presentation.view.Screen.SCREEN_LOGIN;
 
 public class SignupController {
@@ -137,7 +137,7 @@ public class SignupController {
         boolean lastNameExists = !lastNameField.getText().isEmpty();
         if (!lastNameExists) { errorLabel.setText(rb.getString("error.noLastName")); }
 
-        boolean validEmail = emailField.getText().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+        boolean validEmail = isValidEmail(emailField.getText());
         if (!validEmail){ errorLabel.setText(rb.getString("error.invalidEmail")); }
 
         boolean passwordMatch = passwordField.getText().equals(reenterPasswordField.getText());

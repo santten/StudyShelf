@@ -27,7 +27,6 @@ import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +34,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static javafx.scene.shape.FillRule.EVEN_ODD;
-import static presentation.view.Screen.SCREEN_COURSES;
 import static presentation.view.Screen.SCREEN_HOME;
 
 public class CategoryPageController {

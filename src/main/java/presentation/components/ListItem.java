@@ -15,7 +15,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
-import javafx.util.Callback;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
 import presentation.utility.StyleClasses;
@@ -119,23 +118,18 @@ public class ListItem {
 
         view.setMaxHeight(height);
 
-        view.setCellFactory(new Callback<>() {
-                                @Override
-                                public ListCell<Node> call(ListView<Node> listView) {
-                                    return new ListCell<>() {
-                                        @Override
-                                        protected void updateItem(Node item, boolean empty) {
-                                            super.updateItem(item, empty);
-                                            if (empty || item == null) {
-                                                setGraphic(null);
-                                            } else {
-                                                setGraphic(item);
-                                                setPadding(new Insets(0, 0, 0, 0));
-                                            }
-                                        }
-                                    };
-                                }
-                            });
+        view.setCellFactory(listView -> new ListCell<>() {
+            @Override
+            protected void updateItem(Node item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(item);
+                    setPadding(new Insets(0, 0, 0, 0));
+                }
+            }
+        });
 
         view.setMinHeight(height);
         view.setMaxHeight(height);
