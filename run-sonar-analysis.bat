@@ -2,10 +2,6 @@
 echo ===================================================
 echo Starting SonarQube Analysis for StudyShelf
 echo ===================================================
-@echo off
-echo ===================================================
-echo Starting SonarQube Analysis for StudyShelf
-echo ===================================================
 
 REM Set JAVA_HOME
 set JAVA_HOME=C:\Program Files\Amazon Corretto\jdk17.0.14_7
@@ -55,10 +51,23 @@ if %ERRORLEVEL% neq 0 (
 REM Run SonarQube analysis
 echo.
 echo Step 5: Running SonarQube analysis...
-REM Run SonarScanner with the token from .env
 REM Load variables from .env file
-for /F "TOKEN=*" %%A in (.env) do set %%A
-sonar-scanner -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=%SONAR_TOKEN%
+for /F "tokens=*" %%A in (.env) do set %%A
+
+REM Generate a timestamp for the version to force a new analysis
+for /f "tokens=2 delims==" %%a in ('wmic OS Get localdatetime /value') do set "dt=%%a"
+set "YY=%dt:~2,2%"
+set "MM=%dt:~4,2%"
+set "DD=%dt:~6,2%"
+set "HH=%dt:~8,2%"
+set "Min=%dt:~10,2%"
+set "Sec=%dt:~12,2%"
+set "version=1.0.%YY%%MM%%DD%.%HH%%Min%%Sec%"
+
+echo Using version: %version% to force new analysis
+
+REM Run SonarScanner with explicit parameters
+sonar-scanner -Dsonar.projectKey=studyshelf -Dsonar.projectVersion=%version% -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=%SONAR_TOKEN% -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 if %ERRORLEVEL% neq 0 (
     echo SonarQube analysis failed with error code %ERRORLEVEL%
     goto error
@@ -81,5 +90,3 @@ echo ===================================================
 echo.
 echo Press any key to close this window...
 pause > nul
-
-
