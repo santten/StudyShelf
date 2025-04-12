@@ -6,22 +6,17 @@ import domain.model.User;
 import domain.service.PasswordService;
 import infrastructure.repository.RoleRepository;
 import infrastructure.repository.UserRepository;
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import presentation.components.LanguageSelection;
 import presentation.components.PasswordFieldToggle;
+import presentation.utility.GUILogger;
+import presentation.utility.StyleClasses;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
-import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -38,15 +33,7 @@ public class SignupController {
     private PasswordField passwordField;
     private PasswordField reenterPasswordField;
     private MenuButton roleMenuButton;
-    private Button btn_signup;
-    public Hyperlink link_toLogin;
-
-    private Text logoLabel;
-    private Label emailLabel;
     private Label errorLabel;
-    private Label pwLabel;
-    private Label reEnterLabel;
-    private Label roleMenuLabel;
 
     public BorderPane initialize() {
         BorderPane bp = new BorderPane();
@@ -55,13 +42,12 @@ public class SignupController {
         vbox.getStylesheets().add(Objects.requireNonNull(SceneManager.class.getResource("/css/style.css")).toExternalForm());
 
         /* StudyShelf logo */
-        logoLabel = new Text("StudyShelf");
-        logoLabel.getStyleClass().add("error");
-        logoLabel.getStyleClass().add("title");
+        Text logoLabel = new Text("StudyShelf");
+        logoLabel.getStyleClass().addAll(StyleClasses.ERROR, StyleClasses.TITLE);
         vbox.getChildren().add(logoLabel);
 
         /* e-mail */
-        emailLabel = new Label(rb.getString("eMail"));
+        Label emailLabel = new Label(rb.getString("eMail"));
         emailField = new TextField();
         emailField.setMaxWidth(240);
         VBox emailBox = new VBox(emailLabel, emailField);
@@ -82,18 +68,18 @@ public class SignupController {
         vbox.getChildren().add(lastNameBox);
 
         /* password */
-        pwLabel = new Label(rb.getString("password"));
+        Label pwLabel = new Label(rb.getString("password"));
         passwordField = new PasswordField();
         VBox passwordBox = new VBox(pwLabel, (PasswordFieldToggle.create(passwordField, 240)));
 
-        reEnterLabel = new Label(rb.getString("passwordAgain"));
+        Label reEnterLabel = new Label(rb.getString("passwordAgain"));
         reenterPasswordField = new PasswordField();
         VBox reEnterBox = new VBox(reEnterLabel, (PasswordFieldToggle.create(reenterPasswordField, 240)));
 
         vbox.getChildren().addAll(passwordBox, reEnterBox);
 
         /* role menu */
-        roleMenuLabel = new Label(rb.getString("role"));
+        Label roleMenuLabel = new Label(rb.getString("role"));
         roleMenuButton = new MenuButton(rb.getString("rolePrompt"));
         roleMenuButton.getItems().addAll(
                 new MenuItem(rb.getString("student")),
@@ -108,35 +94,24 @@ public class SignupController {
 
         /* error label space */
         errorLabel = new Label();
-        errorLabel.getStyleClass().add("error");
+        errorLabel.getStyleClass().add(StyleClasses.ERROR);
         vbox.getChildren().add(errorLabel);
 
         /* sign up*/
-        btn_signup = new Button(rb.getString("signup"));
-        btn_signup.getStyleClass().add("btnS");
-        btn_signup.setOnAction(e -> {
+        Button btnSignup = new Button(rb.getString("signup"));
+        btnSignup.getStyleClass().add(StyleClasses.BTN_S);
+        btnSignup.setOnAction(e -> {
             if (validateForm()) {
                 handleSignup();
-                try {
-                    sm.setScreen(SCREEN_LOGIN);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
-        vbox.getChildren().add(btn_signup);
-
-        /* link to login */
-        link_toLogin = new Hyperlink(rb.getString("signupToLogin"));
-        link_toLogin.setOnAction(e -> {
-            try {
                 sm.setScreen(SCREEN_LOGIN);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
             }
         });
+        vbox.getChildren().add(btnSignup);
 
-        vbox.getChildren().addAll(link_toLogin);
+        Hyperlink linkToLogin = new Hyperlink(rb.getString("signupToLogin"));
+        linkToLogin.setOnAction(e -> sm.setScreen(SCREEN_LOGIN));
+
+        vbox.getChildren().addAll(linkToLogin);
         vbox.setSpacing(4);
         vbox.setAlignment(Pos.CENTER);
 
@@ -188,28 +163,18 @@ public class SignupController {
 
             String selectedRole = roleMapping.get(displayedRole);
             if (selectedRole == null) {
-                System.out.println("[DB] Invalid role selected: " + displayedRole);
+                GUILogger.warn("Invalid role selected: " + displayedRole);
                 return;
             }
-
-            System.out.println("[DB] Starting user creation transaction");
 
             RoleType roleType;
-            try {
-                roleType = RoleType.valueOf(selectedRole.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                System.out.println("[DB] Invalid role selected: " + selectedRole);
-                return;
-            }
+            roleType = RoleType.valueOf(selectedRole.toUpperCase());
 
             RoleRepository roleRepository = new RoleRepository();
             Role userRole = roleRepository.findByName(roleType);
 
-            System.out.println("[DB] Checking role: " + selectedRole);
-
             if (userRole == null) {
                 userRole = roleRepository.save(new Role(roleType));
-                System.out.println("[DB] Created new role: " + selectedRole);
             }
 
             PasswordService passwordService = new PasswordService();
@@ -218,14 +183,13 @@ public class SignupController {
             UserRepository userRepository = new UserRepository();
             User savedUser = userRepository.save(newUser);
 
-            System.out.println("[DB] User saved successfully - ID: " + savedUser.getUserId());
-            System.out.println("[DB] User details: " + firstName + " " + lastName + " (" + email + ")");
+            GUILogger.warn("User saved successfully - ID: " + savedUser.getUserId());
+            GUILogger.warn("User details: " + firstName + " " + lastName + " (" + email + ")");
 
             sm.setScreen(SCREEN_LOGIN);
 
         } catch (Exception e) {
-            System.out.println("[DB] Error in user creation: " + e.getMessage());
-            e.printStackTrace();
+            GUILogger.warn("Error in user creation: " + e.getMessage());
         }
     }
 }

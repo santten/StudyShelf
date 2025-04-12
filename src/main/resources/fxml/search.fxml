@@ -29,9 +29,9 @@
       </Button>
    </HBox>
    <HBox alignment="CENTER_LEFT" spacing="10">
-      <CheckBox fx:id="checkbox_includeCategories" selected="true" text="Courses" />
-      <CheckBox fx:id="checkbox_includeMaterials" selected="true" text="Materials" />
-      <CheckBox fx:id="checkbox_includeTags" selected="true" text="Tags" />
+      <CheckBox fx:id="checkboxIncludeCategories" selected="true" text="Courses" />
+      <CheckBox fx:id="checkboxIncludeMaterials" selected="true" text="Materials" />
+      <CheckBox fx:id="checkboxIncludeTags" selected="true" text="Tags" />
       <VBox.margin>
          <Insets />
       </VBox.margin>

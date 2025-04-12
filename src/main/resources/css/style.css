@@ -363,12 +363,6 @@
     -fx-fill: -primary-light;
 }
 
-.iconLightM {
-    -fx-scale-x: 1.5;
-    -fx-scale-y: 1.5;
-    -fx-fill: -light;
-}
-
 
 .tag {
     -fx-padding: 4;
@@ -472,4 +466,23 @@
     -fx-border-width: 0 0 2px 0;
     -fx-border-color: transparent transparent -light-darker transparent;
     -fx-padding: 2;
+}
+
+.profileLink {
+    -fx-text-fill: -light;
+    -fx-padding: 0;
+    -fx-underline: false;
+}
+
+.profileLink:hover, .profileLink:focused {
+    -fx-text-fill: -primary-light;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.menuBox {
+    -fx-background-color: -primary-dark;
+    -fx-background-radius: 8;
+    -fx-padding: 10;
+    -fx-min-width: 150;
 }

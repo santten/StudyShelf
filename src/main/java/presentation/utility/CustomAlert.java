@@ -10,6 +10,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class CustomAlert {
+    private CustomAlert(){}
+
     public static void show(javafx.scene.control.Alert.AlertType alertType, String title, String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(alertType);
         alert.setTitle(title);
@@ -31,7 +33,7 @@ public class CustomAlert {
         text.setWrappingWidth(400);
 
         Text label = new Text(heading);
-        label.getStyleClass().add("heading4");
+        label.getStyleClass().add(StyleClasses.HEADING4);
 
         VBox vbox = new VBox(label, text);
         vbox.setPadding(new Insets(10));

@@ -8,16 +8,14 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import presentation.components.LanguageSelection;
 import presentation.components.PasswordFieldToggle;
-import presentation.utility.GUILogger;
+import presentation.utility.StyleClasses;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
-
 
 import java.io.IOException;
 import java.util.Locale;
@@ -48,8 +46,7 @@ public class LoginController {
         vbox.getStylesheets().add(Objects.requireNonNull(SceneManager.class.getResource("/css/style.css")).toExternalForm());
 
         logo = new Text("StudyShelf");
-        logo.getStyleClass().add("error");
-        logo.getStyleClass().add("title");
+        logo.getStyleClass().addAll(StyleClasses.ERROR, StyleClasses.TITLE);
 
         emailLabel = new Label(rb.getString("eMail"));
 
@@ -65,10 +62,10 @@ public class LoginController {
         VBox pwBox = new VBox(pwLabel, (PasswordFieldToggle.create(passwordField, 240)));
 
         errorLabel = new Label();
-        errorLabel.getStyleClass().add("error");
+        errorLabel.getStyleClass().add(StyleClasses.ERROR);
 
         btn_login = new Button(rb.getString("login"));
-        btn_login.getStyleClass().add("btnS");
+        btn_login.getStyleClass().add(StyleClasses.BTN_S);
 
         link_toSignup = new Hyperlink(rb.getString("loginToSignup"));
 
@@ -86,17 +83,9 @@ public class LoginController {
         vbox.setSpacing(4);
         vbox.setAlignment(Pos.CENTER);
 
-        btn_login.setOnAction((e) -> {
-            handleLogin();
-        });
+        btn_login.setOnAction((e) -> handleLogin());
 
-        link_toSignup.setOnAction((e) -> {
-            try {
-                sm.setScreen(SCREEN_SIGNUP);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
+        link_toSignup.setOnAction((e) -> sm.setScreen(SCREEN_SIGNUP));
 
         vbox.setMaxWidth(200);
         vbox.setMaxHeight(200);
@@ -138,12 +127,8 @@ public class LoginController {
         if (user != null) {
             PasswordService passwordService = new PasswordService();
             if (passwordService.checkPassword(password, user.getPassword())) {
-                try {
-                    Session.getInstance().setCurrentUser(user);
-                    sm.login();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                Session.getInstance().setCurrentUser(user);
+                sm.login();
             } else {
                 errorLabel.setText(rb.getString("error.wrongPassword"));
                 errorLabel.setVisible(true);

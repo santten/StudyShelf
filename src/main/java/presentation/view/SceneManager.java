@@ -21,10 +21,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import presentation.controller.CategoryPageController;
 import presentation.components.ListItem;
 import presentation.controller.*;
 import presentation.utility.GUILogger;
+import presentation.utility.StyleClasses;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,41 +34,41 @@ import java.util.Objects;
 import static presentation.view.Screen.*;
 
 public class SceneManager {
-    private static SceneManager instance;
     private BorderPane current;
     private GridPane header;
     private HBox footer;
     private boolean logged;
     private Stage primaryStage;
 
-    public static SceneManager getInstance() {
-        if (instance == null){
-            instance = new SceneManager();
-
-            try {
-                instance.initializeComponents();
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to load FXML components", e);
-            }
-        }
-        return instance;
+    private SceneManager(){
+        initializeComponents();
     }
 
-    private void initializeComponents() throws IOException {
-        setPrimaryStage(new Stage());
-        setScreen(SCREEN_LOGIN);
-        instance.header = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/header.fxml")));
-        instance.footer = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/footer.fxml")));
-        instance.logged = false;
+    private static final class SceneManagerHolder {
+        private static final SceneManager instance = new SceneManager();
+    }
+
+    public static SceneManager getInstance() {
+        return SceneManagerHolder.instance;
+    }
+
+    private void initializeComponents() {
+        try {
+            this.primaryStage = new Stage();
+            this.primaryStage.setResizable(false);
+            this.header = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/header.fxml")));
+            this.footer = FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/footer.fxml")));
+            this.logged = false;
+            LoginController lPage = new LoginController();
+            this.current = lPage.initialize();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to initialize screen", e);
+        }
     }
 
     public void displayCategory(int id) {
         if (CurrentUserManager.get() == null){
-            try {
-                setScreen(SCREEN_LOGIN);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            setScreen(SCREEN_LOGIN);
             return;
         }
 
@@ -85,11 +85,7 @@ public class SceneManager {
 
     public void displayMaterial(int id) {
         if (CurrentUserManager.get() == null){
-            try {
-                setScreen(SCREEN_LOGIN);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            setScreen(SCREEN_LOGIN);
             return;
         }
 
@@ -108,11 +104,7 @@ public class SceneManager {
 
     public void displayProfile(int id) {
         if (CurrentUserManager.get() == null){
-            try {
-                setScreen(SCREEN_LOGIN);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            setScreen(SCREEN_LOGIN);
             return;
         }
 
@@ -134,23 +126,17 @@ public class SceneManager {
         vbox.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/style.css")).toExternalForm());
 
         Text title = new Text(":(");
-        title.getStyleClass().add("heading3");
+        title.getStyleClass().add(StyleClasses.HEADING3);
 
         Text label = new Text(errorText);
 
         Hyperlink link = new Hyperlink(redirectLabel);
-        link.setOnAction(event -> {
-            try {
-                setScreen(redirectScreen);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        link.setOnAction(event -> setScreen(redirectScreen));
 
         vbox.setPadding(new Insets(20, 20, 20, 20));
 
         vbox.getChildren().addAll(title, label, link);
-        instance.current.setCenter(vbox);
+        SceneManagerHolder.instance.current.setCenter(vbox);
     }
 
     public void showMaterialsWithTag(int tagId) {
@@ -163,7 +149,7 @@ public class SceneManager {
         vbox.setSpacing(12);
 
         Label title = new Label("Materials tagged \"" + tag.getTagName() + "\"");
-        title.getStyleClass().addAll("label3", "primary-light");
+        title.getStyleClass().addAll(StyleClasses.LABEL3, StyleClasses.PRIMARY_LIGHT);
         vbox.getChildren().add(title);
 
         StudyMaterialRepository sRepo = new StudyMaterialRepository();
@@ -176,23 +162,23 @@ public class SceneManager {
             vbox.getChildren().add(new Text("No materials exist with this tag yet!"));
         }
 
-        instance.current.setCenter(vbox);
+        SceneManagerHolder.instance.current.setCenter(vbox);
     }
 
-    public void setScreen(Screen screen) throws IOException {
+    public void setScreen(Screen screen) {
         GUILogger.info("Setting screen: " + screen + " called from: " + Thread.currentThread().getStackTrace()[2]);
         if (screen == SCREEN_SIGNUP){
             SignupController sPage = new SignupController();
-            instance.current = sPage.initialize();
+            SceneManagerHolder.instance.current = sPage.initialize();
         }
-        else if (!instance.logged || screen == SCREEN_LOGIN) {
+        else if (!SceneManagerHolder.instance.logged || screen == SCREEN_LOGIN) {
             LoginController lPage = new LoginController();
-            instance.current = lPage.initialize();
+            SceneManagerHolder.instance.current = lPage.initialize();
         } else {
             BorderPane bp = new BorderPane();
-            bp.setTop(instance.header);
-            bp.setBottom(instance.footer);
-            instance.current = bp;
+            bp.setTop(SceneManagerHolder.instance.header);
+            bp.setBottom(SceneManagerHolder.instance.footer);
+            SceneManagerHolder.instance.current = bp;
 
             ScrollPane base = new ScrollPane();
             base.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -200,10 +186,18 @@ public class SceneManager {
 
             switch (screen) {
                 case SCREEN_COURSES:
-                    base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/courses.fxml"))));
+                    try {
+                        base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/courses.fxml"))));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case SCREEN_FIND:
-                    base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/search.fxml"))));
+                    try {
+                        base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/search.fxml"))));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case SCREEN_PROFILE:
                     MyProfileController pPage = new MyProfileController();
@@ -214,46 +208,41 @@ public class SceneManager {
                     uPage.initialize(base);
                     break;
                 default:
-                    base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/home.fxml"))));
+                    try {
+                        base.setContent(FXMLLoader.load(Objects.requireNonNull(SceneManager.class.getResource("/fxml/home.fxml"))));
+                    } catch (IOException e) {
+                        throw new IllegalStateException(e);
+                    }
                     break;
             }
 
-            instance.current.setCenter(base);
+            SceneManagerHolder.instance.current.setCenter(base);
         }
 
         GUILogger.info("Displaying " + screen);
 
         primaryStage.setTitle("StudyShelf");
-        primaryStage.setScene(new Scene(instance.current, 800, 600));
+        primaryStage.setScene(new Scene(SceneManagerHolder.instance.current, 800, 600));
         primaryStage.show();
     }
 
     public void setCenter(Node node){
-        instance.current.setCenter(node);
+        SceneManagerHolder.instance.current.setCenter(node);
     }
 
-    public void setPrimaryStage(Stage primaryStage){
-        primaryStage.setResizable(false);
-        instance.primaryStage = primaryStage;
-    }
-
-    public void login() throws IOException {
-        if (instance.logged) {
+    public void login() {
+        if (SceneManagerHolder.instance.logged) {
             GUILogger.warn("User is already logged in");
         } else {
-            instance.logged = true;
-            instance.setScreen(SCREEN_HOME);
+            SceneManagerHolder.instance.logged = true;
+            SceneManagerHolder.instance.setScreen(SCREEN_HOME);
         }
     }
 
     public void logout() {
-        if (instance.logged){
-            instance.logged = false;
-            try {
-                setScreen(SCREEN_LOGIN);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        if (SceneManagerHolder.instance.logged){
+            SceneManagerHolder.instance.logged = false;
+            setScreen(SCREEN_LOGIN);
         } else {
             GUILogger.warn("User is already logged out");
         }
