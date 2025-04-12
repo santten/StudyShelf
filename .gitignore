@@ -42,3 +42,5 @@ sonar-project.properties
 .scannerwork/
 
 .env
+.scannerwork/
+.sonar/
