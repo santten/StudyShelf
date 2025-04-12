@@ -3,8 +3,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-.scannerwork/
-
 ### IntelliJ IDEA ###
 .idea
 
@@ -41,3 +39,4 @@ src/main/resources/META-INF/persistence.xml
 tokens/.idea/
 
 .env
+.scannerwork/
