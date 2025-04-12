@@ -223,8 +223,8 @@ public class SignupController {
             User savedUser = userRepository.save(newUser);
 
             logger.info("User saved successfully - ID: {}", savedUser.getUserId());
-            System.out.println("[DB] User details: " + firstName + " " + lastName + " (" + email + ")");
-
+            logger.debug("User signup details: {} {}", firstName, lastName);
+            logger.debug("User email: {}", email);
             sm.setScreen(SCREEN_LOGIN);
 
         } catch (Exception e) {
