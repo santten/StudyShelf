@@ -39,3 +39,4 @@ src/main/resources/META-INF/persistence.xml
 tokens/.idea/
 
 .env
+.scannerwork/
