@@ -483,6 +483,11 @@ public class StudyMaterialPageController {
         getFileContainer().getChildren().addAll(left, right);
     }
 
+    public class AppConfig {
+        private AppConfig() {}
+        public static final String IMAGE_TRANSLATE_ICON = "/images/google-translate-icon.png";
+    }
+
     public Button createTranslateButton(){
         Button translateButton = new Button(String.format(isTranslated() ? rb.getString("showOriginal") : rb.getString("translateTo")));
 
@@ -491,7 +496,7 @@ public class StudyMaterialPageController {
             translateButton.setText(String.format(isTranslated() ? rb.getString("showOriginal") : rb.getString("translateTo")));
         });
 
-        String imagePath = "/images/google-translate-icon.png";
+        String imagePath = AppConfig.IMAGE_TRANSLATE_ICON;
         ImageView imageView = new ImageView(new Image(Objects.requireNonNull(LanguageButton.class.getResourceAsStream(imagePath))));
         imageView.setFitWidth(20);
         imageView.setFitHeight(20);
