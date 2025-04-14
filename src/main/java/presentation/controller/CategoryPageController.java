@@ -20,13 +20,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
-import presentation.view.CurrentUserManager;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
+import presentation.utility.StyleClasses;
+import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +34,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static javafx.scene.shape.FillRule.EVEN_ODD;
-import static presentation.view.Screen.SCREEN_COURSES;
 import static presentation.view.Screen.SCREEN_HOME;
 
 public class CategoryPageController {
@@ -48,7 +47,7 @@ public class CategoryPageController {
 
     private final HBox titleLabelHBox;
 
-    public ResourceBundle rb = LanguageManager.getInstance().getBundle();
+    private final ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
     public CategoryPageController() {
         this.pendingMaterials = new ArrayList<>();
@@ -100,22 +99,22 @@ public class CategoryPageController {
         vbox.setPadding(new Insets(20, 20, 20, 20));
 
         Text title = new Text(c.getCategoryName());
-        title.getStyleClass().addAll("heading3", "secondary-light");
+        title.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.SECONDARY_LIGHT);
         getTitleLabelHBox().getChildren().add(title);
 
         Text author = new Text(String.format(rb.getString("courseBy"), c.getCreator().getFullName()));
         VBox header = new VBox();
 
         Button addMaterialButton = new Button();
-        addMaterialButton.getStyleClass().add("buttonGreenBase");
+        addMaterialButton.getStyleClass().add(StyleClasses.BUTTON_GREEN_BASE);
 
         SVGPath addSVG = new SVGPath();
         addSVG.setFillRule(EVEN_ODD);
-        addSVG.setContent(SVGContents.create());
-        addSVG.getStyleClass().addAll("light");
+        addSVG.setContent(SVGContents.CREATE);
+        addSVG.getStyleClass().addAll(StyleClasses.LIGHT);
 
         Text addText = new Text(rb.getString("addMaterialToThisCourse"));
-        addText.getStyleClass().addAll("heading5", "light");
+        addText.getStyleClass().addAll(StyleClasses.HEADING5, StyleClasses.LIGHT);
 
         addMaterialButton.setOnAction(e -> {
             ScrollPane scrollPane = new ScrollPane();
@@ -136,29 +135,24 @@ public class CategoryPageController {
 
         if (isEditable) {
             Button deleteBtn = new Button();
-            deleteBtn.getStyleClass().add("buttonEmpty");
+            deleteBtn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
             SVGPath svgDelete = new SVGPath();
-            svgDelete.setContent(SVGContents.delete());
-            svgDelete.getStyleClass().add("error");
+            svgDelete.setContent(SVGContents.DELETE);
+            svgDelete.getStyleClass().add(StyleClasses.ERROR);
             SVGContents.setScale(svgDelete, 1.4);
             deleteBtn.setGraphic(svgDelete);
 
             deleteBtn.setOnAction(e3 -> {
                 if (CategoryController.deleteCategory(c)) {
-                    try {
-                        SceneManager.getInstance().setScreen(SCREEN_HOME);
-                    } catch (IOException e) {
-                        SceneManager.getInstance().displayErrorPage(rb.getString("error.vague"), SCREEN_COURSES, rb.getString("redirectAllCourses"));
-                        throw new RuntimeException(e);
-                    }
+                    SceneManager.getInstance().setScreen(SCREEN_HOME);
                 }
             });
 
             Button editTitle = new Button();
-            editTitle.getStyleClass().add("buttonEmpty");
+            editTitle.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
             SVGPath svgEdit = new SVGPath();
-            svgEdit.setContent(SVGContents.edit());
-            svgEdit.getStyleClass().add("secondary-light");
+            svgEdit.setContent(SVGContents.EDIT);
+            svgEdit.getStyleClass().add(StyleClasses.SECONDARY_LIGHT);
             SVGContents.setScale(svgEdit, 1.4);
             editTitle.setGraphic(svgEdit);
 
@@ -169,10 +163,10 @@ public class CategoryPageController {
                 titleArea.setMinWidth(540);
 
                 Button saveTitle = new Button();
-                saveTitle.getStyleClass().add("buttonEmpty");
+                saveTitle.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
                 SVGPath svgSave = new SVGPath();
-                svgSave.setContent(SVGContents.save());
-                svgSave.getStyleClass().add("secondary-light");
+                svgSave.setContent(SVGContents.SAVE);
+                svgSave.getStyleClass().add(StyleClasses.SECONDARY_LIGHT);
                 SVGContents.setScale(svgSave, 1.4);
                 saveTitle.setGraphic(svgSave);
 
@@ -209,8 +203,7 @@ public class CategoryPageController {
 
         if (!getOwnerMaterials().isEmpty()) {
             Text text = new Text(String.format(rb.getString("materialsFromCourseCreator"), c.getCreator().getFullName()));
-            text.getStyleClass().add("heading4");
-            text.getStyleClass().add("primary");
+            text.getStyleClass().addAll(StyleClasses.HEADING4, StyleClasses.PRIMARY);
 
             vbox.getChildren().addAll(
                     text,
@@ -234,8 +227,7 @@ public class CategoryPageController {
         GUILogger.info(pendingMaterials.size() + " materials found pending approval.");
 
         Text pendingTitle = new Text(rb.getString("pendingMaterials"));
-        pendingTitle.getStyleClass().add("heading4");
-        pendingTitle.getStyleClass().add("warning");
+        pendingTitle.getStyleClass().addAll(StyleClasses.HEADING4, StyleClasses.WARNING);
 
         page.getChildren().add(pendingTitle);
         setMaterialAmountLabel();
@@ -257,19 +249,14 @@ public class CategoryPageController {
         });
 
         Label materialTitle = new Label(s.getName());
-        materialTitle.getStyleClass().addAll("label4", "primary-light");
+        materialTitle.getStyleClass().addAll(StyleClasses.LABEL4, StyleClasses.PRIMARY_LIGHT);
 
-        String role;
-        switch (s.getUploader().getRole().getName()) {
-            case TEACHER:
-                role = rb.getString("teacher");
-                break;
-            case ADMIN:
-                role = rb.getString("admin");
-                break;
-            default:
-                role = rb.getString("student");
-        }
+        String role = switch (s.getUploader().getRole().getName()) {
+            case TEACHER -> rb.getString("teacher");
+            case ADMIN -> rb.getString("admin");
+            default -> rb.getString("student");
+        };
+
         Text materialInfo = new Text(String.format(rb.getString("fileTypeUploadedByUserWithRole"), s.getFileType(), s.getUploader().getFullName(), role));
 
         HBox graphic = new HBox(materialTitle, materialInfo);
@@ -277,7 +264,7 @@ public class CategoryPageController {
         graphic.setAlignment(Pos.CENTER_LEFT);
 
         content.setGraphic(graphic);
-        content.getStyleClass().add("buttonEmpty");
+        content.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
 
         Button approvalButton = new Button();
         approvalButton.setOnAction(e -> {
@@ -290,10 +277,10 @@ public class CategoryPageController {
             setMaterialAmountLabel();
         });
 
-        approvalButton.getStyleClass().add("buttonEmpty");
+        approvalButton.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
         SVGPath approveSvg = new SVGPath();
-        approveSvg.setContent(SVGContents.approve());
-        approveSvg.getStyleClass().addAll("btnHover", "secondary-light");
+        approveSvg.setContent(SVGContents.APPROVE);
+        approveSvg.getStyleClass().add(StyleClasses.SECONDARY_LIGHT);
         approveSvg.setFillRule(EVEN_ODD);
         approvalButton.setGraphic(approveSvg);
         approvalButton.setMaxWidth(20);
@@ -308,10 +295,10 @@ public class CategoryPageController {
             setMaterialAmountLabel();
         });
 
-        rejectButton.getStyleClass().add("buttonEmpty");
+        rejectButton.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
         SVGPath rejectSvg = new SVGPath();
-        rejectSvg.setContent(SVGContents.reject());
-        rejectSvg.getStyleClass().addAll("btnHover", "error");
+        rejectSvg.setContent(SVGContents.REJECT);
+        rejectSvg.getStyleClass().addAll(StyleClasses.ERROR);
         rejectSvg.setFillRule(EVEN_ODD);
         rejectButton.setGraphic(rejectSvg);
         rejectButton.setMaxWidth(20);
@@ -323,7 +310,7 @@ public class CategoryPageController {
     public void setMaterialAmountLabel() {
         if (getPendingMaterials().isEmpty()) {
             pendingMaterialLabel.setText(rb.getString("noPending"));
-            pendingMaterialLabel.getStyleClass().add("primary-light");
+            pendingMaterialLabel.getStyleClass().add(StyleClasses.PRIMARY_LIGHT);
         } else {
             pendingMaterialLabel.setText(String.format(rb.getString("xMaterialsPendingApproval"), getPendingMaterials().size()));
             pendingMaterialLabel.getStyleClass().clear();
@@ -335,8 +322,7 @@ public class CategoryPageController {
 
         if (!getOtherMaterials().isEmpty()) {
             Text text = new Text(rb.getString("materialsFromOthers"));
-            text.getStyleClass().add("heading4");
-            text.getStyleClass().add("secondary");
+            text.getStyleClass().addAll(StyleClasses.HEADING4, StyleClasses.SECONDARY);
 
             getOtherMaterialsContainer().getChildren().addAll(
                     text,

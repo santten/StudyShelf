@@ -4,12 +4,11 @@ import domain.model.User;
 import domain.service.Session;
 import presentation.utility.CustomAlert;
 
-import java.io.IOException;
 import java.util.ResourceBundle;
 
-import static presentation.view.Screen.SCREEN_PROFILE;
-
 public class CurrentUserManager {
+    private CurrentUserManager(){}
+
     public static User get() {
         return Session.getInstance().getCurrentUser();
     }

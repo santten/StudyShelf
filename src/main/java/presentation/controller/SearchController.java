@@ -24,10 +24,10 @@ public class SearchController {
             new CategoryRepository(),
             new TagRepository()
     );
-    public CheckBox checkbox_includeMaterials;
-    public CheckBox checkbox_includeCategories;
-    public CheckBox checkbox_includeTags;
-    public Text searchPageTitle;
+    @FXML private CheckBox checkboxIncludeMaterials;
+    @FXML private CheckBox checkboxIncludeCategories;
+    @FXML private CheckBox checkboxIncludeTags;
+    @FXML private Text searchPageTitle;
 
     @FXML private TextField searchField;
     @FXML private Button searchButton;
@@ -40,9 +40,9 @@ public class SearchController {
     private void initialize() {
         searchPageTitle.setText(rb.getString("search"));
 
-        checkbox_includeMaterials.setText(rb.getString("materials"));;
-        checkbox_includeCategories.setText(rb.getString("courses"));;
-        checkbox_includeTags.setText(rb.getString("tags"));;
+        checkboxIncludeMaterials.setText(rb.getString("materials"));
+        checkboxIncludeCategories.setText(rb.getString("courses"));
+        checkboxIncludeTags.setText(rb.getString("tags"));
 
         searchButton.setOnAction(e -> performSearch());
         searchButton.setText(rb.getString("search"));
@@ -67,24 +67,24 @@ public class SearchController {
         });
     }
 
-    private void performSearch() {
+    @FXML private void performSearch() {
         String query = searchField.getText();
         if (!query.isEmpty()) {
             resultsListView.getItems().clear();
 
-            if (checkbox_includeMaterials.isSelected()) {
+            if (checkboxIncludeMaterials.isSelected()) {
                 List<StudyMaterial> materialResults = searchService.searchMaterials(query);
                 materialResults.forEach(material -> resultsListView.getItems().add(ListItem.listItemGraphic(material)));
             }
 
-            if (checkbox_includeCategories.isSelected()) {
+            if (checkboxIncludeCategories.isSelected()) {
                 List<Category> categoryResults = searchService.searchCategories(query);
                 categoryResults.forEach(category ->
                         resultsListView.getItems().add(ListItem.listItemGraphic(category))
                 );
             }
 
-            if (checkbox_includeTags.isSelected()) {
+            if (checkboxIncludeTags.isSelected()) {
                 List<Tag> tagResults = searchService.searchTags(query);
                 tagResults.forEach(tag ->
                         resultsListView.getItems().add(ListItem.listItemGraphic(tag))

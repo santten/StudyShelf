@@ -43,6 +43,13 @@
         <dependency> <groupId>org.springframework</groupId> <artifactId>spring-test</artifactId> <version>6.0.13</version> </dependency>
         <dependency> <groupId>org.mockito</groupId> <artifactId>mockito-junit-jupiter</artifactId> <version>5.3.1</version> <scope>test</scope> </dependency>
         <dependency> <groupId>org.junit.jupiter</groupId> <artifactId>junit-jupiter</artifactId> <version>5.8.1</version> <scope>test</scope> </dependency>
+
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.14.6</version>
+        </dependency>
+
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-translate</artifactId>
@@ -78,7 +85,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>dependency/</classpathPrefix>
-                            <mainClass>Launcher</mainClass>
+                            <mainClass>launcher.Launcher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

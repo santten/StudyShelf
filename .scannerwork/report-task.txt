@@ -2,5 +2,5 @@ projectKey=studyshelf
 serverUrl=http://localhost:9000
 serverVersion=25.4.0.105899
 dashboardUrl=http://localhost:9000/dashboard?id=studyshelf
-ceTaskId=11656957-d216-4160-b248-0ace0ef2745a
-ceTaskUrl=http://localhost:9000/api/ce/task?id=11656957-d216-4160-b248-0ace0ef2745a
+ceTaskId=743e0d76-64b9-4479-b351-e00ef63f8708
+ceTaskUrl=http://localhost:9000/api/ce/task?id=743e0d76-64b9-4479-b351-e00ef63f8708

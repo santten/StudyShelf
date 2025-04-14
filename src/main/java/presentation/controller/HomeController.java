@@ -15,17 +15,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
-import presentation.view.CurrentUserManager;
 import presentation.utility.SVGContents;
+import presentation.utility.StyleClasses;
+import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static domain.model.RoleType.STUDENT;
-import static presentation.view.Screen.SCREEN_COURSES;
 import static presentation.view.Screen.SCREEN_FIND;
 
 // HomeController is a controller class which controls the home page of the application.
@@ -57,7 +56,7 @@ public class HomeController {
         HBox header = new HBox();
 
         Text title = new Text(String.format(rb.getString("welcome"), CurrentUserManager.get().getFullName()));
-        title.getStyleClass().addAll("heading2", "error");
+        title.getStyleClass().addAll(StyleClasses.HEADING2, StyleClasses.ERROR);
         header.getChildren().add(title);
 
         mainVBoxHome.getChildren().addAll(header);
@@ -70,7 +69,7 @@ public class HomeController {
             VBox vbox = new VBox();
 
             Text title = new Text(rb.getString("pendingMaterialsInfo"));
-            title.getStyleClass().addAll("heading3", "primary");
+            title.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.PRIMARY);
 
             for (Category category : pendingCategories){
                 Button btn = new Button();
@@ -79,14 +78,13 @@ public class HomeController {
                 SVGPath svg = new SVGPath();
 
                 SceneManager sm = SceneManager.getInstance();
-                svg.setContent(SVGContents.school());
+                svg.setContent(SVGContents.SCHOOL);
                 btn.setOnAction(e -> sm.displayCategory(category.getCategoryId()));
                 SVGContents.setScale(svg, 1.2);
-                svg.getStyleClass().add("secondary");
+                svg.getStyleClass().add(StyleClasses.SECONDARY);
 
                 Label label = new Label(category.getCategoryName());
-                label.getStyleClass().add("label4");
-                label.getStyleClass().add("secondary");
+                label.getStyleClass().addAll(StyleClasses.LABEL4, StyleClasses.SECONDARY);
 
                 graphic.setSpacing(8);
                 graphic.setAlignment(Pos.CENTER_LEFT);
@@ -96,7 +94,7 @@ public class HomeController {
 
                 graphic.getChildren().addAll(svg, label, sub);
 
-                btn.getStyleClass().add("buttonEmpty");
+                btn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
                 btn.setGraphic(graphic);
 
                 vbox.getChildren().add(btn);
@@ -112,7 +110,7 @@ public class HomeController {
             VBox vbox = new VBox();
 
             Text title = new Text(rb.getString("latestMaterialsLabel"));
-            title.getStyleClass().addAll("heading3", "primary-light");
+            title.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.PRIMARY_LIGHT);
 
             vbox.getChildren().addAll(title, MaterialCard.materialCardScrollHBox(list));
             vbox.setSpacing(10);
@@ -127,7 +125,7 @@ public class HomeController {
             VBox vbox = new VBox();
 
             Text title = new Text(rb.getString("topRatedMaterialsLabel"));
-            title.getStyleClass().addAll("heading3", "primary");
+            title.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.PRIMARY);
 
             vbox.getChildren().addAll(title, MaterialCard.materialCardScrollHBox(list));
             vbox.setSpacing(10);
@@ -142,7 +140,7 @@ public class HomeController {
             VBox vbox = new VBox();
 
             Text title = new Text(rb.getString("recentlyReviewedMaterialsLabel"));
-            title.getStyleClass().addAll("heading3", "primary-light");
+            title.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.PRIMARY_LIGHT);
 
             vbox.getChildren().addAll(title, MaterialCard.materialCardScrollHBox(list));
             vbox.setSpacing(10);
@@ -155,23 +153,19 @@ public class HomeController {
         HBox searchSuggestion = new HBox();
 
         SVGPath searchSvg = new SVGPath();
-        searchSvg.setContent(SVGContents.search());
+        searchSvg.setContent(SVGContents.SEARCH);
         SVGContents.setScale(searchSvg, 1.3);
-        searchSvg.getStyleClass().add("primary");
+        searchSvg.getStyleClass().add(StyleClasses.PRIMARY);
 
         Text text = new Text(rb.getString("somethingElse"));
-        text.getStyleClass().addAll("heading3", "primary");
+        text.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.PRIMARY);
 
         Button button = new Button(rb.getString("redirectSearch"));
         button.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();
-            try {
-                sm.setScreen(SCREEN_FIND);
-            } catch (IOException ex) {
-                sm.displayErrorPage(rb.getString("error.setScreenFail"), SCREEN_COURSES, rb.getString("redirectHome"));
-            }
+            sm.setScreen(SCREEN_FIND);
         });
-        button.getStyleClass().addAll("btnS");
+        button.getStyleClass().add(StyleClasses.BTN_S);
 
         searchSuggestion.getChildren().addAll(searchSvg, text, button);
         searchSuggestion.setAlignment(Pos.CENTER_LEFT);

@@ -22,13 +22,13 @@
     -fx-fill: -primary-light;
 }
 
-.header_logo {
+.headerLogo {
     -fx-underline: false;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
 
-.header_logo .text {
+.headerLogo .text {
     -fx-font-family: "Aladin Regular";
     -fx-font-size: 32;
     -fx-fill: -light;
