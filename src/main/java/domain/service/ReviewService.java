@@ -13,6 +13,11 @@ import presentation.view.LanguageManager;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Service layer handling logic for creating, updating, retrieving,
+ * deleting and translating reviews on study materials.
+ */
 public class ReviewService {
     private static final Logger logger = LoggerFactory.getLogger(ReviewService.class);
 
@@ -28,6 +33,9 @@ public class ReviewService {
         this.translationService = new TranslationService();
     }
 
+    /**
+     * Adds a new review and automatically translates it into supported languages.
+     */
     // CREATE_REVIEW
     public Review addReview(User user, StudyMaterial material, String text) {
         if (user == null || material == null || text == null || text.trim().isEmpty()) {
@@ -59,6 +67,9 @@ public class ReviewService {
         return savedReview;
     }
 
+    /**
+     * Updates an existing review text and re-generates its translations.
+     */
     // UPDATE_OWN_REVIEW
     public Review updateReview(User user, Review review, String newText) {
         if (review == null || newText == null || newText.trim().isEmpty()) {
@@ -93,6 +104,9 @@ public class ReviewService {
         return updatedReview;
     }
 
+    /**
+     * Retrieves all reviews for a given material if user has READ permission.
+     */
     // READ_REVIEWS
     public List<Review> getReviewsForMaterial(User user, StudyMaterial material) {
         if (!permissionService.hasPermission(user, PermissionType.READ_REVIEWS)) {
@@ -101,6 +115,9 @@ public class ReviewService {
         return reviewRepository.findByStudyMaterial(material);
     }
 
+    /**
+     * Retrieves all reviews for a material without user validation.
+     */
     public List<Review> getReviewsForMaterial(StudyMaterial material) {
         if (material == null) {
             throw new IllegalArgumentException("Material cannot be null");
@@ -108,6 +125,9 @@ public class ReviewService {
         return reviewRepository.findByStudyMaterial(material);
     }
 
+    /**
+     * Deletes a review. Only the owner or an admin can delete it.
+     */
     public void deleteReview(User user, Review review) {
         // DELETE_OWN_REVIEW
         boolean isOwner = review.getUser().getUserId() == user.getUserId();
@@ -121,10 +141,16 @@ public class ReviewService {
         reviewRepository.deleteById(review.getReviewId());
     }
 
+    /**
+     * Finds review(s) written by a specific user for a material.
+     */
     public List<Review> findReviewByUserAndMaterial(User user, StudyMaterial sm) {
         return reviewRepository.findByUserAndMaterial(user, sm);
     }
 
+    /**
+     * Returns the translated text of a review for the current language.
+     */
     public String getTranslatedReviewText(Review review) {
         if (review == null) {
             return "";
@@ -137,6 +163,9 @@ public class ReviewService {
         return translatedText != null ? translatedText : review.getReviewText();
     }
 
+    /**
+     * Returns the original review text.
+     */
     public String getOriginalReviewText(Review review) {
         if (review == null) {
             return "";

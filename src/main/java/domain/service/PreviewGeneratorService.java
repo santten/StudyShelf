@@ -13,7 +13,20 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import java.io.IOException;
 
+/**
+ * Service responsible for generating preview thumbnails
+ * for various file types such as PDF, images, Word documents, etc.
+ */
 public class PreviewGeneratorService {
+
+    /**
+     * Generates a preview image (in PNG format) from the given file content and type.
+     *
+     * @param content  The byte array of the file content
+     * @param fileType The MIME type of the file
+     * @return A byte array representing the preview image (PNG format)
+     * @throws IOException if processing fails
+     */
     public byte[] generatePreview(byte[] content, String fileType) throws IOException {
         if (fileType == null || fileType.isEmpty()) {
             return generateDefaultPreview();
@@ -33,6 +46,9 @@ public class PreviewGeneratorService {
         }
     }
 
+    /**
+     * Generates a preview for PDF documents by rendering the first page.
+     */
     private byte[] generatePDFPreview(byte[] content) throws IOException {
         PDDocument document = PDDocument.load(content);
         PDFRenderer pdfRenderer = new PDFRenderer(document);
@@ -46,6 +62,9 @@ public class PreviewGeneratorService {
         return baos.toByteArray();
     }
 
+    /**
+     * Generates a thumbnail for image files.
+     */
     private byte[] generateImagePreview(byte[] content) throws IOException {
         BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(content));
         BufferedImage thumbnail = Thumbnails.of(originalImage)
@@ -56,6 +75,9 @@ public class PreviewGeneratorService {
         return baos.toByteArray();
     }
 
+    /**
+     * Generates a preview for Word documents by rendering the first paragraph as an image.
+     */
     private byte[] generateWordPreview(byte[] content) throws IOException {
         XWPFDocument document = new XWPFDocument(new ByteArrayInputStream(content));
         BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
@@ -69,6 +91,9 @@ public class PreviewGeneratorService {
         return baos.toByteArray();
     }
 
+    /**
+     * Generates a default placeholder image when preview can't be generated.
+     */
     private byte[] generateDefaultPreview() throws IOException {
         BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();

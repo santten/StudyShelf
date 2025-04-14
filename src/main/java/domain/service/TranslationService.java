@@ -13,15 +13,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Provides language translation functionality using Google Cloud Translate API.
+ * Supports multiple languages and automatic translation of content.
+ */
 public class TranslationService {
     private static final Logger logger = LoggerFactory.getLogger(TranslationService.class);
     private static final List<String> SUPPORTED_LANGUAGES = List.of("en", "fi", "ru", "zh");
     private Translate translate;
 
+    /**
+     * Initializes the translation service using API key stored in properties file.
+     */
     public TranslationService() {
         initializeTranslationService();
     }
 
+    /**
+     * Loads API key from properties file and initializes Google Translate service.
+     */
     private void initializeTranslationService() {
         Properties properties = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("credentials/translate-api.properties")) {
@@ -50,6 +60,13 @@ public class TranslationService {
         }
     }
 
+    /**
+     * Translates a given text to all supported target languages.
+     *
+     * @param text the original text
+     * @param sourceLanguage the source language code (e.g., "en")
+     * @return a map of language code to translated text
+     */
     public Map<String, String> translateToAllLanguages(String text, String sourceLanguage) {
         Map<String, String> translations = new HashMap<>();
 
@@ -75,6 +92,14 @@ public class TranslationService {
         return translations;
     }
 
+    /**
+     * Translates text from a source language to a target language.
+     *
+     * @param text original text
+     * @param sourceLanguage source language code
+     * @param targetLanguage target language code
+     * @return translated text or original text if translation fails
+     */
     public String translateText(String text, String sourceLanguage, String targetLanguage) {
         if (sourceLanguage.equals(targetLanguage)) {
             return text;
@@ -93,6 +118,14 @@ public class TranslationService {
         }
     }
 
+    /**
+     * Core translation method with stricter exception handling.
+     *
+     * @param text text to translate
+     * @param sourceLanguage original language code
+     * @param targetLanguage target language code
+     * @return translated text
+     */
     public String translate(String text, String sourceLanguage, String targetLanguage) {
         if (text == null || text.trim().isEmpty()) {
             return "";
