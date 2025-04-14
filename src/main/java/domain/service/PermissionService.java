@@ -7,11 +7,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Set;
 
-import static domain.model.PermissionType.CREATE_RESOURCE;
-
+/**
+ * Service for managing and validating user permissions.
+ */
 public class PermissionService {
     private static final Logger logger = LoggerFactory.getLogger(PermissionService.class);
 
+    /**
+     * Checks if a user has a specific permission.
+     *
+     * @param user           the user to check
+     * @param permissionType the required permission
+     * @return true if the user has the permission, false otherwise
+     */
     public boolean hasPermission(User user, PermissionType permissionType) {
         if (user == null || user.getRole() == null || user.getRole().getPermissions() == null) {
             logger.warn("Permission check failed: User, role, or permissions are null");
@@ -21,6 +29,14 @@ public class PermissionService {
                 .anyMatch(permission -> permission.getName() == permissionType);
     }
 
+    /**
+     * Checks if a user has permission to act on a specific entity (based on ownership or role).
+     *
+     * @param user           the user making the request
+     * @param permissionType the required permission
+     * @param entityOwnerId  the ID of the entity owner
+     * @return true if permission is granted, false otherwise
+     */
     public boolean hasPermissionOnEntity(User user, PermissionType permissionType, int entityOwnerId) {
         if (user == null) {
             logger.warn("Permission check failed: User is null");
@@ -50,6 +66,9 @@ public class PermissionService {
         return false;
     }
 
+    /**
+     * Checks if the user has admin-level permissions.
+     */
     private boolean hasAdminPermission(User user, PermissionType permissionType) {
         if (!user.isAdmin()) {
             return false;
@@ -74,7 +93,9 @@ public class PermissionService {
         return adminPermissions.contains(permissionType);
     }
 
-
+    /**
+     * Checks if the user has permissions only on their own resources/entities.
+     */
     private boolean hasOwnPermission(User user, PermissionType permissionType, int entityOwnerId) {
         Set<PermissionType> ownPermissions = Set.of(
                 PermissionType.CREATE_RESOURCE,
@@ -106,6 +127,9 @@ public class PermissionService {
         return false;
     }
 
+    /**
+     * Checks if the user has permissions at the course level (teachers).
+     */
     private boolean hasCoursePermission(User user, PermissionType permissionType) {
         if (!user.isTeacher()) {
             return false;
@@ -125,10 +149,11 @@ public class PermissionService {
         return coursePermissions.contains(permissionType);
     }
 
+    /**
+     * Checks if the user has general approval permissions (Admin or Teacher).
+     */
     public boolean hasApprovalPermission(User user) {
         RoleType role = user.getRole().getName();
         return role == RoleType.ADMIN || role == RoleType.TEACHER;
     }
-
-
 }

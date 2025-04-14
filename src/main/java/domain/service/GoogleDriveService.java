@@ -21,6 +21,10 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Service class responsible for interacting with Google Drive API.
+ * Supports file upload and download operations using user credentials.
+ */
 public class GoogleDriveService {
     private final Drive driveService;
     // add file credentials.json to this path
@@ -28,6 +32,10 @@ public class GoogleDriveService {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
 
+    /**
+     * Initializes the Google Drive client using OAuth 2.0 credentials.
+     * Requires a valid credentials.json file under src/main/resources/credentials/.
+     */
     public GoogleDriveService() {
         try {
             NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -51,6 +59,15 @@ public class GoogleDriveService {
         }
     }
 
+    /**
+     * Uploads a file to Google Drive.
+     *
+     * @param content     byte array of file content
+     * @param filename    name of the file to be stored
+     * @param contentType MIME type of the file
+     * @return a public web view link to the uploaded file
+     * @throws IOException if an upload error occurs
+     */
     public String uploadFile(byte[] content, String filename, String contentType) throws IOException {
         File fileMetadata = new File();
         fileMetadata.setName(filename);
@@ -64,6 +81,13 @@ public class GoogleDriveService {
         return uploadedFile.getWebViewLink();
     }
 
+    /**
+     * Downloads a file from Google Drive based on its shared webViewLink.
+     *
+     * @param fileUrl the web view URL of the Google Drive file
+     * @return the file contents as a byte array
+     * @throws IOException if download fails
+     */
     public byte[] downloadFile(String fileUrl) throws IOException {
         String fileId = extractFileIdFromUrl(fileUrl);
 
@@ -73,6 +97,13 @@ public class GoogleDriveService {
         return outputStream.toByteArray();
     }
 
+    /**
+     * Extracts the file ID from a Google Drive web view URL.
+     * Expected format: https://drive.google.com/file/d/{fileId}/view
+     *
+     * @param url the shared Google Drive URL
+     * @return the extracted file ID
+     */
     private String extractFileIdFromUrl(String url) {
         String[] parts = url.split("/");
         return parts[5];

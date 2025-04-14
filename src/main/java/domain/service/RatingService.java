@@ -5,10 +5,13 @@ import domain.model.Rating;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import infrastructure.repository.RatingRepository;
-import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
+/**
+ * Service class responsible for handling rating-related operations,
+ * such as creating, updating, deleting, and retrieving ratings on study materials.
+ */
 public class RatingService {
     private final RatingRepository ratingRepository;
     private final PermissionService permissionService;
@@ -18,6 +21,10 @@ public class RatingService {
         this.permissionService = permissionService;
     }
 
+    /**
+     * Creates a new rating for a study material by the user.
+     * @throws SecurityException if the user lacks permission
+     */
     // CREATE_RATING
     public Rating rateMaterial(int ratingScore, StudyMaterial material, User user) {
         if (!permissionService.hasPermission(user, PermissionType.CREATE_RATING)) {
@@ -27,6 +34,9 @@ public class RatingService {
         return ratingRepository.save(rating);
     }
 
+    /**
+     * Calculates and returns the average rating score for a material.
+     */
     public double getAverageRating(StudyMaterial material) {
         return ratingRepository.findByMaterial(material)
                 .stream()
@@ -35,6 +45,10 @@ public class RatingService {
                 .orElse(0.0);
     }
 
+    /**
+     * Updates the user's own rating with a new score.
+     * @throws SecurityException if the user does not own the rating or lacks permission
+     */
     // UPDATE_OWN_RATING
     public Rating updateRating(User user, Rating rating, int newScore) {
         if (!rating.getUser().equals(user)) {
@@ -47,6 +61,10 @@ public class RatingService {
         return ratingRepository.save(rating);
     }
 
+    /**
+     * Retrieves all ratings for a given material.
+     * @throws SecurityException if the user lacks permission
+     */
     // READ_RATINGS
     public List<Rating> getRatings(User user, StudyMaterial material) {
         if (!permissionService.hasPermission(user, PermissionType.READ_RATINGS)) {
@@ -55,6 +73,10 @@ public class RatingService {
         return ratingRepository.findByMaterial(material);
     }
 
+    /**
+     * Deletes a rating either by the owner or an admin.
+     * @throws SecurityException if the user lacks permission
+     */
     public void deleteRating(User user, Rating rating) {
         // DELETE_OWN_RATING
         boolean isOwner = rating.getUser().getUserId() == user.getUserId();
@@ -68,6 +90,10 @@ public class RatingService {
         ratingRepository.deleteById(rating.getRatingId());
     }
 
+    /**
+     * Checks whether the user has already rated a material.
+     * Users cannot rate their own uploads.
+     */
     public boolean hasUserRatedMaterial(User user, StudyMaterial sm){
         if (sm.getUploader().getUserId() == user.getUserId()){
             return false;
@@ -76,10 +102,16 @@ public class RatingService {
         }
     }
 
+    /**
+     * Retrieves all ratings made by a specific user.
+     */
     public List<Rating> getRatingsByUser(User user) {
         return ratingRepository.findByUser(user);
     }
 
+    /**
+     * Retrieves rating(s) for a specific user and material.
+     */
     public List<Rating> findRatingByUserAndMaterial(User user, StudyMaterial sm) {
         return ratingRepository.findByUserAndMaterial(user, sm);
     }
