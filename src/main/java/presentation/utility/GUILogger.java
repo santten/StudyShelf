@@ -1,6 +1,8 @@
 package presentation.utility;
 
 public class GUILogger {
+    private GUILogger(){}
+
     static boolean showWarnings = false;
     static boolean showInfo = false;
 

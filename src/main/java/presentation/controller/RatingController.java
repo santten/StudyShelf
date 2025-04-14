@@ -6,9 +6,9 @@ import domain.service.RatingService;
 import domain.service.ReviewService;
 import infrastructure.repository.RatingRepository;
 import infrastructure.repository.ReviewRepository;
-import presentation.view.CurrentUserManager;
 import presentation.utility.CustomAlert;
 import presentation.utility.GUILogger;
+import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
 
 import java.util.List;

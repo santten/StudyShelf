@@ -13,6 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import presentation.components.ListItem;
 import presentation.components.TextLabels;
+import presentation.utility.StyleClasses;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
@@ -24,7 +25,9 @@ import java.util.ResourceBundle;
 import static presentation.components.ListItem.listItemGraphic;
 
 public class ProfilePageController {
-    public static ResourceBundle rb = LanguageManager.getInstance().getBundle();
+    public static final ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
+    private ProfilePageController(){}
 
     public static void setPage(User u){
         VBox base = new VBox();
@@ -33,8 +36,7 @@ public class ProfilePageController {
         base.setPadding(new Insets(20, 20, 20, 20));
 
         Label title = new Label(u.getFullName());
-        title.getStyleClass().add("label3");
-        title.getStyleClass().add("error");
+        title.getStyleClass().addAll(StyleClasses.LABEL3, StyleClasses.ERROR);
         title.setWrapText(true);
         title.setMaxWidth(600);
 
@@ -45,8 +47,7 @@ public class ProfilePageController {
 
         if (!userCategories.isEmpty()) {
             Label cTitle = new Label(rb.getString("courses"));
-            cTitle.getStyleClass().add("label4");
-            cTitle.getStyleClass().add("secondary");
+            cTitle.getStyleClass().addAll(StyleClasses.LABEL4, StyleClasses.SECONDARY);
 
             List<Category> categoryList = cRepo.findCategoriesByUser(u);
             List<Node> buttonList = new ArrayList<>();
@@ -62,8 +63,7 @@ public class ProfilePageController {
 
         if (!userMaterials.isEmpty()) {
             Label mTitle = new Label(rb.getString("materials"));
-            mTitle.getStyleClass().add("label4");
-            mTitle.getStyleClass().add("primary-light");
+            mTitle.getStyleClass().addAll(StyleClasses.PRIMARY_LIGHT, StyleClasses.LABEL4);
 
             List<Node> buttonList = new ArrayList<>();
 
