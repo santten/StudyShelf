@@ -5,22 +5,25 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import presentation.utility.SVGContents;
+import presentation.utility.StyleClasses;
 
 public class Stars {
-    public static HBox StarRow(double fillAmount, double scale, int spacing){
+    private Stars(){}
+
+    public static HBox getStarRow(double fillAmount, double scale, int spacing){
         HBox base = new HBox();
 
         for (int i = 1; i <= 5; i++) {
             StackPane starContainer = new StackPane();
             SVGPath emptyStar = new SVGPath();
-            emptyStar.setContent(SVGContents.star());
+            emptyStar.setContent(SVGContents.STAR);
             SVGContents.setScale(emptyStar, scale);
-            emptyStar.getStyleClass().add("star-empty");
+            emptyStar.getStyleClass().add(StyleClasses.STAR_EMPTY);
 
             SVGPath filledStar = new SVGPath();
-            filledStar.setContent(SVGContents.star());
+            filledStar.setContent(SVGContents.STAR);
             SVGContents.setScale(filledStar, scale);
-            filledStar.getStyleClass().add("star-filled");
+            filledStar.getStyleClass().add(StyleClasses.STAR_FILLED);
 
             double fillPercentage = Math.max(0, Math.min(1, fillAmount - (i - 1)));
             Rectangle clip = new Rectangle();

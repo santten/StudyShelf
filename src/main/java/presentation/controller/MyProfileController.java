@@ -3,35 +3,30 @@ package presentation.controller;
 import domain.model.*;
 import domain.service.*;
 import infrastructure.repository.*;
-import jakarta.persistence.RollbackException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import presentation.view.CurrentUserManager;
-import presentation.utility.CustomAlert;
 import presentation.components.PasswordFieldToggle;
+import presentation.utility.CustomAlert;
 import presentation.utility.SVGContents;
+import presentation.utility.StyleClasses;
+import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
-import java.awt.*;
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
 import static presentation.controller.SubScreen.*;
-import static presentation.view.Screen.*;
+import static presentation.view.Screen.SCREEN_LOGIN;
+import static presentation.view.Screen.SCREEN_UPLOAD;
 
 public class MyProfileController {
     private HBox hBoxBase;
@@ -87,11 +82,11 @@ public class MyProfileController {
         VBox base = getMenuVBox();
         base.getChildren().clear();
         base.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/profile.css")).toExternalForm());
-        base.getStyleClass().add("menuBox");
+        base.getStyleClass().add(StyleClasses.MENU_BOX);
 
         Text headingMyProfile = new Text(rb.getString("myProfile"));
         base.getChildren().add(headingMyProfile);
-        headingMyProfile.getStyleClass().addAll("heading3", "light");
+        headingMyProfile.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.LIGHT);
 
         addMenuLink(rb.getString("myMaterials"), PROFILE_FILES);
         if (CurrentUserManager.get().hasPermission(PermissionType.CREATE_CATEGORY)) {
@@ -101,7 +96,7 @@ public class MyProfileController {
 
         Text headingSettings = new Text(rb.getString("settings"));
         base.getChildren().addAll(new Separator(), headingSettings);
-        headingSettings.getStyleClass().addAll("heading3", "light");
+        headingSettings.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.LIGHT);
 
         addMenuLink(rb.getString("profileSettings"), PROFILE_SETTINGS);
         addMenuLink(rb.getString("profileDelete"), PROFILE_DELETE);
@@ -109,7 +104,7 @@ public class MyProfileController {
         Hyperlink link = new Hyperlink(rb.getString("logOut"));
         link.setOnAction(e -> CurrentUserManager.logout());
 
-        link.getStyleClass().add("profileLink");
+        link.getStyleClass().add(StyleClasses.PROFILE_LINK);
         getMenuVBox().getChildren().addAll(new Separator(), new Separator(), link, new Separator());
 
         getMenuVBox().setSpacing(4);
@@ -139,7 +134,7 @@ public class MyProfileController {
 
     private void setUpMyMaterials(VBox base) {
         Text heading = new Text(rb.getString("myMaterials"));
-        heading.getStyleClass().addAll("heading3", "primary-light");
+        heading.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.PRIMARY_LIGHT);
 
         User user = CurrentUserManager.get();
         StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
@@ -149,13 +144,7 @@ public class MyProfileController {
 
         if (materials.isEmpty()) {
             Hyperlink link = new Hyperlink(rb.getString("uploadMaterialPrompt"));
-            link.setOnAction(evt -> {
-                try {
-                    SceneManager.getInstance().setScreen(SCREEN_UPLOAD);
-                } catch (IOException e) {
-                    SceneManager.getInstance().displayErrorPage(rb.getString("error.vague"), SCREEN_PROFILE, rb.getString("redirectBack"));
-                }
-            });
+            link.setOnAction(evt -> SceneManager.getInstance().setScreen(SCREEN_UPLOAD));
             getMaterialContainer().getChildren().addAll(new Text(rb.getString("noMyMaterials")), link);
         }
 
@@ -165,14 +154,14 @@ public class MyProfileController {
             Button btn = new Button();
 
             SVGPath svgPath = new SVGPath();
-            svgPath.getStyleClass().add("primary");
+            svgPath.getStyleClass().add(StyleClasses.PRIMARY);
             SVGContents.setScale(svgPath, 1.3);
-            svgPath.setContent(SVGContents.file());
+            svgPath.setContent(SVGContents.FILE);
 
             Text text = new Text(sm.getName());
-            text.getStyleClass().addAll("heading4", "primary");
+            text.getStyleClass().addAll(StyleClasses.HEADING4, StyleClasses.PRIMARY);
 
-            btn.getStyleClass().add("buttonEmpty");
+            btn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
 
             btn.setOnAction(e -> SceneManager.getInstance().displayMaterial(sm.getMaterialId()));
             btn.setMinWidth(540);
@@ -182,14 +171,7 @@ public class MyProfileController {
             hbox.setAlignment(Pos.CENTER_LEFT);
             btn.setGraphic(hbox);
 
-            Button deleteBtn = new Button();
-
-            SVGPath svgPathDelete = new SVGPath();
-            svgPathDelete.getStyleClass().add("error");
-            SVGContents.setScale(svgPathDelete, 1.3);
-            svgPathDelete.setContent(SVGContents.delete());
-            deleteBtn.getStyleClass().add("buttonEmpty");
-            deleteBtn.setGraphic(svgPathDelete);
+            Button deleteBtn = createDeleteButton();
 
             deleteBtn.setOnAction(e -> {
                 if (StudyMaterialController.deleteMaterial(sm)) {
@@ -203,7 +185,7 @@ public class MyProfileController {
 
             item.getChildren().addAll(svgPath, btn, deleteBtn);
             item.setAlignment(Pos.CENTER_LEFT);
-            item.getStyleClass().add("profileListItem");
+            item.getStyleClass().add(StyleClasses.PROFILE_LIST_ITEM);
 
             getMaterialContainer().getChildren().add(item);
         }
@@ -217,7 +199,7 @@ public class MyProfileController {
 
     private void setUpMySettings(VBox base) {
         Text heading = new Text(rb.getString("displaySettings"));
-        heading.getStyleClass().addAll("heading3", "error");
+        heading.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.ERROR);
         base.getChildren().addAll(heading, new Text(rb.getString("nameDisclaimer")));
         base.setSpacing(8);
 
@@ -225,7 +207,7 @@ public class MyProfileController {
         UserService uServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
 
         Text warningField = new Text("");
-        warningField.getStyleClass().add("error");
+        warningField.getStyleClass().add(StyleClasses.ERROR);
 
         TextField firstNameField = new TextField(curUser.getFirstName());
         base.getChildren().add(createFieldBox(rb.getString("firstName"),
@@ -258,7 +240,7 @@ public class MyProfileController {
 
     private void setUpProfileDelete(VBox base) {
         Text heading = new Text(rb.getString("profileDelete"));
-        heading.getStyleClass().addAll("heading3", "error");
+        heading.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.ERROR);
 
         TextFlow disclaimer = new TextFlow(new Text(rb.getString("profileDeleteDisclaimer")));
         disclaimer.setPrefWidth(500);
@@ -267,58 +249,54 @@ public class MyProfileController {
 
         Button buttonDelete = new Button(rb.getString("profileDelete"));
         buttonDelete.setDisable(true);
-        buttonDelete.getStyleClass().add("btnSError");
+        buttonDelete.getStyleClass().add(StyleClasses.BTN_S_ERROR);
 
         buttonDelete.setOnAction(e -> {
             User user = CurrentUserManager.get();
             UserService userServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
             userServ.deleteOwnUser(user);
-            try {
-                SceneManager.getInstance().setScreen(SCREEN_LOGIN);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            SceneManager.getInstance().setScreen(SCREEN_LOGIN);
         });
 
         CheckBox checkbox = new CheckBox(rb.getString("profileDeleteCheckbox"));
 
-        checkbox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            buttonDelete.setDisable(!newValue);
-        });
+        checkbox.selectedProperty().addListener((observable, oldValue, newValue) ->
+            buttonDelete.setDisable(!newValue));
 
         base.setSpacing(8);
         base.getChildren().addAll(heading, disclaimer, checkbox, buttonDelete);
     }
 
-    private HBox createFieldBox(String labelText,
+    private VBox createFieldBox(String labelText,
                                 TextField textField,
                                 Supplier<String> valueSupplier,
                                 Runnable action,
                                 Text warningField,
                                 String warningString) {
         Label label = new Label(labelText);
-        label.getStyleClass().addAll("label4");
+        label.getStyleClass().addAll(StyleClasses.LABEL4);
         label.setMinWidth(100);
         label.setMaxWidth(100);
 
         textField.setMinWidth(300);
 
         Button button = new Button("✔");
-        button.getStyleClass().add("btnPlain");
+        button.getStyleClass().add(StyleClasses.BTN_PLAIN);
         button.setDisable(true);
 
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals(valueSupplier.get())) {
                 button.setDisable(true);
                 button.setText("✔");
-                button.getStyleClass().removeAll("btnS");
-                button.getStyleClass().add("btnPlain");
+                button.getStyleClass().removeAll(StyleClasses.BTN_S);
+                button.getStyleClass().add(StyleClasses.BTN_PLAIN);
                 button.setDisable(true);
             } else {
                 button.setDisable(false);
                 button.setText(rb.getString("save"));
-                button.getStyleClass().removeAll("btnPlain");
-                button.getStyleClass().add("btnS");
+                button.getStyleClass().removeAll(StyleClasses.BTN_PLAIN);
+                button.getStyleClass().add(StyleClasses.BTN_S);
+                warningField.setText("");
             }
         });
 
@@ -326,17 +304,19 @@ public class MyProfileController {
             try {
                 action.run();
                 button.setText("✔");
-                button.getStyleClass().removeAll("btnS");
-                button.getStyleClass().add("btnPlain");
+                button.getStyleClass().removeAll(StyleClasses.BTN_S);
+                button.getStyleClass().add(StyleClasses.BTN_PLAIN);
                 button.setDisable(true);
+                warningField.setText("");
             } catch (Exception ex) {
-                warningField.setText("ok");
+                warningField.setText(warningString);
             }
         });
 
         HBox box = new HBox(label, textField, button);
         box.setSpacing(8);
-        return box;
+
+        return new VBox(box, warningField);
     }
 
     private void setUpPasswordSettings(VBox base){
@@ -344,11 +324,11 @@ public class MyProfileController {
         UserService uServ = new UserService(new UserRepository(), new RoleRepository(), new PasswordService(), new JWTService());
 
         Text headingPW = new Text(rb.getString("changePassword"));
-        headingPW.getStyleClass().addAll("heading3", "error");
+        headingPW.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.ERROR);
         base.getChildren().addAll(headingPW);
 
         Label labelOldPW = new Label(rb.getString("oldPassword"));
-        labelOldPW.getStyleClass().addAll("label4");
+        labelOldPW.getStyleClass().addAll(StyleClasses.LABEL4);
         labelOldPW.setMinWidth(120);
         labelOldPW.setMaxWidth(120);
 
@@ -357,7 +337,7 @@ public class MyProfileController {
         oldPWField.setMinWidth(280);
 
         Label labelNewPW = new Label(rb.getString("newPassword"));
-        labelNewPW.getStyleClass().addAll("label4");
+        labelNewPW.getStyleClass().addAll(StyleClasses.LABEL4);
         labelNewPW.setMinWidth(120);
         labelNewPW.setMaxWidth(120);
 
@@ -366,18 +346,18 @@ public class MyProfileController {
         newPWField.setMinWidth(280);
 
         Label pwLabel = new Label("");
-        pwLabel.getStyleClass().addAll("secondary-light");
+        pwLabel.getStyleClass().addAll(StyleClasses.SECONDARY_LIGHT);
 
         Button pwButton = new Button(rb.getString("changePassword"));
         pwButton.setOnAction(e -> {
             if (uServ.updateUserPassword(curUser, oldPWField.getText(), newPWField.getText())){
                 pwLabel.getStyleClass().clear();
-                pwLabel.getStyleClass().addAll("secondary-light");
+                pwLabel.getStyleClass().addAll(StyleClasses.SECONDARY_LIGHT);
                 pwLabel.setText(rb.getString("pwChangeSuccess"));
                 pwButton.setDisable(true);
             } else {
                 pwLabel.getStyleClass().clear();
-                pwLabel.getStyleClass().addAll("error");
+                pwLabel.getStyleClass().addAll(StyleClasses.ERROR);
                 pwLabel.setText(rb.getString("pwChangeFailOldWrong"));
                 pwButton.setDisable(true);
             }
@@ -394,7 +374,7 @@ public class MyProfileController {
             pwLabel.setText("");
         });
 
-        pwButton.getStyleClass().add("btnS");
+        pwButton.getStyleClass().add(StyleClasses.BTN_S);
 
         HBox oldPWHBox = new HBox(labelOldPW, PasswordFieldToggle.create(oldPWField, 280));
         oldPWHBox.setSpacing(8);
@@ -409,7 +389,7 @@ public class MyProfileController {
 
     private void setUpMyRatings(VBox base) {
         Text heading = new Text(rb.getString("myRatings"));
-        heading.getStyleClass().addAll("heading3", "warning");
+        heading.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.WARNING);
 
         User user = CurrentUserManager.get();
         RatingService rServ = new RatingService(new RatingRepository(), new PermissionService());
@@ -422,72 +402,80 @@ public class MyProfileController {
         }
 
         for (Rating r : ratings) {
-            HBox item = new HBox();
-            Button btn = new Button();
-
-            int score = r.getRatingScore();
-            HBox starContainer = new HBox();
-
-            for (int i = 0; i < 5; i++){
-                SVGPath svgPath = new SVGPath();
-                SVGContents.setScale(svgPath, 1.1);
-                svgPath.setContent(SVGContents.star());
-                if (i < score) {
-                    svgPath.getStyleClass().add("warning");
-                } else {
-                    svgPath.getStyleClass().add("light-darker");
-                }
-                starContainer.getChildren().add(svgPath);
-            }
-            starContainer.setSpacing(6);
-
-            Text text = new Text("   " + r.getStudyMaterial().getName());
-            text.getStyleClass().addAll("heading4", "warning");
-
-            btn.getStyleClass().add("buttonEmpty");
-
-            btn.setOnAction(e -> SceneManager.getInstance().displayMaterial(r.getStudyMaterial().getMaterialId()));
-            btn.setMinWidth(540);
-            btn.setMaxWidth(540);
-
-            HBox hbox = new HBox(starContainer, text);
-            hbox.setAlignment(Pos.CENTER_LEFT);
-            btn.setGraphic(hbox);
-
-            Button deleteBtn = new Button();
-
-            SVGPath svgPathDelete = new SVGPath();
-            svgPathDelete.getStyleClass().add("error");
-            SVGContents.setScale(svgPathDelete, 1.3);
-            svgPathDelete.setContent(SVGContents.delete());
-            deleteBtn.getStyleClass().add("buttonEmpty");
-            deleteBtn.setGraphic(svgPathDelete);
-
-            deleteBtn.setOnAction(e -> {
-                if (CustomAlert.confirm(rb.getString("alertHeadingDeleteReview"), rb.getString("alertAreYouSureDeleteReview"), rb.getString("alertNoUndoDeleteReview"), true)) {
-                    if (new RatingController().deleteRatingAndReview(CurrentUserManager.get(), r.getStudyMaterial())) {
-                        getRatingContainer().getChildren().remove(item);
-                    }
-
-                    if (getRatingContainer().getChildren().isEmpty()) {
-                        getRatingContainer().getChildren().add(new Text(rb.getString("noRatingsCTA")));
-                    }
-                }
-            });
-
-            item.getChildren().addAll(btn, deleteBtn);
-            item.setAlignment(Pos.CENTER_LEFT);
-            item.getStyleClass().add("profileListItem");
-
-            getRatingContainer().getChildren().add(item);
+            appendItemButton(r);
         }
 
         base.getChildren().addAll(heading, getRatingContainer());
     }
 
+    private void appendItemButton(Rating r) {
+        HBox item = new HBox();
+        Button btn = new Button();
+
+        int score = r.getRatingScore();
+        HBox starContainer = new HBox();
+
+        for (int i = 0; i < 5; i++){
+            SVGPath svgPath = new SVGPath();
+            SVGContents.setScale(svgPath, 1.1);
+            svgPath.setContent(SVGContents.STAR);
+            if (i < score) {
+                svgPath.getStyleClass().add(StyleClasses.WARNING);
+            } else {
+                svgPath.getStyleClass().add(StyleClasses.LIGHT_DARKER);
+            }
+            starContainer.getChildren().add(svgPath);
+        }
+        starContainer.setSpacing(6);
+
+        Text text = new Text("   " + r.getStudyMaterial().getName());
+        text.getStyleClass().addAll(StyleClasses.HEADING4, StyleClasses.WARNING);
+
+        btn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
+
+        btn.setOnAction(e -> SceneManager.getInstance().displayMaterial(r.getStudyMaterial().getMaterialId()));
+        btn.setMinWidth(540);
+        btn.setMaxWidth(540);
+
+        HBox hbox = new HBox(starContainer, text);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        btn.setGraphic(hbox);
+
+        Button deleteBtn = createDeleteButton();
+
+        deleteBtn.setOnAction(e -> {
+            if (CustomAlert.confirm(rb.getString("alertHeadingDeleteReview"), rb.getString("alertAreYouSureDeleteReview"), rb.getString("alertNoUndoDeleteReview"), true)) {
+                if (new RatingController().deleteRatingAndReview(CurrentUserManager.get(), r.getStudyMaterial())) {
+                    getRatingContainer().getChildren().remove(item);
+                }
+
+                if (getRatingContainer().getChildren().isEmpty()) {
+                    getRatingContainer().getChildren().add(new Text(rb.getString("noRatingsCTA")));
+                }
+            }
+        });
+
+        item.getChildren().addAll(btn, deleteBtn);
+        item.setAlignment(Pos.CENTER_LEFT);
+        item.getStyleClass().add(StyleClasses.PROFILE_LIST_ITEM);
+
+        getRatingContainer().getChildren().add(item);
+    }
+
+    private Button createDeleteButton() {
+        Button deleteBtn = new Button();
+        SVGPath svgPathDelete = new SVGPath();
+        svgPathDelete.getStyleClass().add(StyleClasses.ERROR);
+        SVGContents.setScale(svgPathDelete, 1.3);
+        svgPathDelete.setContent(SVGContents.DELETE);
+        deleteBtn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
+        deleteBtn.setGraphic(svgPathDelete);
+        return deleteBtn;
+    }
+
     private void setUpMyCourses(VBox base) {
         Text heading = new Text(rb.getString("myCourses"));
-        heading.getStyleClass().addAll("heading3", "secondary-light");
+        heading.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.SECONDARY_LIGHT);
 
         User user = CurrentUserManager.get();
         CategoryService cServ = new CategoryService(new CategoryRepository(), new PermissionService());
@@ -497,13 +485,7 @@ public class MyProfileController {
 
         if (courses.isEmpty()) {
             Hyperlink link = new Hyperlink(rb.getString("makeCourse"));
-            link.setOnAction(evt -> {
-                try {
-                    SceneManager.getInstance().setScreen(SCREEN_UPLOAD);
-                } catch (IOException e) {
-                    SceneManager.getInstance().displayErrorPage(rb.getString("error.vague"), SCREEN_PROFILE, rb.getString("redirectBack"));
-                }
-            });
+            link.setOnAction(evt -> SceneManager.getInstance().setScreen(SCREEN_UPLOAD));
             getCourseContainer().getChildren().addAll(new Text(rb.getString("noMyCourses")), link);
         }
 
@@ -512,14 +494,14 @@ public class MyProfileController {
             Button btn = new Button();
 
             SVGPath svgPath = new SVGPath();
-            svgPath.getStyleClass().add("secondary");
+            svgPath.getStyleClass().add(StyleClasses.SECONDARY);
             SVGContents.setScale(svgPath, 1.3);
-            svgPath.setContent(SVGContents.school());
+            svgPath.setContent(SVGContents.SCHOOL);
 
             Text text = new Text(c.getCategoryName());
-            text.getStyleClass().addAll("heading4", "secondary");
+            text.getStyleClass().addAll(StyleClasses.HEADING4, StyleClasses.SECONDARY);
 
-            btn.getStyleClass().add("buttonEmpty");
+            btn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
 
             btn.setOnAction(e -> SceneManager.getInstance().displayCategory(c.getCategoryId()));
             btn.setMinWidth(540);
@@ -529,14 +511,7 @@ public class MyProfileController {
             hbox.setAlignment(Pos.CENTER_LEFT);
             btn.setGraphic(hbox);
 
-            Button deleteBtn = new Button();
-
-            SVGPath svgPathDelete = new SVGPath();
-            svgPathDelete.getStyleClass().add("error");
-            SVGContents.setScale(svgPathDelete, 1.3);
-            svgPathDelete.setContent(SVGContents.delete());
-            deleteBtn.getStyleClass().add("buttonEmpty");
-            deleteBtn.setGraphic(svgPathDelete);
+            Button deleteBtn = createDeleteButton();
 
             deleteBtn.setOnAction(e -> {
                 if (CategoryController.deleteCategory(c)) {
@@ -550,7 +525,7 @@ public class MyProfileController {
 
             item.getChildren().addAll(svgPath, btn, deleteBtn);
             item.setAlignment(Pos.CENTER_LEFT);
-            item.getStyleClass().add("profileListItem");
+            item.getStyleClass().add(StyleClasses.PROFILE_LIST_ITEM);
 
             getCourseContainer().getChildren().add(item);
         }
@@ -562,7 +537,7 @@ public class MyProfileController {
     private void addMenuLink(String text, SubScreen destination) {
         Hyperlink link = new Hyperlink(text);
         link.setOnAction(e -> setUpContent(destination));
-        link.getStyleClass().add("profileLink");
+        link.getStyleClass().add(StyleClasses.PROFILE_LINK);
         getMenuVBox().getChildren().add(link);
     }
 }
