@@ -4,22 +4,24 @@ import javafx.geometry.Pos;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
 import presentation.utility.SVGContents;
+import presentation.utility.StyleClasses;
 
 public class PasswordFieldToggle {
+    private PasswordFieldToggle(){}
+
     public static StackPane create(PasswordField passwordField, int fixedWidth) {
         ToggleButton toggleButton = new ToggleButton();
 
-        toggleButton.getStyleClass().add("buttonEmpty");
+        toggleButton.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
         SVGPath svg = new SVGPath();
         SVGContents.setScale(svg, 1.2);
-        svg.setContent(SVGContents.eye());
+        svg.setContent(SVGContents.EYE);
         toggleButton.setGraphic(svg);
 
-        svg.getStyleClass().add("primary-light");
+        svg.getStyleClass().add(StyleClasses.PRIMARY_LIGHT);
 
         TextField textField = new TextField();
 
@@ -49,17 +51,17 @@ public class PasswordFieldToggle {
         StackPane.setMargin(toggleButton, new javafx.geometry.Insets(0, 5, 0, 0));
 
         toggleButton.setOnAction(e -> {
-            svg.getStyleClass().add("primary-light");
+            svg.getStyleClass().add(StyleClasses.PRIMARY_LIGHT);
 
             if (toggleButton.isSelected()) {
                 stackPane.getChildren().remove(passwordField);
                 stackPane.getChildren().add(0, textField);
-                svg.setContent(SVGContents.noEye());
+                svg.setContent(SVGContents.NO_EYE);
                 toggleButton.setGraphic(svg);
             } else {
                 stackPane.getChildren().remove(textField);
                 stackPane.getChildren().add(0, passwordField);
-                svg.setContent(SVGContents.eye());
+                svg.setContent(SVGContents.EYE);
                 toggleButton.setGraphic(svg);
             }
         });

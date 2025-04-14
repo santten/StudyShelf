@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import presentation.components.MaterialCard;
 import presentation.utility.GUILogger;
+import presentation.utility.StyleClasses;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
@@ -19,7 +20,7 @@ import java.util.ResourceBundle;
 
 public class CoursesController {
     private final CategoryRepository categoryRepo = new CategoryRepository();
-    private ResourceBundle rb = LanguageManager.getInstance().getBundle();
+    private final ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
     @FXML private VBox mainVBoxCourses;
 
@@ -40,18 +41,15 @@ public class CoursesController {
             Label title = new Label();
 
             title.setText(c.getCategoryName());
-            title.getStyleClass().add("label3");
-            title.getStyleClass().add("secondary");
+            title.getStyleClass().addAll(StyleClasses.LABEL3, StyleClasses.SECONDARY);
 
             Button button = new Button(rb.getString("seeCoursePage"));
-            button.getStyleClass().add("btnXS");
+            button.getStyleClass().add(StyleClasses.BTN_XS);
 
             HBox hbox = new HBox(button, new Text(String.format(rb.getString("courseBy"), c.getCreator().getFullName())));
             hbox.setSpacing(8);
 
-            button.setOnAction(e -> {
-                SceneManager.getInstance().displayCategory(c.getCategoryId());
-            });
+            button.setOnAction(e -> SceneManager.getInstance().displayCategory(c.getCategoryId()));
 
             courseContainer.getChildren().addAll(title, hbox);
 

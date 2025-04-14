@@ -27,9 +27,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
-import presentation.view.CurrentUserManager;
 import presentation.utility.GUILogger;
+import presentation.utility.StyleClasses;
 import presentation.utility.UITools;
+import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
@@ -48,10 +49,10 @@ public class UploadController {
 
     private File file;
 
-    private Button btn_uploadMaterial;
-    private TextField field_title;
-    private TextArea field_description;
-    private ChoiceBox<Category> choice_category;
+    private TextField fieldTitle;
+    private TextArea fieldDescription;
+
+    private ChoiceBox<Category> choiceCategory;
     private CheckBox uploadAgreement;
 
     private final TagService tagService = new TagService(new TagRepository(), new PermissionService());
@@ -99,20 +100,20 @@ public class UploadController {
 
         /* title area */
         Text title = new Text(rb.getString("uploadFile"));
-        title.getStyleClass().addAll("heading3", "primary-light");
+        title.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.PRIMARY_LIGHT);
         getVBox().getChildren().add(title);
 
         /* create upload button box */
         HBox uploadButtonHBox = new HBox();
-        btn_uploadMaterial = new Button(rb.getString("upload"));
-        btn_uploadMaterial.getStyleClass().add("btnS");
-        btn_uploadMaterial.setDisable(true);
+        Button btnUploadMaterial = new Button(rb.getString("upload"));
+        btnUploadMaterial.getStyleClass().add(StyleClasses.BTN_S);
+        btnUploadMaterial.setDisable(true);
 
-        Text text_uploadingAs = new Text(String.format(rb.getString("uploadingAs"), user.getFullName()));
-        text_uploadingAs.getStyleClass().addAll("primary-light");
+        Text textUploadingAs = new Text(String.format(rb.getString("uploadingAs"), user.getFullName()));
+        textUploadingAs.getStyleClass().add(StyleClasses.PRIMARY_LIGHT);
         uploadButtonHBox.setSpacing(8);
         uploadButtonHBox.setAlignment(Pos.CENTER_LEFT);
-        uploadButtonHBox.getChildren().addAll(btn_uploadMaterial, text_uploadingAs);
+        uploadButtonHBox.getChildren().addAll(btnUploadMaterial, textUploadingAs);
 
         /* create fileChooser */
         HBox chooseFileHBox = new HBox();
@@ -120,54 +121,28 @@ public class UploadController {
         fileChooser.setTitle(rb.getString("addMaterialFile"));
         fileChooser.getExtensionFilters().addAll();
         Text fileTitle = new Text("");
-        Button btn_getFile = getBtnGetFile(fileChooser, fileTitle, btn_uploadMaterial);
+        Button btnGetFile = getBtnGetFile(fileChooser, fileTitle, btnUploadMaterial);
         chooseFileHBox.setSpacing(8);
         chooseFileHBox.setAlignment(Pos.CENTER_LEFT);
-        chooseFileHBox.getChildren().addAll(btn_getFile, fileTitle);
+        chooseFileHBox.getChildren().addAll(btnGetFile, fileTitle);
 
         /* file title */
-        field_title = new TextField();
-        field_title.textProperty().addListener((obs, oldText, newText) ->
-                btn_uploadMaterial.setDisable(checkUploadButtonCondition())
+        fieldTitle = new TextField();
+        fieldTitle.textProperty().addListener((obs, oldText, newText) ->
+                btnUploadMaterial.setDisable(checkUploadButtonCondition())
         );
-        UITools.limitInputLength(field_title, 100);
+        UITools.limitInputLength(fieldTitle, 100);
 
         /* file description */
-        field_description = new TextArea();
-        field_description.setWrapText(true);
-        field_description.setMaxHeight(80);
+        fieldDescription = new TextArea();
+        fieldDescription.setWrapText(true);
+        fieldDescription.setMaxHeight(80);
 
-
-        choice_category = new ChoiceBox<>();
-        choice_category.setMinWidth(600);
-        List<Category> categories = new CategoryRepository().findAll();
-        GUILogger.info("Loading categories: " + categories.size());
-        ObservableList<Category> categoriesObservableList = FXCollections.observableList(categories);
-
-        choice_category.setItems(categoriesObservableList);
-        choice_category.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(Category category) {
-                if (category != null) {
-                    return category.getCategoryName() + " (" + category.getCreator().getFullName() + ")";
-                } else {
-                    return "";
-                }
-            }
-
-            @Override
-            public Category fromString(String s) {
-                return null;
-            }
-        });
+        setUpChoiceBox(btnUploadMaterial);
 
         if (presetCategory != null) {
-            choice_category.getSelectionModel().select(presetCategory);
+            choiceCategory.getSelectionModel().select(presetCategory);
         }
-
-        choice_category.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldSelection, newSelection) -> btn_uploadMaterial.setDisable(checkUploadButtonCondition())
-        );
 
         /* tags */
         TextFlow tagChips = new TextFlow();
@@ -188,46 +163,12 @@ public class UploadController {
 
         uploadAgreement = new CheckBox(rb.getString("uploadAgreement"));
         uploadAgreement.selectedProperty().addListener((obs, wasSelected, isSelected) ->
-                btn_uploadMaterial.setDisable(checkUploadButtonCondition())
+                btnUploadMaterial.setDisable(checkUploadButtonCondition())
         );
 
-        btn_uploadMaterial.setOnAction(event -> {
-            btn_uploadMaterial.setDisable(true);
-
-            try {
-                byte[] content = Files.readAllBytes(file.toPath());
-                String filename = file.getName();
-                User uploader = CurrentUserManager.get();
-                String name = field_title.getText();
-                String description = field_description.getText();
-                Category category = choice_category.getValue();
-                Set<Tag> materialTags = pendingTags.stream()
-                        .map(tagName -> tagService.createTag(tagName, uploader))
-                        .collect(Collectors.toSet());
-
-                StudyMaterialService materialService = new StudyMaterialService(
-                        new GoogleDriveService(),
-                        new StudyMaterialRepository(),
-                        new PermissionService()
-                );
-
-                StudyMaterial material = materialService.uploadMaterial(
-                        content,
-                        filename,
-                        uploader,
-                        name,
-                        description,
-                        category,
-                        materialTags
-                );
-
-                material.getTags().addAll(materialTags);
-                materialService.updateMaterial(material);
-
-                SceneManager.getInstance().displayMaterial(material.getMaterialId());
-            } catch (IOException ex) {
-                GUILogger.warn("Failed to upload material: " + ex.getMessage());
-            }
+        btnUploadMaterial.setOnAction(event -> {
+            btnUploadMaterial.setDisable(true);
+            uploadMaterial();
         });
 
         GridPane gp = new GridPane();
@@ -247,13 +188,13 @@ public class UploadController {
         gp.add(chooseFileHBox, 1, 0);
 
         gp.add(gridLabel(rb.getString("titleFieldLabel"), true), 0, 1);
-        gp.add(field_title, 1, 1);
+        gp.add(fieldTitle, 1, 1);
 
         gp.add(gridLabel(rb.getString("descriptionFieldLabel"), false), 0, 2);
-        gp.add(field_description, 1, 2);
+        gp.add(fieldDescription, 1, 2);
 
         gp.add(gridLabel(rb.getString("courseFieldLabel"), true), 0, 3);
-        gp.add(choice_category, 1, 3);
+        gp.add(choiceCategory, 1, 3);
 
         gp.add(gridLabel(rb.getString("tags"), false), 0, 4);
         gp.add(tagArea, 1, 4);
@@ -265,6 +206,71 @@ public class UploadController {
         getVBox().getChildren().add(gp);
     }
 
+    private void uploadMaterial(){
+        try {
+            byte[] content = Files.readAllBytes(file.toPath());
+            String filename = file.getName();
+            User uploader = CurrentUserManager.get();
+            String name = fieldTitle.getText();
+            String description = fieldDescription.getText();
+            Category category = choiceCategory.getValue();
+            Set<Tag> materialTags = pendingTags.stream()
+                    .map(tagName -> tagService.createTag(tagName, uploader))
+                    .collect(Collectors.toSet());
+
+            StudyMaterialService materialService = new StudyMaterialService(
+                    new GoogleDriveService(),
+                    new StudyMaterialRepository(),
+                    new PermissionService()
+            );
+
+            StudyMaterial material = materialService.uploadMaterial(
+                    content,
+                    filename,
+                    uploader,
+                    name,
+                    description,
+                    category,
+                    materialTags
+            );
+
+            material.getTags().addAll(materialTags);
+            materialService.updateMaterial(material);
+
+            SceneManager.getInstance().displayMaterial(material.getMaterialId());
+        } catch (IOException ex) {
+            GUILogger.warn("Failed to upload material: " + ex.getMessage());
+        }
+    }
+
+    private void setUpChoiceBox(Button btnUploadMaterial) {
+        choiceCategory.setMinWidth(600);
+        List<Category> categories = new CategoryRepository().findAll();
+        GUILogger.info("Loading categories: " + categories.size());
+        ObservableList<Category> categoriesObservableList = FXCollections.observableList(categories);
+
+        choiceCategory.setItems(categoriesObservableList);
+        choiceCategory.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Category category) {
+                if (category != null) {
+                    return category.getCategoryName() + " (" + category.getCreator().getFullName() + ")";
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public Category fromString(String s) {
+                return null;
+            }
+        });
+
+        choiceCategory.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldSelection, newSelection) -> btnUploadMaterial.setDisable(checkUploadButtonCondition())
+        );
+    }
+
     private TextFlow gridLabel(String text, boolean required) {
         TextFlow base = new TextFlow();
 
@@ -274,7 +280,7 @@ public class UploadController {
 
         if (required) {
             Text requiredStar = new Text("*");
-            requiredStar.getStyleClass().add("error");
+            requiredStar.getStyleClass().add(StyleClasses.ERROR);
             requiredStar.setStyle("-fx-font-weight: bolder; -fx-font-size: 1.1em;");
             base.getChildren().add(requiredStar);
         }
@@ -289,14 +295,14 @@ public class UploadController {
     }
 
     private boolean checkUploadButtonCondition() {
-        return field_title.getText().isEmpty() ||
+        return fieldTitle.getText().isEmpty() ||
                 !uploadAgreement.isSelected() || file == null ||
-                choice_category.getValue() == null;
+                choiceCategory.getValue() == null;
     }
 
-    private Button getBtnGetFile(FileChooser fileChooser, Text fileTitle, Button btn_uploadMaterial) {
-        Button btn_getFile = new Button(rb.getString("chooseFile"));
-        btn_getFile.setOnAction(e -> {
+    private Button getBtnGetFile(FileChooser fileChooser, Text fileTitle, Button btnUploadMaterial) {
+        Button btnGetFile = new Button(rb.getString("chooseFile"));
+        btnGetFile.setOnAction(e -> {
             File selectedFile = fileChooser.showOpenDialog(null);
             if (selectedFile != null) {
                 GUILogger.info("User selected file from " + selectedFile.getAbsolutePath());
@@ -305,9 +311,9 @@ public class UploadController {
             } else {
                 setFile(null);
             }
-            btn_uploadMaterial.setDisable(checkUploadButtonCondition());
+            btnUploadMaterial.setDisable(checkUploadButtonCondition());
         });
-        return btn_getFile;
+        return btnGetFile;
     }
 
     private void addTagChip(String tagName, TextFlow tagChips) {
@@ -315,13 +321,13 @@ public class UploadController {
         chip.setAlignment(Pos.CENTER);
 
         HBox chipContent = new HBox();
-        chipContent.getStyleClass().add("tagNotClickable");
+        chipContent.getStyleClass().add(StyleClasses.TAG_NOT_CLICKABLE);
 
         Text text = new Text(tagName);
-        text.getStyleClass().add("light");
+        text.getStyleClass().add(StyleClasses.LIGHT);
 
         Button removeBtn = new Button("×");
-        removeBtn.getStyleClass().add("tagRemoveBtn");
+        removeBtn.getStyleClass().add(StyleClasses.TAG_REMOVE_BTN);
 
         removeBtn.setOnAction(e -> {
             tagChips.getChildren().remove(chip);
@@ -337,7 +343,7 @@ public class UploadController {
 
     private void setUpCourseCreation() {
         Text title = new Text(rb.getString("createCourse"));
-        title.getStyleClass().addAll("heading3", "secondary-light");
+        title.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.SECONDARY_LIGHT);
         getVBox().getChildren().add(title);
 
         ColumnConstraints coll1 = new ColumnConstraints();
@@ -358,11 +364,11 @@ public class UploadController {
         gp.add(gridLabel(rb.getString("courseName"), true), 0, 0);
 
         Button btn = new Button(rb.getString("createCourse"));
-        btn.getStyleClass().add("btnS");
+        btn.getStyleClass().add(StyleClasses.BTN_S);
         btn.setDisable(true);
 
         Text warningText = new Text();
-        warningText.getStyleClass().add("error");
+        warningText.getStyleClass().add(StyleClasses.ERROR);
 
         User u = CurrentUserManager.get();
         CategoryRepository courseRepo = new CategoryRepository();

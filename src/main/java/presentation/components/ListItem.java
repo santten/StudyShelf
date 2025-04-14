@@ -15,9 +15,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
-import javafx.util.Callback;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
+import presentation.utility.StyleClasses;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
@@ -27,7 +27,9 @@ import java.util.ResourceBundle;
 import static presentation.components.ItemType.*;
 
 public class ListItem {
-    public static ResourceBundle rb = LanguageManager.getInstance().getBundle();
+    public static final ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
+    private ListItem(){}
 
     public static Button listItemGraphic(StudyMaterial s){
         return layout(s.getName(), MATERIAL, String.format(rb.getString("fileUploadedByName"), s.getFileType(), s.getUploader().getFullName()), s.getMaterialId());
@@ -59,28 +61,26 @@ public class ListItem {
 
         switch (type){
             case USER:
-                svg.setContent(SVGContents.user());
-                color = "error";
+                svg.setContent(SVGContents.USER);
+                color = StyleClasses.ERROR;
                 break;
             case CATEGORY:
-                svg.setContent(SVGContents.school());
-                color = "secondary";
-                btn.setOnAction(e -> {
-                    sm.displayCategory(id);
-                });
+                svg.setContent(SVGContents.SCHOOL);
+                color = StyleClasses.SECONDARY;
+                btn.setOnAction(e -> sm.displayCategory(id));
                 break;
             case MATERIAL:
-                svg.setContent(SVGContents.file());
-                color = "primary-light";
+                svg.setContent(SVGContents.FILE);
+                color = StyleClasses.PRIMARY_LIGHT;
                 btn.setOnAction(e -> sm.displayMaterial(id));
                 break;
             case TAG:
-                svg.setContent(SVGContents.tag());
-                color = "primary";
+                svg.setContent(SVGContents.TAG);
+                color = StyleClasses.PRIMARY;
                 btn.setOnAction(e -> sm.showMaterialsWithTag(id));
                 break;
             default:
-                color = "error";
+                color = StyleClasses.ERROR;
                 btn.setOnAction(e -> GUILogger.warn(rb.getString("error.nonExistentButton")));
         }
 
@@ -90,7 +90,7 @@ public class ListItem {
 
         Label label = new Label(text);
         label.setText(text);
-        label.getStyleClass().add("label4");
+        label.getStyleClass().add(StyleClasses.LABEL4);
         label.getStyleClass().add(color);
 
         header.setSpacing(8);
@@ -101,7 +101,7 @@ public class ListItem {
 
         graphic.getChildren().addAll(header, sub);
 
-        btn.getStyleClass().add("listItemBtn");
+        btn.getStyleClass().add(StyleClasses.LIST_ITEM_BTN);
         btn.setGraphic(graphic);
 
         return btn;
@@ -114,29 +114,22 @@ public class ListItem {
     public static ListView<Node> toListView(List<Node> list, int height) {
         ListView<Node> view = new ListView<>();
 
-        list.forEach(item -> {
-            view.getItems().add(item);
-        });
+        list.forEach(item -> view.getItems().add(item));
 
         view.setMaxHeight(height);
 
-        view.setCellFactory(new Callback<ListView<Node>, ListCell<Node>>() {
-                                @Override
-                                public ListCell<Node> call(ListView<Node> listView) {
-                                    return new ListCell<Node>() {
-                                        @Override
-                                        protected void updateItem(Node item, boolean empty) {
-                                            super.updateItem(item, empty);
-                                            if (empty || item == null) {
-                                                setGraphic(null);
-                                            } else {
-                                                setGraphic(item);
-                                                setPadding(new Insets(0, 0, 0, 0));
-                                            }
-                                        }
-                                    };
-                                }
-                            });
+        view.setCellFactory(listView -> new ListCell<>() {
+            @Override
+            protected void updateItem(Node item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(item);
+                    setPadding(new Insets(0, 0, 0, 0));
+                }
+            }
+        });
 
         view.setMinHeight(height);
         view.setMaxHeight(height);

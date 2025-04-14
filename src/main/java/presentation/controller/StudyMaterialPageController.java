@@ -26,12 +26,12 @@ import presentation.components.LanguageButton;
 import presentation.components.Stars;
 import presentation.components.TagButton;
 import presentation.components.TextLabels;
-import presentation.view.CurrentUserManager;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
+import presentation.utility.StyleClasses;
+import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
-import domain.service.TranslationService;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -39,8 +39,6 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static domain.model.MaterialStatus.APPROVED;
-import static domain.model.MaterialStatus.REJECTED;
 import static domain.model.RoleType.ADMIN;
 
 
@@ -51,14 +49,12 @@ public class StudyMaterialPageController {
     private final VBox reviewWritingContainer;
 
     private final VBox pendingStatusVBox;
-    private MaterialStatus pendingStatus;
 
     private final StudyMaterial material;
-    private final TranslationService translationService = new TranslationService();
     private final StudyMaterialTranslationRepository translationRepository = new StudyMaterialTranslationRepository();
 
-    private List<Review> reviews;
-    private List<Rating> ratings;
+    private List<Review> reviewList;
+    private List<Rating> ratingList;
 
     private int curRatingNum;
     private String curRatingText;
@@ -103,9 +99,9 @@ public class StudyMaterialPageController {
 
     private HBox makeReviewTitleHBox() {
         Text title = new Text(rb.getString("reviews"));
-        title.getStyleClass().addAll("heading3", "primary-light");
+        title.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.PRIMARY_LIGHT);
 
-        HBox stars = Stars.StarRow(getAvgRating(), 1, 4);
+        HBox stars = Stars.getStarRow(getAvgRating(), 1, 4);
         Text starsText = new Text(String.format("(%.1f)", getAvgRating()));
 
         HBox hbox = new HBox();
@@ -116,19 +112,19 @@ public class StudyMaterialPageController {
         return hbox;
     }
 
-    private List<Review> getReviews() {
-        return reviews;
+    private List<Review> getReviewList() {
+        return reviewList;
     }
 
     private List<Rating> getRatings() {
-        return ratings;
+        return ratingList;
     }
 
     private void refresh() {
         ReviewRepository reviewRepo = new ReviewRepository();
-        this.reviews = reviewRepo.findByStudyMaterial(material);
+        this.reviewList = reviewRepo.findByStudyMaterial(material);
         RatingRepository ratingRepo = new RatingRepository();
-        this.ratings = ratingRepo.findByMaterial(material);
+        this.ratingList = ratingRepo.findByMaterial(material);
         this.avgRating = ratingServ.getAverageRating(getMaterial());
     }
 
@@ -150,10 +146,6 @@ public class StudyMaterialPageController {
 
     private VBox getPendingStatusVBox() {
         return pendingStatusVBox;
-    }
-
-    private void setPendingStatus(MaterialStatus status) {
-        this.pendingStatus = status;
     }
 
     /* main method */
@@ -191,25 +183,25 @@ public class StudyMaterialPageController {
         switch (sm.getStatus()) {
             case APPROVED:
                 Text approvedText = new Text(String.format(rb.getString("approvedMaterial"), sm.getCategory().getCreator().getFullName()));
-                approvedText.getStyleClass().add("secondary-light");
+                approvedText.getStyleClass().add(StyleClasses.SECONDARY_LIGHT);
                 base.getChildren().add(approvedText);
                 break;
             case REJECTED:
                 Text rejectedText = new Text(rb.getString("rejectedMaterial"));
-                rejectedText.getStyleClass().add("error");
+                rejectedText.getStyleClass().add(StyleClasses.ERROR);
                 base.getChildren().add(rejectedText);
                 break;
             case PENDING:
                 User u = CurrentUserManager.get();
                 if (u.getUserId() != getMaterial().getCategory().getCreator().getUserId()) {
                     Text pendingText = new Text(rb.getString("pendingMaterial"));
-                    pendingText.getStyleClass().add("primary-light");
+                    pendingText.getStyleClass().add(StyleClasses.PRIMARY_LIGHT);
                     base.getChildren().add(pendingText);
                 } else {
                     VBox decisionVBox = new VBox();
 
                     Text title = new Text(rb.getString("waitingForApproval"));
-                    title.getStyleClass().addAll("error", "heading3");
+                    title.getStyleClass().addAll(StyleClasses.ERROR, StyleClasses.HEADING3);
 
                     Hyperlink courseHyperLink = new Hyperlink(sm.getCategory().getCategoryName());
                     courseHyperLink.setOnAction(e -> {
@@ -230,18 +222,17 @@ public class StudyMaterialPageController {
                     approvalButton.setOnAction(e -> {
                         StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
                         smServ.approveMaterial(CurrentUserManager.get(), sm);
-                        setPendingStatus(APPROVED);
                         setUpApprovalStatus();
                     });
 
-                    approvalButton.getStyleClass().add("approveRejectButton");
+                    approvalButton.getStyleClass().add(StyleClasses.APPROVE_REJECT_BUTTON);
                     SVGPath approveSvg = new SVGPath();
-                    approveSvg.setContent(SVGContents.approve());
-                    approveSvg.getStyleClass().addAll("btnHover", "secondary-light");
+                    approveSvg.setContent(SVGContents.APPROVE);
+                    approveSvg.getStyleClass().add(StyleClasses.SECONDARY_LIGHT);
                     approveSvg.setFillRule(FillRule.EVEN_ODD);
 
                     Label approveLabel = new Label(rb.getString("approveMaterial"));
-                    approveLabel.getStyleClass().addAll("label5", "secondary-light");
+                    approveLabel.getStyleClass().addAll(StyleClasses.LABEL5, StyleClasses.SECONDARY_LIGHT);
 
                     HBox approvalGraphic = new HBox(approveSvg, approveLabel);
                     approvalGraphic.setSpacing(12);
@@ -252,18 +243,17 @@ public class StudyMaterialPageController {
                     rejectButton.setOnAction(e -> {
                         StudyMaterialService smServ = new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService());
                         smServ.rejectMaterial(CurrentUserManager.get(), sm);
-                        setPendingStatus(REJECTED);
                         setUpApprovalStatus();
                     });
 
-                    rejectButton.getStyleClass().add("approveRejectButton");
+                    rejectButton.getStyleClass().add(StyleClasses.APPROVE_REJECT_BUTTON);
                     SVGPath rejectSvg = new SVGPath();
-                    rejectSvg.setContent(SVGContents.reject());
-                    rejectSvg.getStyleClass().addAll("btnHover", "error");
+                    rejectSvg.setContent(SVGContents.REJECT);
+                    rejectSvg.getStyleClass().addAll(StyleClasses.ERROR);
                     rejectSvg.setFillRule(FillRule.EVEN_ODD);
 
                     Label rejectLabel = new Label(rb.getString("rejectMaterial"));
-                    rejectLabel.getStyleClass().addAll("label5", "error");
+                    rejectLabel.getStyleClass().addAll(StyleClasses.LABEL5, StyleClasses.ERROR);
 
                     HBox rejectGraphic = new HBox(rejectSvg, rejectLabel);
                     rejectGraphic.setSpacing(12);
@@ -272,7 +262,7 @@ public class StudyMaterialPageController {
 
                     buttons.getChildren().addAll(approvalButton, rejectButton);
                     decisionVBox.getChildren().addAll(title, textFlow, buttons);
-                    decisionVBox.getStyleClass().add("decisionVBox");
+                    decisionVBox.getStyleClass().add(StyleClasses.DECISION_VBOX);
                     decisionVBox.setSpacing(10);
                     base.getChildren().addAll(decisionVBox);
                 }
@@ -305,17 +295,16 @@ public class StudyMaterialPageController {
         /* FILE TITLE */
         TextFlow fileTitleContainer = new TextFlow();
         Label title = new Label(displayName + " ");
-        title.getStyleClass().add("label3");
-        title.getStyleClass().add("primary-light");
+        title.getStyleClass().addAll(StyleClasses.LABEL3, StyleClasses.PRIMARY_LIGHT);
         title.setWrapText(true);
         title.setMaxWidth(600);
 
         if (isEditable) {
             Button editTitle = new Button();
-            editTitle.getStyleClass().add("buttonEmpty");
+            editTitle.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
             SVGPath svgEdit = new SVGPath();
-            svgEdit.setContent(SVGContents.edit());
-            svgEdit.getStyleClass().add("primary-light");
+            svgEdit.setContent(SVGContents.EDIT);
+            svgEdit.getStyleClass().add(StyleClasses.PRIMARY_LIGHT);
             SVGContents.setScale(svgEdit, 1.4);
             editTitle.setGraphic(svgEdit);
 
@@ -326,10 +315,10 @@ public class StudyMaterialPageController {
                 titleArea.setMinWidth(540);
 
                 Button saveTitle = new Button("");
-                saveTitle.getStyleClass().add("buttonEmpty");
+                saveTitle.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
                 SVGPath svgSave = new SVGPath();
-                svgSave.setContent(SVGContents.save());
-                svgSave.getStyleClass().add("primary-light");
+                svgSave.setContent(SVGContents.SAVE);
+                svgSave.getStyleClass().add(StyleClasses.PRIMARY_LIGHT);
                 SVGContents.setScale(svgSave, 1.4);
                 saveTitle.setGraphic(svgSave);
 
@@ -354,41 +343,19 @@ public class StudyMaterialPageController {
 
         Hyperlink authorLink = new Hyperlink(s.getUploader().getFullName());
         authorLink.setStyle("-fx-font-size: 1.2em; -fx-underline: false;");
-        authorLink.setOnAction(e -> {
-            SceneManager.getInstance().displayProfile(s.getUploader().getUserId());
-        });
+        authorLink.setOnAction(e -> SceneManager.getInstance().displayProfile(s.getUploader().getUserId()));
 
         uploaderLabels.getChildren().addAll(author, authorLink, new Text("  "), TextLabels.getUserRoleLabel(s.getUploader()), new Text("  "));
 
         if (s.getUploader() == s.getCategory().getCreator()) {
             Label categoryOwnerLabel = new Label(rb.getString("categoryOwner"));
-            categoryOwnerLabel.getStyleClass().add("primaryTagLabel");
+            categoryOwnerLabel.getStyleClass().add(StyleClasses.PRIMARY_TAG_LABEL);
             uploaderLabels.getChildren().add(categoryOwnerLabel);
         }
 
         Text fileDetails = new Text(Math.round(s.getFileSize()) + " KB " + s.getFileType());
 
-        Button downloadBtn = new Button(rb.getString("download"));
-        downloadBtn.getStyleClass().add("btnDownload");
-        downloadBtn.setOnAction(event -> {
-            try {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setInitialFileName(s.getName() + "." + s.getFileExtension());
-                File saveLocation = fileChooser.showSaveDialog(null);
-
-                if (saveLocation != null) {
-                    StudyMaterialService materialService = new StudyMaterialService(
-                            new GoogleDriveService(),
-                            new StudyMaterialRepository(),
-                            new PermissionService()
-                    );
-                    materialService.downloadMaterial(CurrentUserManager.get(), s, saveLocation);
-                    GUILogger.info("Successfully downloaded " + s.getName());
-                }
-            } catch (IOException e) {
-                GUILogger.warn("Failed to download file: " + e.getMessage());
-            }
-        });
+        Button downloadBtn = getDownloadButton(s);
 
         /* FILE DESC CONTAINER */
         VBox fileDescContainer = new VBox();
@@ -400,7 +367,7 @@ public class StudyMaterialPageController {
 
         if (isEditable) {
             Button editDesc = new Button(rb.getString("editDescription"));
-            editDesc.getStyleClass().add("btnXSPrimary");
+            editDesc.getStyleClass().add(StyleClasses.BTN_XS_PRIMARY);
             fileDescContainer.getChildren().addAll(fileDesc, editDesc);
             editDesc.setOnAction(e -> {
                 fileDescContainer.getChildren().clear();
@@ -408,7 +375,7 @@ public class StudyMaterialPageController {
 
                 descArea.setWrapText(true);
                 Button saveDesc = new Button(rb.getString("saveDescription"));
-                saveDesc.getStyleClass().add("btnXSPrimary");
+                saveDesc.getStyleClass().add(StyleClasses.BTN_XS_PRIMARY);
                 saveDesc.setOnAction(ev -> {
                     materialServ.updateDescription(CurrentUserManager.get(), s, descArea.getText());
                     fileDescContainer.getChildren().clear();
@@ -435,7 +402,7 @@ public class StudyMaterialPageController {
         });
 
         TextFlow course = new TextFlow(new Text(rb.getString("uploadedUnderCourse") + " "), courseLink, new Text(" " + String.format(rb.getString("time"), formattedTimestamp)));
-        course.getStyleClass().add("primary");
+        course.getStyleClass().add(StyleClasses.PRIMARY);
 
         TextFlow tagContainer = new TextFlow();
         Set<Tag> tags = s.getTags();
@@ -461,17 +428,18 @@ public class StudyMaterialPageController {
 
         if (isEditable) {
             Button button = new Button();
-            button.getStyleClass().add("buttonEmpty");
+            button.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
 
             SVGPath svgPath = new SVGPath();
             SVGContents.setScale(svgPath,1.5);
-            svgPath.setContent(SVGContents.delete());
-            svgPath.getStyleClass().add("error");
+            svgPath.setContent(SVGContents.DELETE);
+            svgPath.getStyleClass().add(StyleClasses.ERROR);
 
             button.setGraphic(svgPath);
             button.setOnAction(e -> {
-                StudyMaterialController.deleteMaterial(s);
-                SceneManager.getInstance().displayCategory(s.getCategory().getCategoryId());
+                if (StudyMaterialController.deleteMaterial(s)){
+                    SceneManager.getInstance().displayCategory(s.getCategory().getCategoryId());
+                }
             });
 
             HBox managementHBox = new HBox(button);
@@ -483,7 +451,33 @@ public class StudyMaterialPageController {
         getFileContainer().getChildren().addAll(left, right);
     }
 
-    public Button createTranslateButton(){
+    private Button getDownloadButton(StudyMaterial s){
+        Button downloadBtn = new Button(rb.getString("download"));
+        downloadBtn.getStyleClass().add(StyleClasses.BTN_DOWNLOAD);
+        downloadBtn.setOnAction(event -> {
+            try {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialFileName(s.getName() + "." + s.getFileExtension());
+                File saveLocation = fileChooser.showSaveDialog(null);
+
+                if (saveLocation != null) {
+                    StudyMaterialService materialService = new StudyMaterialService(
+                            new GoogleDriveService(),
+                            new StudyMaterialRepository(),
+                            new PermissionService()
+                    );
+                    materialService.downloadMaterial(CurrentUserManager.get(), s, saveLocation);
+                    GUILogger.info("Successfully downloaded " + s.getName());
+                }
+            } catch (IOException e) {
+                GUILogger.warn("Failed to download file: " + e.getMessage());
+            }
+        });
+
+        return downloadBtn;
+    }
+
+    private Button createTranslateButton(){
         Button translateButton = new Button(String.format(isTranslated() ? rb.getString("showOriginal") : rb.getString("translateTo")));
 
         translateButton.setOnAction(e -> {
@@ -497,13 +491,13 @@ public class StudyMaterialPageController {
         imageView.setFitHeight(20);
 
         translateButton.setGraphic(imageView);
-        translateButton.getStyleClass().addAll("buttonEmpty", "primary-light");
+        translateButton.getStyleClass().addAll(StyleClasses.BUTTON_EMPTY, StyleClasses.PRIMARY_LIGHT);
         translateButton.setMaxHeight(18);
 
         return translateButton;
     }
 
-    /* making reviews and ratings */
+    /* making reviewList and ratings */
 
     public int getCurRatingNum() {
         return curRatingNum;
@@ -527,7 +521,7 @@ public class StudyMaterialPageController {
         VBox base = new VBox();
 
         Text title = new Text(rb.getString("addYourReview"));
-        title.getStyleClass().addAll("heading3", "primary");
+        title.getStyleClass().addAll(StyleClasses.HEADING3, StyleClasses.PRIMARY);
 
         HBox starContainer = new HBox();
         starContainer.setSpacing(4);
@@ -541,12 +535,10 @@ public class StudyMaterialPageController {
         TextField comment = new TextField();
         comment.setPromptText(rb.getString("addTextToReview"));
 
-        comment.textProperty().addListener((observable, oldValue, newValue) -> {
-            setCurRatingText(newValue);
-        });
+        comment.textProperty().addListener((observable, oldValue, newValue) -> setCurRatingText(newValue));
 
         sendReviewButton.setDisable(true);
-        sendReviewButton.getStyleClass().add("btnS");
+        sendReviewButton.getStyleClass().add(StyleClasses.BTN_S);
         sendReviewButton.setOnAction(e -> {
             if (!Objects.equals(getCurRatingText(), "") && (getCurRatingText() != null)) {
                 String reviewText = getCurRatingText().trim();
@@ -587,11 +579,11 @@ public class StudyMaterialPageController {
 
     private Button getStarButton(int i, HBox starContainer, Button sendReviewButton) {
         Button btn = new Button();
-        btn.getStyleClass().add("buttonEmpty");
+        btn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
 
         SVGPath graphic = new SVGPath();
-        graphic.setContent(SVGContents.star());
-        graphic.getStyleClass().add("star-empty");
+        graphic.setContent(SVGContents.STAR);
+        graphic.getStyleClass().add(StyleClasses.STAR_EMPTY);
 
         btn.setStyle("-fx-padding: 0; -fx-border: none;");
 
@@ -606,10 +598,10 @@ public class StudyMaterialPageController {
                 SVGPath starGraphic = (SVGPath) ((Button) star).getGraphic();
                 if (j < getCurRatingNum()) {
                     starGraphic.getStyleClass().clear();
-                    starGraphic.getStyleClass().add("star-filled");
+                    starGraphic.getStyleClass().add(StyleClasses.STAR_FILLED);
                 } else {
                     starGraphic.getStyleClass().clear();
-                    starGraphic.getStyleClass().add("star-empty");
+                    starGraphic.getStyleClass().add(StyleClasses.STAR_EMPTY);
                 }
             }
 
@@ -636,9 +628,9 @@ public class StudyMaterialPageController {
 
         List<Rating> leftOverRatings = new ArrayList<>(ratings);
 
-        List<Review> reviews = getReviews();
+        List<Review> reviews = getReviewList();
         Collections.reverse(reviews);
-        GUILogger.info(reviews.size() + " reviews found");
+        GUILogger.info(reviews.size() + " reviewList found");
 
         FlowPane fp = new FlowPane();
         fp.setMaxWidth(700);
@@ -681,23 +673,23 @@ public class StudyMaterialPageController {
             SceneManager sm = SceneManager.getInstance();
             sm.displayProfile(rating.getUser().getUserId());
         });
-        userLink.getStyleClass().add("reviewUserLink");
+        userLink.getStyleClass().add(StyleClasses.REVIEW_USER_LINK);
 
         HBox reviewerHBox = new HBox(userLink, TextLabels.getUserRoleLabel(rating.getUser()));
         reviewerHBox.setSpacing(8);
 
-        HBox stars = Stars.StarRow(rating.getRatingScore(), 1, 3);
+        HBox stars = Stars.getStarRow(rating.getRatingScore(), 1, 3);
 
         Text comment = new Text(commentText);
         comment.setWrappingWidth(320);
 
         isTranslated.addListener((observable, oldValue, newValue) -> {
-            String updatedText = newValue ? reviewSer.getTranslatedReviewText(review) : reviewSer.getOriginalReviewText(review);
+            String updatedText = Boolean.TRUE.equals(newValue) ? reviewSer.getTranslatedReviewText(review) : reviewSer.getOriginalReviewText(review);
             comment.setText(updatedText);
         });
 
         base.getChildren().addAll(reviewerHBox, stars, comment);
-        base.getStyleClass().add("reviewCard");
+        base.getStyleClass().add(StyleClasses.REVIEW_CARD);
         return base;
     }
 }

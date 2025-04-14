@@ -1,3 +1,5 @@
+package launcher;
+
 import infrastructure.config.DatabaseInitializer;
 import presentation.view.StudyShelfApplication;
 

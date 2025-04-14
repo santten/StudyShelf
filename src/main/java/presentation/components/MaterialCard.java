@@ -14,8 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
+import presentation.utility.StyleClasses;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
@@ -27,7 +27,9 @@ import java.util.ResourceBundle;
 import static javafx.scene.shape.FillRule.EVEN_ODD;
 
 public class MaterialCard {
-    public static ResourceBundle rb = LanguageManager.getInstance().getBundle();
+    public static final ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
+    private MaterialCard(){}
 
     public static Button materialCard(StudyMaterial s) {
         Button materialCard = new Button();
@@ -48,14 +50,9 @@ public class MaterialCard {
         TextFlow titleArea = new TextFlow();
 
         SVGPath svgPath = new SVGPath();
+        svgPath.setContent(SVGContents.FILE);
 
-        // there will be more options to reflect different file types in the future
-        switch (s.getFileType()) {
-            default:
-                svgPath.setContent(SVGContents.file());
-        }
-
-        svgPath.getStyleClass().add("iconPrimaryM");
+        svgPath.getStyleClass().add(StyleClasses.ICON_PRIMARY_M);
         svgPath.setFillRule(EVEN_ODD);
         titleArea.getChildren().add(svgPath);
 
@@ -67,8 +64,7 @@ public class MaterialCard {
         title.setMaxWidth(110);
         title.setMaxHeight(20);
 
-        title.getStyleClass().add("label4");
-        title.getStyleClass().add("primary-light");
+        title.getStyleClass().addAll(StyleClasses.LABEL4, StyleClasses.PRIMARY_LIGHT);
         titleArea.getChildren().add(title);
         contentBox.getChildren().add(titleArea);
 
@@ -79,7 +75,7 @@ public class MaterialCard {
         String formattedTimestamp = s.getTimestamp().format(formatter);
 
         Text timestamp = new Text(formattedTimestamp);
-        timestamp.getStyleClass().add("materialCardSubtitle");
+        timestamp.getStyleClass().add(StyleClasses.MATERIAL_CARD_SUBTITLE);
         contentBox.getChildren().add(timestamp);
 
         HBox ratingBox = new HBox();
@@ -91,7 +87,7 @@ public class MaterialCard {
         double avgRating = ratingService.getAverageRating(s);
 
         if (avgRating > 0.0) {
-            HBox starContainer = Stars.StarRow(avgRating, 0.7, 5);
+            HBox starContainer = Stars.getStarRow(avgRating, 0.7, 5);
             ratingBox.getChildren().add(starContainer);
         }
 
@@ -100,10 +96,8 @@ public class MaterialCard {
 
         materialCard.setTooltip(new Tooltip(String.format(rb.getString("fileUploadedByName"), s.getName(), uploader.getFullName())));
         materialCard.setGraphic(wrapper);
-        materialCard.getStyleClass().add("materialCardM");
-        materialCard.setOnAction(e -> {
-            SceneManager.getInstance().displayMaterial(s.getMaterialId());
-        });
+        materialCard.getStyleClass().add(StyleClasses.MATERIAL_CARD_M);
+        materialCard.setOnAction(e -> SceneManager.getInstance().displayMaterial(s.getMaterialId()));
         return materialCard;
     }
 
