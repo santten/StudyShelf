@@ -5,7 +5,6 @@ import domain.model.Rating;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import infrastructure.repository.RatingRepository;
-import jakarta.persistence.EntityManager;
 
 import java.util.List;
 

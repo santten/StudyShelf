@@ -6,7 +6,6 @@ import infrastructure.repository.CategoryRepository;
 import domain.model.PermissionType;
 import domain.model.User;
 import infrastructure.repository.StudyMaterialRepository;
-import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

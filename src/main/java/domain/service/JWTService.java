@@ -1,6 +1,5 @@
 package domain.service;
 
-import domain.model.RoleType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
