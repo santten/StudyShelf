@@ -33,29 +33,138 @@ public class StudyMaterialService {
         this.permissionService = permissionService;
     }
 
+//    public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category, Set<Tag> tags) throws IOException {
+//        if (!permissionService.hasPermission(uploader, PermissionType.CREATE_RESOURCE)) {
+//            throw new SecurityException("You do not have permission to upload study materials.");
+//        }
+//
+//        String fileType = Files.probeContentType(Path.of(filename));
+//        if (fileType == null) {
+//            fileType = "application/octet-stream";
+//        }
+//        String fileUrl = driveService.uploadFile(content, filename, fileType);
+//
+//        PreviewGeneratorService previewGenerator = new PreviewGeneratorService();
+//        byte[] preview = previewGenerator.generatePreview(content, fileType);
+//
+//        // auto-approve materials submitted by course owner
+//        MaterialStatus status = (category.getCreator().getUserId() == uploader.getUserId()) ? MaterialStatus.APPROVED : MaterialStatus.PENDING;
+//
+//        StudyMaterial material = new StudyMaterial(
+//                uploader,
+//                name,
+//                description,
+//                fileUrl,
+//                content.length / 1024f,
+//                fileType,
+//                LocalDateTime.now(),
+//                status
+//        );
+//        material.setCategory(category);
+//        material.setPreviewImage(preview);
+//        material.getTags().addAll(tags);
+//
+//        // Save the material first to get its ID
+//        StudyMaterial savedMaterial = repository.save(material);
+//
+//        // Generate and save translations for name and description
+//        try {
+//            // Create a translation repository instance
+//            StudyMaterialTranslationRepository translationRepo = new StudyMaterialTranslationRepository();
+//
+//            // Create translation service
+//            TranslationService translationService = new TranslationService();
+//
+//            // Get the current language the user is using
+//            String sourceLanguage = LanguageManager.getInstance().getCurrentLanguage();
+//            if (sourceLanguage == null || sourceLanguage.isEmpty()) {
+//                sourceLanguage = "en"; // Default to English if not set
+//            }
+//
+//            // Use the languages from your LanguageSelection component
+//            String[] targetLanguages = {"en", "fi", "ru", "zh"};
+//
+//            Map<String, String> nameTranslations = new HashMap<>();
+//            Map<String, String> descriptionTranslations = new HashMap<>();
+//
+//            // Add original content in the source language
+//            nameTranslations.put(sourceLanguage, name);
+//            descriptionTranslations.put(sourceLanguage, description);
+//
+//            // Generate translations for each target language
+//            for (String targetLanguage : targetLanguages) {
+//                // Skip the source language as we already have that content
+//                if (!targetLanguage.equals(sourceLanguage)) {
+//                    try {
+//                        String translatedName = translationService.translate(name, sourceLanguage, targetLanguage);
+//
+//                        String translatedDescription = "";
+//                        if (description != null && !description.isEmpty()) {
+//                            translatedDescription = translationService.translate(description, sourceLanguage, targetLanguage);
+//                        }
+//
+//                        nameTranslations.put(targetLanguage, translatedName);
+//                        descriptionTranslations.put(targetLanguage, translatedDescription);
+//                    } catch (Exception e) {
+//                        logger.error("Failed to translate study material from {} to {}: {}",
+//                                sourceLanguage, targetLanguage, e.getMessage());
+//                    }
+//                }
+//            }
+//
+//            // Save all translations using the existing repository method
+//            translationRepo.saveTranslations(savedMaterial.getMaterialId(), nameTranslations, descriptionTranslations);
+//            logger.info("Saved translations for material: {}", savedMaterial.getName());
+//        } catch (Exception e) {
+//            logger.error("Failed to generate and save translations for study material", e);
+//        }
+//
+//        logger.info("User {} uploaded new study material: {}", uploader.getEmail(), name);
+//        return savedMaterial;
+//    }
+
     public StudyMaterial uploadMaterial(byte[] content, String filename, User uploader, String name, String description, Category category, Set<Tag> tags) throws IOException {
+        checkUploadPermission(uploader);
+
+        String fileType = resolveFileType(filename);
+        String fileUrl = driveService.uploadFile(content, filename, fileType);
+        byte[] preview = new PreviewGeneratorService().generatePreview(content, fileType);
+
+        MaterialStatus status = determineStatus(category, uploader);
+        StudyMaterial material = buildMaterial(uploader, name, description, fileUrl, fileType, preview, category, status, tags);
+
+        StudyMaterial savedMaterial = repository.save(material);
+        generateAndSaveTranslations(name, description, savedMaterial);
+
+        logger.info("User {} uploaded new study material: {}", uploader.getEmail(), name);
+        return savedMaterial;
+    }
+
+    private void checkUploadPermission(User uploader) {
         if (!permissionService.hasPermission(uploader, PermissionType.CREATE_RESOURCE)) {
             throw new SecurityException("You do not have permission to upload study materials.");
         }
+    }
 
+    private String resolveFileType(String filename) throws IOException {
         String fileType = Files.probeContentType(Path.of(filename));
-        if (fileType == null) {
-            fileType = "application/octet-stream";
-        }
-        String fileUrl = driveService.uploadFile(content, filename, fileType);
+        return (fileType == null) ? "application/octet-stream" : fileType;
+    }
 
-        PreviewGeneratorService previewGenerator = new PreviewGeneratorService();
-        byte[] preview = previewGenerator.generatePreview(content, fileType);
+    private MaterialStatus determineStatus(Category category, User uploader) {
+        return (category.getCreator().getUserId() == uploader.getUserId())
+                ? MaterialStatus.APPROVED
+                : MaterialStatus.PENDING;
+    }
 
-        // auto-approve materials submitted by course owner
-        MaterialStatus status = (category.getCreator().getUserId() == uploader.getUserId()) ? MaterialStatus.APPROVED : MaterialStatus.PENDING;
-
+    private StudyMaterial buildMaterial(User uploader, String name, String description, String fileUrl, String fileType,
+                                        byte[] preview, Category category, MaterialStatus status, Set<Tag> tags) {
         StudyMaterial material = new StudyMaterial(
                 uploader,
                 name,
                 description,
                 fileUrl,
-                content.length / 1024f,
+                preview.length / 1024f,
                 fileType,
                 LocalDateTime.now(),
                 status
@@ -63,45 +172,34 @@ public class StudyMaterialService {
         material.setCategory(category);
         material.setPreviewImage(preview);
         material.getTags().addAll(tags);
+        return material;
+    }
 
-        // Save the material first to get its ID
-        StudyMaterial savedMaterial = repository.save(material);
-
-        // Generate and save translations for name and description
+    private void generateAndSaveTranslations(String name, String description, StudyMaterial savedMaterial) {
         try {
-            // Create a translation repository instance
             StudyMaterialTranslationRepository translationRepo = new StudyMaterialTranslationRepository();
-
-            // Create translation service
             TranslationService translationService = new TranslationService();
 
-            // Get the current language the user is using
             String sourceLanguage = LanguageManager.getInstance().getCurrentLanguage();
             if (sourceLanguage == null || sourceLanguage.isEmpty()) {
-                sourceLanguage = "en"; // Default to English if not set
+                sourceLanguage = "en";
             }
 
-            // Use the languages from your LanguageSelection component
             String[] targetLanguages = {"en", "fi", "ru", "zh"};
 
             Map<String, String> nameTranslations = new HashMap<>();
             Map<String, String> descriptionTranslations = new HashMap<>();
 
-            // Add original content in the source language
             nameTranslations.put(sourceLanguage, name);
             descriptionTranslations.put(sourceLanguage, description);
 
-            // Generate translations for each target language
             for (String targetLanguage : targetLanguages) {
-                // Skip the source language as we already have that content
                 if (!targetLanguage.equals(sourceLanguage)) {
                     try {
                         String translatedName = translationService.translate(name, sourceLanguage, targetLanguage);
-
-                        String translatedDescription = "";
-                        if (description != null && !description.isEmpty()) {
-                            translatedDescription = translationService.translate(description, sourceLanguage, targetLanguage);
-                        }
+                        String translatedDescription = (description != null && !description.isEmpty())
+                                ? translationService.translate(description, sourceLanguage, targetLanguage)
+                                : "";
 
                         nameTranslations.put(targetLanguage, translatedName);
                         descriptionTranslations.put(targetLanguage, translatedDescription);
@@ -112,16 +210,14 @@ public class StudyMaterialService {
                 }
             }
 
-            // Save all translations using the existing repository method
             translationRepo.saveTranslations(savedMaterial.getMaterialId(), nameTranslations, descriptionTranslations);
             logger.info("Saved translations for material: {}", savedMaterial.getName());
         } catch (Exception e) {
             logger.error("Failed to generate and save translations for study material", e);
         }
-
-        logger.info("User {} uploaded new study material: {}", uploader.getEmail(), name);
-        return savedMaterial;
     }
+
+
 
 
     // UPDATE_OWN_RESOURCE
