@@ -138,6 +138,7 @@ public class UploadController {
         fieldDescription.setWrapText(true);
         fieldDescription.setMaxHeight(80);
 
+        choiceCategory = new ChoiceBox<>();
         setUpChoiceBox(btnUploadMaterial);
 
         if (presetCategory != null) {
