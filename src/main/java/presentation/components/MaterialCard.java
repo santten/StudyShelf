@@ -97,7 +97,7 @@ public class MaterialCard {
         materialCard.setTooltip(new Tooltip(String.format(rb.getString("fileUploadedByName"), s.getName(), uploader.getFullName())));
         materialCard.setGraphic(wrapper);
         materialCard.getStyleClass().add(StyleClasses.MATERIAL_CARD_M);
-        materialCard.setOnAction(e -> SceneManager.getInstance().displayMaterial(s.getMaterialId()));
+        materialCard.setOnAction(e -> SceneManager.getInstance().setScreen(s));
         return materialCard;
     }
 
