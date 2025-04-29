@@ -44,7 +44,7 @@ import java.util.stream.Stream;
 import static domain.model.PermissionType.CREATE_CATEGORY;
 import static domain.model.PermissionType.CREATE_RESOURCE;
 
-public class UploadController {
+public class UploadController implements PageController {
     private VBox vbox;
 
     private File file;
@@ -60,11 +60,16 @@ public class UploadController {
 
     public final ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
-    public void initialize(ScrollPane wrapper) {
-        initialize(wrapper, null);
+    public void setPage() {
+        setPage(null);
     }
 
-    public void initialize(ScrollPane wrapper, Category presetCategory) {
+    @Override
+    public String getPageName() {
+        return "Upload Page";
+    }
+
+    public void setPage(Category presetCategory) {
         setVBox(new VBox());
 
         User user = CurrentUserManager.get();
@@ -77,7 +82,7 @@ public class UploadController {
             setUpCourseCreation();
         }
 
-        wrapper.setContent(getVBox());
+        SceneManager.getInstance().setCenter(getVBox());
     }
 
     private VBox getVBox() {
@@ -238,7 +243,7 @@ public class UploadController {
             material.getTags().addAll(materialTags);
             materialService.updateMaterial(material);
 
-            SceneManager.getInstance().displayMaterial(material.getMaterialId());
+            SceneManager.getInstance().setScreen(material);
         } catch (IOException ex) {
             GUILogger.warn("Failed to upload material: " + ex.getMessage());
         }
@@ -387,7 +392,7 @@ public class UploadController {
             cat.setCreator(CurrentUserManager.get());
             CategoryRepository categoryRepository = new CategoryRepository();
             categoryRepository.save(cat);
-            SceneManager.getInstance().displayCategory(cat.getCategoryId());
+            SceneManager.getInstance().setScreen(cat);
         });
 
         HBox row1HBox = new HBox();

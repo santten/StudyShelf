@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import static presentation.enums.ScreenType.SCREEN_LOGIN;
 import static presentation.utility.EmailValidator.isValidEmail;
-import static presentation.view.Screen.SCREEN_LOGIN;
 
 public class SignupController {
     SceneManager sm = SceneManager.getInstance();
