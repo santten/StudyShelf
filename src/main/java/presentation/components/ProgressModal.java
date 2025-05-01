@@ -17,7 +17,7 @@ public class ProgressModal {
     public ProgressModal(Stage owner, String title, String message, Task<?> task) {
         dialogStage = new Stage();
         dialogStage.initOwner(owner);
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.initModality(Modality.NONE);
         dialogStage.setTitle(title);
 
         Label label = new Label(message);
