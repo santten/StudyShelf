@@ -8,6 +8,7 @@ import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.StudyMaterialTranslationRepository;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -22,6 +23,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import presentation.components.*;
 import presentation.utility.CustomAlert;
 import presentation.utility.GUILogger;
@@ -467,7 +469,6 @@ public class StudyMaterialPageController implements PageController {
         Button downloadBtn = new Button(rb.getString("download"));
         downloadBtn.getStyleClass().add(StyleClasses.BTN_DOWNLOAD);
         downloadBtn.setOnAction(event -> {
-            try {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setInitialFileName(s.getName() + "." + s.getFileExtension());
                 File saveLocation = fileChooser.showSaveDialog(null);
@@ -478,12 +479,24 @@ public class StudyMaterialPageController implements PageController {
                             new StudyMaterialRepository(),
                             new PermissionService()
                     );
-                    materialService.downloadMaterial(CurrentUserManager.get(), s, saveLocation);
-                    GUILogger.info("Successfully downloaded " + s.getName());
+
+                    Task<Void> downloadTask = materialService.downloadMaterial(CurrentUserManager.get(), s, saveLocation);
+
+                    // Modal download progress
+                    Stage owner = (Stage) downloadBtn.getScene().getWindow();
+                    ProgressModal modal = new ProgressModal(owner, rb.getString("downloading"), s.getName(), downloadTask);
+                    modal.show();
+
+                    downloadTask.addEventHandler(javafx.concurrent.WorkerStateEvent.WORKER_STATE_SUCCEEDED, e -> {
+                        GUILogger.info("Successfully downloaded " + s.getName());
+                    });
+                    downloadTask.addEventHandler(javafx.concurrent.WorkerStateEvent.WORKER_STATE_FAILED, e -> {
+                        Throwable exception = downloadTask.getException();
+                        GUILogger.warn("Failed to download file: " + exception.getMessage());
+                    });
+                    new Thread(downloadTask).start();
                 }
-            } catch (IOException e) {
-                GUILogger.warn("Failed to download file: " + e.getMessage());
-            }
+
         });
 
         return downloadBtn;
