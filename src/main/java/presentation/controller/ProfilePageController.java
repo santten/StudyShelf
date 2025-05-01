@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import presentation.components.BreadCrumb;
 import presentation.components.ListItem;
 import presentation.components.TextLabels;
 import presentation.utility.StyleClasses;
@@ -24,12 +25,17 @@ import java.util.ResourceBundle;
 
 import static presentation.components.ListItem.listItemGraphic;
 
-public class ProfilePageController {
+public class ProfilePageController implements PageController {
     public static final ResourceBundle rb = LanguageManager.getInstance().getBundle();
+    private final User user;
 
-    private ProfilePageController(){}
+    public ProfilePageController(User u){
+        this.user = u;
+    }
 
-    public static void setPage(User u){
+    public void setPage(){
+        User u = this.user;
+
         VBox base = new VBox();
         base.getStylesheets().add(Objects.requireNonNull(ProfilePageController.class.getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
@@ -40,7 +46,7 @@ public class ProfilePageController {
         title.setWrapText(true);
         title.setMaxWidth(600);
 
-        base.getChildren().addAll(title, TextLabels.getUserRoleLabel(u));
+        base.getChildren().addAll(new BreadCrumb().makeBreadCrumb(), title, TextLabels.getUserRoleLabel(u));
 
         CategoryRepository cRepo = new CategoryRepository();
         List<Category> userCategories = cRepo.findCategoriesByUser(u);
@@ -76,5 +82,10 @@ public class ProfilePageController {
         ScrollPane wrapper = new ScrollPane(base);
         wrapper.setFitToWidth(true);
         SceneManager.getInstance().setCenter(wrapper);
+    }
+
+    @Override
+    public String getPageName() {
+        return this.user.getFullName();
     }
 }

@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import static presentation.view.Screen.SCREEN_SIGNUP;
+import static presentation.enums.ScreenType.SCREEN_SIGNUP;
 
 public class LoginController {
     SceneManager sm = SceneManager.getInstance();

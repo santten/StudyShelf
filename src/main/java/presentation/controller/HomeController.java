@@ -7,9 +7,11 @@ import domain.service.PermissionService;
 import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
@@ -21,14 +23,17 @@ import presentation.view.CurrentUserManager;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static domain.model.RoleType.STUDENT;
-import static presentation.view.Screen.SCREEN_FIND;
+import static presentation.enums.ScreenType.SCREEN_SEARCH;
+import static presentation.utility.FXMLPageHandler.setUp;
 
 // HomeController is a controller class which controls the home page of the application.
-public class HomeController {
+public class HomeController implements PageController {
     @FXML private VBox mainVBoxHome;
 
     private final CategoryRepository cRepository = new CategoryRepository();
@@ -37,6 +42,16 @@ public class HomeController {
     private final StudyMaterialRepository smRepository = new StudyMaterialRepository();
 
     ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
+    @Override
+    public void setPage() {
+        setUp("/fxml/home.fxml");
+    }
+
+    @Override
+    public String getPageName() {
+        return "Home";
+    }
 
     @FXML
     private void initialize() {
@@ -79,7 +94,7 @@ public class HomeController {
 
                 SceneManager sm = SceneManager.getInstance();
                 svg.setContent(SVGContents.SCHOOL);
-                btn.setOnAction(e -> sm.displayCategory(category.getCategoryId()));
+                btn.setOnAction(e -> sm.setScreen(category));
                 SVGContents.setScale(svg, 1.2);
                 svg.getStyleClass().add(StyleClasses.SECONDARY);
 
@@ -163,7 +178,7 @@ public class HomeController {
         Button button = new Button(rb.getString("redirectSearch"));
         button.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();
-            sm.setScreen(SCREEN_FIND);
+            sm.setScreen(SCREEN_SEARCH);
         });
         button.getStyleClass().add(StyleClasses.BTN_S);
 

@@ -1,4 +1,4 @@
-package presentation.components;
+package presentation.enums;
 
 public enum ItemType {
     USER,
