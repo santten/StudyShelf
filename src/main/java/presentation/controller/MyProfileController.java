@@ -12,6 +12,7 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import presentation.components.PasswordFieldToggle;
+import presentation.enums.SubScreen;
 import presentation.utility.CustomAlert;
 import presentation.utility.SVGContents;
 import presentation.utility.StyleClasses;
@@ -24,11 +25,11 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
-import static presentation.controller.SubScreen.*;
-import static presentation.view.Screen.SCREEN_LOGIN;
-import static presentation.view.Screen.SCREEN_UPLOAD;
+import static presentation.enums.ScreenType.SCREEN_LOGIN;
+import static presentation.enums.ScreenType.SCREEN_UPLOAD;
+import static presentation.enums.SubScreen.*;
 
-public class MyProfileController {
+public class MyProfileController implements PageController {
     private HBox hBoxBase;
     private VBox menuVBox;
     private VBox contentVBox;
@@ -38,11 +39,17 @@ public class MyProfileController {
 
     ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
-    public void initialize(ScrollPane wrapper) {
-        initialize(wrapper, PROFILE_FILES);
+
+    public void setPage() {
+        setPage(PROFILE_FILES);
     }
 
-    public void initialize(ScrollPane wrapper, SubScreen subScreen) {
+    @Override
+    public String getPageName() {
+        return "My Profile";
+    }
+
+    public void setPage(SubScreen subScreen) {
         setHBox(new HBox());
         setMenuVBox(new VBox());
         setContentVBox(new VBox());
@@ -51,7 +58,8 @@ public class MyProfileController {
         setUpContent(subScreen);
 
         getHBox().getChildren().addAll(getMenuVBox(), getContentVBox());
-        wrapper.setContent(getHBox());
+
+        SceneManager.getInstance().setCenter(getHBox());
     }
 
     private HBox getHBox() {
@@ -163,7 +171,7 @@ public class MyProfileController {
 
             btn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
 
-            btn.setOnAction(e -> SceneManager.getInstance().displayMaterial(sm.getMaterialId()));
+            btn.setOnAction(e -> SceneManager.getInstance().setScreen(sm));
             btn.setMinWidth(540);
             btn.setMaxWidth(540);
 
@@ -174,7 +182,7 @@ public class MyProfileController {
             Button deleteBtn = createDeleteButton();
 
             deleteBtn.setOnAction(e -> {
-                if (StudyMaterialController.deleteMaterial(sm)) {
+                if (StudyMaterialPageController.deleteMaterial(sm)) {
                     getMaterialContainer().getChildren().remove(item);
                 }
 
@@ -433,7 +441,7 @@ public class MyProfileController {
 
         btn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
 
-        btn.setOnAction(e -> SceneManager.getInstance().displayMaterial(r.getStudyMaterial().getMaterialId()));
+        btn.setOnAction(e -> SceneManager.getInstance().setScreen(r.getStudyMaterial()));
         btn.setMinWidth(540);
         btn.setMaxWidth(540);
 
@@ -503,7 +511,7 @@ public class MyProfileController {
 
             btn.getStyleClass().add(StyleClasses.BUTTON_EMPTY);
 
-            btn.setOnAction(e -> SceneManager.getInstance().displayCategory(c.getCategoryId()));
+            btn.setOnAction(e -> SceneManager.getInstance().setScreen(c));
             btn.setMinWidth(540);
             btn.setMaxWidth(540);
 
@@ -514,7 +522,7 @@ public class MyProfileController {
             Button deleteBtn = createDeleteButton();
 
             deleteBtn.setOnAction(e -> {
-                if (CategoryController.deleteCategory(c)) {
+                if (CategoryPageController.deleteCategory(c)) {
                     getCourseContainer().getChildren().remove(item);
                 }
 

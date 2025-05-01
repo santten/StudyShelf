@@ -8,22 +8,29 @@ import infrastructure.repository.CategoryRepository;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.TagRepository;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import presentation.components.ListItem;
 import presentation.view.LanguageManager;
+import presentation.view.SceneManager;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class SearchController {
+import static presentation.utility.FXMLPageHandler.setUp;
+
+public class SearchController implements PageController{
 
     private final SearchService searchService = new SearchService(
             new StudyMaterialRepository(),
             new CategoryRepository(),
             new TagRepository()
     );
+
     @FXML private CheckBox checkboxIncludeMaterials;
     @FXML private CheckBox checkboxIncludeCategories;
     @FXML private CheckBox checkboxIncludeTags;
@@ -35,6 +42,15 @@ public class SearchController {
     @FXML private ListView<Button> resultsListView;
 
     ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
+    public void setPage(){
+        setUp("/fxml/search.fxml");
+    }
+
+    @Override
+    public String getPageName() {
+        return "Search";
+    }
 
     @FXML
     private void initialize() {

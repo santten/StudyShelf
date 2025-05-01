@@ -6,7 +6,7 @@ import presentation.utility.GUILogger;
 
 import java.util.Locale;
 
-import static presentation.view.Screen.SCREEN_LOGIN;
+import static presentation.enums.ScreenType.SCREEN_LOGIN;
 
 public class StudyShelfApplication extends Application {
     @Override

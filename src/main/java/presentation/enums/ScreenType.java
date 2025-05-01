@@ -1,0 +1,18 @@
+package presentation.enums;
+
+public enum ScreenType {
+    SCREEN_HOME,
+    SCREEN_LOGIN,
+    SCREEN_SIGNUP,
+    SCREEN_COURSES,
+    SCREEN_PROFILE,
+    SCREEN_SEARCH,
+    SCREEN_UPLOAD,
+    SCREEN_CREATE_COURSE,
+    SCREEN_MATERIALS_TAGGED,
+
+    CATEGORY_PAGE,
+    MATERIAL_PAGE,
+    PROFILE_PAGE,
+    TAG_PAGE
+}

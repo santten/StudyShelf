@@ -4,8 +4,10 @@ import domain.model.Category;
 import domain.model.StudyMaterial;
 import infrastructure.repository.CategoryRepository;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -15,12 +17,25 @@ import presentation.utility.StyleClasses;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class CoursesController {
+import static presentation.utility.FXMLPageHandler.setUp;
+
+public class CoursesController implements PageController {
     private final CategoryRepository categoryRepo = new CategoryRepository();
     private final ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
+    public void setPage(){
+        setUp("/fxml/courses.fxml");
+    }
+
+    @Override
+    public String getPageName() {
+        return "All Courses";
+    }
 
     @FXML private VBox mainVBoxCourses;
 
@@ -49,7 +64,7 @@ public class CoursesController {
             HBox hbox = new HBox(button, new Text(String.format(rb.getString("courseBy"), c.getCreator().getFullName())));
             hbox.setSpacing(8);
 
-            button.setOnAction(e -> SceneManager.getInstance().displayCategory(c.getCategoryId()));
+            button.setOnAction(e -> SceneManager.getInstance().setScreen(c));
 
             courseContainer.getChildren().addAll(title, hbox);
 

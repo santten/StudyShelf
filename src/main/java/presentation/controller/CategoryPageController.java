@@ -1,6 +1,7 @@
 package presentation.controller;
 
 import domain.model.Category;
+import domain.model.PermissionType;
 import domain.model.StudyMaterial;
 import domain.model.User;
 import domain.service.CategoryService;
@@ -19,7 +20,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import presentation.components.BreadCrumb;
 import presentation.components.MaterialCard;
+import presentation.utility.CustomAlert;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
 import presentation.utility.StyleClasses;
@@ -33,10 +36,13 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.scene.shape.FillRule.EVEN_ODD;
-import static presentation.view.Screen.SCREEN_HOME;
+import static presentation.enums.ScreenType.SCREEN_HOME;
 
-public class CategoryPageController {
+public class CategoryPageController implements PageController {
+    private final Category category;
+
     private List<StudyMaterial> pendingMaterials;
     private List<StudyMaterial> ownerMaterials;
     private List<StudyMaterial> otherMaterials;
@@ -49,7 +55,7 @@ public class CategoryPageController {
 
     private final ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
-    public CategoryPageController() {
+    public CategoryPageController(Category c) {
         this.pendingMaterials = new ArrayList<>();
         this.ownerMaterials = new ArrayList<>();
         this.otherMaterials = new ArrayList<>();
@@ -60,6 +66,8 @@ public class CategoryPageController {
         this.otherMaterialsContainer = new VBox();
 
         this.titleLabelHBox = new HBox();
+
+        this.category = c;
     }
 
     private List<StudyMaterial> getPendingMaterials() {
@@ -91,7 +99,10 @@ public class CategoryPageController {
         this.otherMaterials = otherMaterials;
     }
 
-    public void setPage(Category c){
+    public void setPage(){
+        getTitleLabelHBox().getChildren().clear();
+
+        Category c = this.category;
         VBox vbox = new VBox();
 
         vbox.getStylesheets().add(Objects.requireNonNull(CategoryPageController.class.getResource("/css/style.css")).toExternalForm());
@@ -117,11 +128,8 @@ public class CategoryPageController {
         addText.getStyleClass().addAll(StyleClasses.HEADING5, StyleClasses.LIGHT);
 
         addMaterialButton.setOnAction(e -> {
-            ScrollPane scrollPane = new ScrollPane();
             UploadController page = new UploadController();
-            page.initialize(scrollPane, c);
-            SceneManager sm = SceneManager.getInstance();
-            sm.setCenter(scrollPane);
+            page.setPage(c);
         });
 
         HBox addMaterialHBox = new HBox(addSVG, addText);
@@ -143,7 +151,7 @@ public class CategoryPageController {
             deleteBtn.setGraphic(svgDelete);
 
             deleteBtn.setOnAction(e3 -> {
-                if (CategoryController.deleteCategory(c)) {
+                if (CategoryPageController.deleteCategory(c)) {
                     SceneManager.getInstance().setScreen(SCREEN_HOME);
                 }
             });
@@ -186,7 +194,7 @@ public class CategoryPageController {
         }
 
         header.setSpacing(12);
-        header.getChildren().addAll(getTitleLabelHBox(), author, addMaterialButton);
+        header.getChildren().addAll(new BreadCrumb().makeBreadCrumb(), getTitleLabelHBox(), author, addMaterialButton);
 
         vbox.getChildren().add(header);
 
@@ -221,6 +229,11 @@ public class CategoryPageController {
         SceneManager.getInstance().setCenter(sp);
     }
 
+    @Override
+    public String getPageName() {
+        return this.category.getCategoryName();
+    }
+
     public void setUpApproveView(Category c, VBox page){
         CategoryService cServ = new CategoryService(new CategoryRepository(), new PermissionService());
         setPendingMaterials(cServ.getPendingMaterialsByCategory(CurrentUserManager.get(), c));
@@ -245,7 +258,7 @@ public class CategoryPageController {
         Button content = new Button();
         content.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();
-            sm.displayMaterial(s.getMaterialId());
+            sm.setScreen(s);
         });
 
         Label materialTitle = new Label(s.getName());
@@ -327,6 +340,20 @@ public class CategoryPageController {
             getOtherMaterialsContainer().getChildren().addAll(
                     text,
                     MaterialCard.materialCardScrollHBox(otherMaterials));
+        }
+    }
+
+    public static boolean deleteCategory(Category c) {
+        if (CustomAlert.confirm("Deleting Course", "Are you sure you want to delete course \"" + c.getCategoryName() + "\"?", "This will delete all of the materials in it and can not be undone.", true)) {
+            User user = CurrentUserManager.get();
+            if (!(user.getUserId() == c.getCreator().getUserId() || user.hasPermission(PermissionType.DELETE_ANY_CATEGORY))) {
+                CustomAlert.show(WARNING, "Permission Denied", "You do not have permission to delete this course.");
+            }
+            new CategoryService(new CategoryRepository(), new PermissionService()).deleteCategory(user, c.getCategoryId());
+
+            return true;
+        } else {
+            return false;
         }
     }
 }

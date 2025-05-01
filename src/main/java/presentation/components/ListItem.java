@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.FillRule;
 import javafx.scene.shape.SVGPath;
+import presentation.enums.ItemType;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
 import presentation.utility.StyleClasses;
@@ -24,7 +25,7 @@ import presentation.view.SceneManager;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static presentation.components.ItemType.*;
+import static presentation.enums.ItemType.*;
 
 public class ListItem {
     public static final ResourceBundle rb = LanguageManager.getInstance().getBundle();
@@ -32,11 +33,11 @@ public class ListItem {
     private ListItem(){}
 
     public static Button listItemGraphic(StudyMaterial s){
-        return layout(s.getName(), MATERIAL, String.format(rb.getString("fileUploadedByName"), s.getFileType(), s.getUploader().getFullName()), s.getMaterialId());
+        return layout(s.getName(), MATERIAL, String.format(rb.getString("fileUploadedByName"), s.getFileType(), s.getUploader().getFullName()), s);
     }
 
     public static Button listItemGraphic(Category c) {
-        return layout(c.getCategoryName(), CATEGORY, String.format(rb.getString("courseBy"), c.getCreator().getFullName()), c.getCategoryId());
+        return layout(c.getCategoryName(), CATEGORY, String.format(rb.getString("courseBy"), c.getCreator().getFullName()), c);
     }
 
     public static Button listItemGraphic(User u) {
@@ -45,11 +46,11 @@ public class ListItem {
 
     public static Button listItemGraphic(Tag t) {
         String text = t.getMaterials().size() > 1 ? String.format(rb.getString("tagContainsPluralMaterials"), t.getMaterials().size()) : rb.getString("tagContainsSingularMaterial");
-        return layout(t.getTagName(), TAG, text, t.getTagId());
+        return layout(t.getTagName(), TAG, text, t);
     }
 
 
-    public static Button layout(String text, ItemType type, String info, int id){
+    public static Button layout(String text, ItemType type, String info, Object obj){
         Button btn = new Button();
         VBox graphic = new VBox();
         HBox header = new HBox();
@@ -67,17 +68,17 @@ public class ListItem {
             case CATEGORY:
                 svg.setContent(SVGContents.SCHOOL);
                 color = StyleClasses.SECONDARY;
-                btn.setOnAction(e -> sm.displayCategory(id));
+                btn.setOnAction(e -> sm.setScreen((Category) obj));
                 break;
             case MATERIAL:
                 svg.setContent(SVGContents.FILE);
                 color = StyleClasses.PRIMARY_LIGHT;
-                btn.setOnAction(e -> sm.displayMaterial(id));
+                btn.setOnAction(e -> sm.setScreen((StudyMaterial) obj));
                 break;
             case TAG:
                 svg.setContent(SVGContents.TAG);
                 color = StyleClasses.PRIMARY;
-                btn.setOnAction(e -> sm.showMaterialsWithTag(id));
+                btn.setOnAction(e -> sm.setScreen((Tag) obj));
                 break;
             default:
                 color = StyleClasses.ERROR;

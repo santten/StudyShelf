@@ -22,10 +22,8 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
-import presentation.components.LanguageButton;
-import presentation.components.Stars;
-import presentation.components.TagButton;
-import presentation.components.TextLabels;
+import presentation.components.*;
+import presentation.utility.CustomAlert;
 import presentation.utility.GUILogger;
 import presentation.utility.SVGContents;
 import presentation.utility.StyleClasses;
@@ -40,9 +38,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static domain.model.RoleType.ADMIN;
+import static javafx.scene.control.Alert.AlertType.WARNING;
 
 
-public class StudyMaterialPageController {
+public class StudyMaterialPageController implements PageController {
     private final HBox fileContainer;
 
     private final VBox reviewContainer;
@@ -150,7 +149,8 @@ public class StudyMaterialPageController {
 
     /* main method */
 
-    public void displayPage() {
+    @Override
+    public void setPage() {
         VBox base = new VBox();
         base.getStylesheets().add(Objects.requireNonNull(CategoryPageController.class.getResource("/css/style.css")).toExternalForm());
         base.setSpacing(12);
@@ -158,6 +158,8 @@ public class StudyMaterialPageController {
 
         boolean isOwned = CurrentUserManager.get().getUserId() == getMaterial().getUploader().getUserId();
         boolean isAdmin = (CurrentUserManager.get().getRole().getName() == ADMIN);
+
+        base.getChildren().add(new BreadCrumb().makeBreadCrumb());
 
         setUpFileContainer(isOwned || isAdmin);
         base.getChildren().add(getFileContainer());
@@ -172,6 +174,11 @@ public class StudyMaterialPageController {
 
         ScrollPane wrapper = new ScrollPane(base);
         SceneManager.getInstance().setCenter(wrapper);
+    }
+
+    @Override
+    public String getPageName() {
+        return this.material.getName();
     }
 
     private void setUpApprovalStatus() {
@@ -206,7 +213,7 @@ public class StudyMaterialPageController {
                     Hyperlink courseHyperLink = new Hyperlink(sm.getCategory().getCategoryName());
                     courseHyperLink.setOnAction(e -> {
                         SceneManager sceneMan = SceneManager.getInstance();
-                        sceneMan.displayCategory(sm.getCategory().getCategoryId());
+                        sceneMan.setScreen(sm.getCategory());
                     });
 
                     TextFlow textFlow = new TextFlow(
@@ -343,7 +350,7 @@ public class StudyMaterialPageController {
 
         Hyperlink authorLink = new Hyperlink(s.getUploader().getFullName());
         authorLink.setStyle("-fx-font-size: 1.2em; -fx-underline: false;");
-        authorLink.setOnAction(e -> SceneManager.getInstance().displayProfile(s.getUploader().getUserId()));
+        authorLink.setOnAction(e -> SceneManager.getInstance().setScreen(s.getUploader()));
 
         uploaderLabels.getChildren().addAll(author, authorLink, new Text("  "), TextLabels.getUserRoleLabel(s.getUploader()), new Text("  "));
 
@@ -398,7 +405,7 @@ public class StudyMaterialPageController {
         Hyperlink courseLink = new Hyperlink(s.getCategory().getCategoryName());
         courseLink.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();
-            sm.displayCategory(s.getCategory().getCategoryId());
+            sm.setScreen(s.getCategory());
         });
 
         TextFlow course = new TextFlow(new Text(rb.getString("uploadedUnderCourse") + " "), courseLink, new Text(" " + String.format(rb.getString("time"), formattedTimestamp)));
@@ -437,8 +444,8 @@ public class StudyMaterialPageController {
 
             button.setGraphic(svgPath);
             button.setOnAction(e -> {
-                if (StudyMaterialController.deleteMaterial(s)){
-                    SceneManager.getInstance().displayCategory(s.getCategory().getCategoryId());
+                if (StudyMaterialPageController.deleteMaterial(s)){
+                    SceneManager.getInstance().setScreen(s.getCategory());
                 }
             });
 
@@ -676,7 +683,7 @@ public class StudyMaterialPageController {
         Hyperlink userLink = new Hyperlink(rating.getUser().getFullName());
         userLink.setOnAction(e -> {
             SceneManager sm = SceneManager.getInstance();
-            sm.displayProfile(rating.getUser().getUserId());
+            sm.setScreen(rating.getUser());
         });
         userLink.getStyleClass().add(StyleClasses.REVIEW_USER_LINK);
 
@@ -696,5 +703,19 @@ public class StudyMaterialPageController {
         base.getChildren().addAll(reviewerHBox, stars, comment);
         base.getStyleClass().add(StyleClasses.REVIEW_CARD);
         return base;
+    }
+
+    public static boolean deleteMaterial(StudyMaterial s) {
+        final ResourceBundle rb = LanguageManager.getInstance().getBundle();
+
+        if (CustomAlert.confirm(rb.getString("alertDeletingMaterial"), String.format(rb.getString("alertConfirmDeleteMaterial"), s.getName()), rb.getString("alertNoUndo"), true)) {
+            if (!(CurrentUserManager.get().getUserId() == s.getUploader().getUserId() || CurrentUserManager.get().hasPermission(PermissionType.DELETE_ANY_RESOURCE))) {
+                CustomAlert.show(WARNING, rb.getString("alertPermissionDenied"), rb.getString("alertPermissionDeniedMaterial"));
+            }
+            new StudyMaterialService(new GoogleDriveService(), new StudyMaterialRepository(), new PermissionService()).deleteMaterial(CurrentUserManager.get(), s);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
