@@ -86,7 +86,7 @@ public class LoginController {
 
         linkToSignup.setOnAction(e -> sm.setScreen(SCREEN_SIGNUP));
 
-        vbox.setMaxWidth(200);
+        vbox.setMaxWidth(250);
         vbox.setMaxHeight(200);
 
         bp.setCenter(vbox);
