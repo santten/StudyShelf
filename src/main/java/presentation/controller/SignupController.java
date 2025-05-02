@@ -104,6 +104,7 @@ public class SignupController {
         /* sign up*/
         Button btnSignup = new Button(rb.getString("signup"));
         btnSignup.getStyleClass().add(StyleClasses.BTN_S);
+        btnSignup.setDefaultButton(true);
         btnSignup.setOnAction(e -> {
             if (validateForm()) {
                 handleSignup();

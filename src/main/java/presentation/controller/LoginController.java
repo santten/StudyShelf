@@ -65,6 +65,7 @@ public class LoginController {
 
         btnLogin = new Button(rb.getString("login"));
         btnLogin.getStyleClass().add(StyleClasses.BTN_S);
+        btnLogin.setDefaultButton(true);
 
         linkToSignup = new Hyperlink(rb.getString("loginToSignup"));
 
@@ -94,6 +95,7 @@ public class LoginController {
         bp.setMinWidth(800);
         bp.setMinHeight(600);
         return bp;
+
     }
 
     private HBox getLanguageSelection() {
