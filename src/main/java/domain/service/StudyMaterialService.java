@@ -4,12 +4,16 @@ import domain.model.*;
 import infrastructure.repository.StudyMaterialRepository;
 import infrastructure.repository.StudyMaterialTranslationRepository;
 import domain.model.PermissionType;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import presentation.view.LanguageManager;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -248,19 +252,51 @@ public class StudyMaterialService {
     }
 
     /**
-     * Downloads a file to the given location if the user has permission.
+     * Asynchronously downloads a file to the given location if the user has permission.
+     * This method executes the download operation in a background thread to prevent UI freezing.
+     *
+     * @param user          User attempting to download the material
+     * @param material      StudyMaterial to be downloaded
+     * @param saveLocation  File location where the downloaded content will be saved
+     * @return Task<Void>   JavaFX Task that can be used to monitor download progress or handle completion
+     *                      The task completes with null on success or throws an exception on failure
+     * @throws SecurityException if the user lacks permission to download the material
+     * @throws Exception for other unexpected errors during download
      */
-    public void downloadMaterial(User user, StudyMaterial material, File saveLocation) throws IOException {
-        boolean canDownload = (material.getStatus() == MaterialStatus.APPROVED && permissionService.hasPermission(user, PermissionType.READ_RESOURCES))
-                || permissionService.hasPermission(user, PermissionType.REVIEW_PENDING_RESOURCES);
+    public Task<Void> downloadMaterial(User user, StudyMaterial material, File saveLocation) {
+        Task<Void> downloadTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                try {
+                    boolean canDownload = (material.getStatus() == MaterialStatus.APPROVED &&
+                            permissionService.hasPermission(user, PermissionType.READ_RESOURCES))
+                            || permissionService.hasPermission(user, PermissionType.REVIEW_PENDING_RESOURCES);
 
-        if (!canDownload) {
-            throw new SecurityException("You do not have permission to download this material.");
-        }
+                    if (!canDownload) {
+                        throw new SecurityException("You do not have permission to download this material.");
+                    }
 
-        byte[] content = driveService.downloadFile(material.getLink());
-        Files.write(saveLocation.toPath(), content);
-        logger.info("User {} downloaded material: {}", user.getEmail(), material.getName());
+                    long fileSize = driveService.getFileSize(material.getLink());
+
+                    try (OutputStream out = new FileOutputStream(saveLocation)) {
+                        driveService.downloadFile(material.getLink(), out, (bytesCopied) -> {
+                            updateProgress(bytesCopied, fileSize);
+                        });
+                    }
+
+                    Platform.runLater(() -> {
+                        logger.info("User {} downloaded material: {}", user.getEmail(), material.getName());
+                    });
+
+                    return null;
+                } catch (Exception e) {
+                    logger.error("Error downloading material: {}", e.getMessage());
+                    throw e;
+                }
+            }
+        };
+
+        return downloadTask;
     }
 
     /**

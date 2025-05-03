@@ -37,7 +37,10 @@ src/main/resources/META-INF/
 tokens/
 src/main/resources/META-INF/persistence.xml
 tokens/.idea/
+# SonarQube configuration
+sonar-project.properties
+.scannerwork/
 
 .env
 .scannerwork/
-sonar-project.properties
+.sonar/
