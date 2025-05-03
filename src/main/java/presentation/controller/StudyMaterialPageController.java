@@ -364,7 +364,7 @@ public class StudyMaterialPageController implements PageController {
 
         Text fileDetails = new Text(Math.round(s.getFileSize()) + " KB " + s.getFileType());
 
-        Button downloadBtn = getDownloadButton(s);
+        VBox downloadBtn = getDownloadButton(s);
 
         /* FILE DESC CONTAINER */
         VBox fileDescContainer = new VBox();
@@ -460,14 +460,17 @@ public class StudyMaterialPageController implements PageController {
         getFileContainer().getChildren().addAll(left, right);
     }
 
-    public class AppConfig {
+    public static class AppConfig {
         private AppConfig() {}
         public static final String IMAGE_TRANSLATE_ICON = "/images/google-translate-icon.png";
     }
 
-    private Button getDownloadButton(StudyMaterial s){
+    private VBox getDownloadButton(StudyMaterial s){
         Button downloadBtn = new Button(rb.getString("download"));
         downloadBtn.getStyleClass().add(StyleClasses.BTN_DOWNLOAD);
+
+        Text statusMessage = new Text("");
+
         downloadBtn.setOnAction(event -> {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setInitialFileName(s.getName() + "." + s.getFileExtension());
@@ -482,24 +485,29 @@ public class StudyMaterialPageController implements PageController {
 
                     Task<Void> downloadTask = materialService.downloadMaterial(CurrentUserManager.get(), s, saveLocation);
 
-                    // Modal download progress
-                    Stage owner = (Stage) downloadBtn.getScene().getWindow();
-                    ProgressModal modal = new ProgressModal(owner, rb.getString("downloading"), s.getName(), downloadTask);
+                    ProgressModal modal = ProgressModal.getInstance();
+                    ProgressModal.addTask(s.getName(), downloadTask);
                     modal.show();
 
                     downloadTask.addEventHandler(javafx.concurrent.WorkerStateEvent.WORKER_STATE_SUCCEEDED, e -> {
                         GUILogger.info("Successfully downloaded " + s.getName());
+                        statusMessage.setText(rb.getString("successfulDownload"));
+                        statusMessage.getStyleClass().clear();
+                        statusMessage.getStyleClass().add(StyleClasses.SECONDARY);
                     });
                     downloadTask.addEventHandler(javafx.concurrent.WorkerStateEvent.WORKER_STATE_FAILED, e -> {
                         Throwable exception = downloadTask.getException();
                         GUILogger.warn("Failed to download file: " + exception.getMessage());
+                        statusMessage.setText(rb.getString("failedDownload"));
+                        statusMessage.getStyleClass().clear();
+                        statusMessage.getStyleClass().add(StyleClasses.ERROR);
                     });
                     new Thread(downloadTask).start();
                 }
 
         });
 
-        return downloadBtn;
+        return new VBox(downloadBtn, statusMessage);
     }
 
     private Button createTranslateButton(){

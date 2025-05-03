@@ -48,4 +48,8 @@ public class StyleClasses {
     public static final String PROFILE_LIST_ITEM = "profileListItem";
     public static final String PROFILE_LINK = "profileLink";
     public static final String MENU_BOX = "menuBox";
+
+    public static final String PROGRESS_SUCCESS = "progress-bar-success";
+    public static final String PROGRESS_FAIL = "progress-bar-fail";
+
 }

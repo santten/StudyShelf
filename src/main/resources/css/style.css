@@ -486,3 +486,16 @@
     -fx-padding: 10;
     -fx-min-width: 150;
 }
+
+.progress-bar .bar {
+    -fx-background-color: -primary-light;
+}
+
+.progress-bar-success .bar {
+    -fx-background-color: -secondary;
+}
+
+.progress-bar-fail .bar {
+    -fx-background-color: -error;
+}
+
