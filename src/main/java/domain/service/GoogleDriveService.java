@@ -15,11 +15,10 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Service class responsible for interacting with Google Drive API.
@@ -88,13 +87,18 @@ public class GoogleDriveService {
      * @return the file contents as a byte array
      * @throws IOException if download fails
      */
-    public byte[] downloadFile(String fileUrl) throws IOException {
+    public void downloadFile(String fileUrl, OutputStream outputStream, Consumer<Long> progressCallback) throws IOException {
         String fileId = extractFileIdFromUrl(fileUrl);
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        driveService.files().get(fileId)
-                .executeMediaAndDownloadTo(outputStream);
-        return outputStream.toByteArray();
+        InputStream in = driveService.files().get(fileId).executeMediaAsInputStream();
+        byte[] buffer = new byte[8192];
+        long totalRead = 0;
+        int bytesRead;
+        while ((bytesRead = in.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+            totalRead += bytesRead;
+            progressCallback.accept(totalRead);
+        }
+        in.close();
     }
 
     /**
@@ -108,6 +112,14 @@ public class GoogleDriveService {
         String[] parts = url.split("/");
         return parts[5];
     }
+
+    public long getFileSize(String fileUrl) throws IOException {
+        String fileId = extractFileIdFromUrl(fileUrl);
+        File file = driveService.files().get(fileId).setFields("size").execute();
+        return file.getSize();
+    }
+
+
 
 
 }
