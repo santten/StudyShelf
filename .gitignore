@@ -40,3 +40,4 @@ tokens/.idea/
 
 .env
 .scannerwork/
+sonar-project.properties
