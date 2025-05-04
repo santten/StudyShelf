@@ -15,6 +15,15 @@ pipeline {
           git branch: 'armas-branch', url: 'https://github.com/santten/StudyShelf.git'
         }
       }
+      stage('Prepare Environment') {
+        steps {
+          // Create directory structure
+          bat 'if not exist "src\\main\\resources" mkdir -p src\\main\\resources'
+
+          // Create the properties file
+          bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\main\\resources\\translate-api.properties'
+        }
+      }
 
       stage('build'){
         steps {
@@ -24,9 +33,7 @@ pipeline {
 
       stage('tests') {
                    steps {
-                      bat 'if not exist "src\\main\\resources\\credentials" mkdir src\\main\\resources\\credentials'
-                      bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\main\\resources\\credentials\\translate-api.properties'
-                      bat "mvn test jacoco:report"
+                       bat "mvn test jacoco:report -Dmaven.clean.skip=true"
                   }
                    post {
                           always {
