@@ -23,13 +23,13 @@ pipeline {
       }
 
       stage('Prepare Test Environment') {
-        steps {
-          // Create test resources directory if it doesn't exist
-              bat 'mkdir -p src\\test\\resources'
+         steps {
+            // Create test resources directory if it doesn't exist (Windows syntax)
+            bat 'if not exist "src\\test\\resources" mkdir src\\test\\resources'
 
-              // Create the correctly named properties file
-              bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\test\\resources\\translate-api.properties'
-        }
+            // Create the correctly named properties file
+            bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\test\\resources\\translate-api.properties'
+          }
       }
 
       stage('tests') {
