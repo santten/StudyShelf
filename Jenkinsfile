@@ -9,6 +9,12 @@ pipeline {
       jdk 'JDK17'
     }
     stages {
+
+      stage('Clean Workspace') {
+        steps {
+          cleanWs()
+        }
+      }
       stage('checking'){
         steps {
           git branch: 'main', url: 'https://github.com/santten/StudyShelf.git'
