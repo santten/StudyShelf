@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -301,7 +302,6 @@ class StudyMaterialServiceTest {
     @Test
     void downloadMaterial_Success() throws IOException {
         java.io.File saveLocation = File.createTempFile("testFile", ".txt");
-
         byte[] fileData = "Test File Data".getBytes();
 
         testMaterial.setStatus(MaterialStatus.APPROVED);
@@ -314,10 +314,14 @@ class StudyMaterialServiceTest {
         when(permissionService.hasPermission(any(User.class), eq(PermissionType.READ_RESOURCES)))
                 .thenReturn(true);
 
-        when(driveService.downloadFile(testMaterial.getLink())).thenReturn(fileData);
+        doAnswer(invocation -> {
+            OutputStream os = invocation.getArgument(1);
+            os.write(fileData);
+            return null; // for void methods
+        }).when(driveService).downloadFile(eq(testMaterial.getLink()), any(OutputStream.class), any());
 
         materialService.downloadMaterial(uploader, testMaterial, saveLocation);
-        verify(driveService, times(1)).downloadFile(testMaterial.getLink());
+        verify(driveService, times(1)).downloadFile(eq(testMaterial.getLink()), any(OutputStream.class), any());
     }
 
 
@@ -331,7 +335,7 @@ class StudyMaterialServiceTest {
                 materialService.downloadMaterial(uploader, testMaterial, saveLocation)
         );
 
-        verify(driveService, never()).downloadFile(anyString());
+        verify(driveService, never()).downloadFile(anyString(), any(OutputStream.class), any());
     }
 
     @Test
