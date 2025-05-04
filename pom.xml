@@ -100,6 +100,7 @@
                         <test>true</test>
                         <jakarta.persistence.jdbc.url>jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1</jakarta.persistence.jdbc.url>
                         <jakarta.persistence.jdbc.driver>org.h2.Driver</jakarta.persistence.jdbc.driver>
+                        <DB_HOST>localhost</DB_HOST>
                         <jakarta.persistence.jdbc.user>sa</jakarta.persistence.jdbc.user>
                         <jakarta.persistence.jdbc.password></jakarta.persistence.jdbc.password>
                     </systemPropertyVariables>
