@@ -25,10 +25,10 @@ pipeline {
       stage('Prepare Test Environment') {
         steps {
           // Create test resources directory if it doesn't exist
-          bat 'mkdir -p src\\test\\resources'
+              bat 'mkdir -p src\\test\\resources'
 
-          // Create dummy translation.properties file for tests
-          bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\test\\resources\\translation.properties'
+              // Create the correctly named properties file
+              bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\test\\resources\\translate-api.properties'
         }
       }
 
