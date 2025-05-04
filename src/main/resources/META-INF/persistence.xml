@@ -33,8 +33,8 @@
         <class>domain.model.Permission</class>
         <properties>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://${DB_HOST:localhost}:3306/StudyShelf"/>
-            <property name="jakarta.persistence.jdbc.user" value="${DB_USER:appuser}"/>
-            <property name="jakarta.persistence.jdbc.password" value="${DB_PASSWORD:password}"/>
+            <property name="jakarta.persistence.jdbc.user" value="appuser"/>
+            <property name="jakarta.persistence.jdbc.password" value="password"/>
             <!--Uncomment this line and comment line above to use the local database>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/StudyShelf"/>
             <property name="jakarta.persistence.jdbc.user" value="appuser"/>
