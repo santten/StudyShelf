@@ -2,6 +2,7 @@ version: '3.8'
 services:
   app:
     image: armasnevolainen/study_shelf:latest_v1
+    command: java -Djakarta.persistence.jdbc.url=jdbc:mariadb://db:3306/StudyShelf --module-path /app/javafx-libs/javafx-controls/20.0.1:/app/javafx-libs/javafx-graphics/20.0.1:/app/javafx-libs/javafx-base/20.0.1:/app/javafx-libs/javafx-fxml/20.0.1 --add-modules javafx.controls,javafx.fxml -jar studyshelf.jar
     environment:
       - DISPLAY=host.docker.internal:0
       - DB_HOST=db
