@@ -10,9 +10,10 @@ pipeline {
     }
     stages {
 
-      stage('Clean Workspace') {
+      stage('Clean and Build') {
         steps {
-          cleanWs()
+          bat 'mvn clean'
+          bat 'mvn compile -U'
         }
       }
       stage('checking'){
