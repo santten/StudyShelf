@@ -283,24 +283,22 @@
     -fx-background-radius: 4;
 }
 
-.menu-button {
+.menu-button, .combo-box, .choice-box {
     -fx-background-color: -light-shadow;
     -fx-border-color: transparent;
     -fx-border-radius: 5;
 }
 
-.menu-button:focused {
+.menu-button:focused, .combo-box:focused, .choice-box:focused {
     -fx-border-color: -primary-light;
 }
 
-.choice-box {
-    -fx-background-color: -light-shadow;
-    -fx-border-color: transparent;
-    -fx-border-radius: 5;
+.combo-box {
+    -fx-padding: 6;
 }
 
-.choice-box:focused {
-    -fx-border-color: -primary-light;
+.combo-box .list-view .list-cell {
+    -fx-padding: 6;
 }
 
 .menu-item:focused {

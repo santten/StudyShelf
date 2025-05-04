@@ -83,7 +83,7 @@ public class ProgressModal {
             progressBar.getStyleClass().add(StyleClasses.PROGRESS_FAIL);
         });
 
-        task.setOnCancelled(e -> GUILogger.info("cancelled"));
+        task.setOnCancelled(e -> GUILogger.warn("download cancelled"));
     }
 
     public void show() {
