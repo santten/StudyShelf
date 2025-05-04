@@ -10,15 +10,9 @@ pipeline {
     }
     stages {
 
-      stage('Clean and Build') {
-        steps {
-          bat 'mvn clean'
-          bat 'mvn compile -U'
-        }
-      }
       stage('checking'){
         steps {
-          git branch: 'main', url: 'https://github.com/santten/StudyShelf.git'
+          git branch: 'armas-branch', url: 'https://github.com/santten/StudyShelf.git'
         }
       }
 

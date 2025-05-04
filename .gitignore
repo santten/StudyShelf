@@ -40,6 +40,7 @@ tokens/.idea/
 # SonarQube configuration
 sonar-project.properties
 .scannerwork/
+credentials/
 
 .env
 .scannerwork/
