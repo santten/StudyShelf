@@ -2,10 +2,12 @@ package domain.service;
 
 import domain.model.*;
 import infrastructure.repository.ReviewRepository;
+import infrastructure.repository.ReviewTranslationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,6 +17,9 @@ class ReviewServiceTest {
     private ReviewService reviewService;
     private ReviewRepository reviewRepository;
     private PermissionService permissionService;
+    private TranslationService translationService;
+    private ReviewTranslationRepository translationRepository;
+
 
     private User testUser;
     private User adminUser;
@@ -25,13 +30,26 @@ class ReviewServiceTest {
     void setUp() {
         reviewRepository = Mockito.mock(ReviewRepository.class);
         permissionService = Mockito.mock(PermissionService.class);
+        translationService = Mockito.mock(TranslationService.class);
+        translationRepository = Mockito.mock(ReviewTranslationRepository.class);
         reviewService = new ReviewService(reviewRepository, permissionService);
-
         Role studentRole = new Role(RoleType.STUDENT);
         Role adminRole = new Role(RoleType.ADMIN);
 
         testUser = new User(1, "Bob", "Johnson", "bob@example.com", "securePass", studentRole);
         adminUser = new User(2, "Alice", "Smith", "alice@example.com", "securePass", adminRole);
+        try {
+            // Access private fields to inject mocks
+            Field tsField = ReviewService.class.getDeclaredField("translationService");
+            tsField.setAccessible(true);
+            tsField.set(reviewService, translationService);
+
+            Field trField = ReviewService.class.getDeclaredField("translationRepository");
+            trField.setAccessible(true);
+            trField.set(reviewService, translationRepository);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to set up test", e);
+        }
 
         testMaterial = new StudyMaterial(
                 testUser,
