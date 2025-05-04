@@ -24,8 +24,8 @@ pipeline {
 
       stage('tests') {
                    steps {
-                      bat 'if not exist "src\\resources" mkdir src\\resources'
-                      bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\resources\\translate-api.properties'
+                      bat 'if not exist "src\\main\\resources\\credentials" mkdir src\\main\\resources\\credentials'
+                      bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\main\\resources\\credentials\\translate-api.properties'
                       bat "mvn test jacoco:report"
                   }
                    post {
