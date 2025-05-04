@@ -36,5 +36,6 @@
          <Insets />
       </VBox.margin>
    </HBox>
+   <Text fx:id="resultsDisplayLabel" strokeType="OUTSIDE" strokeWidth="0.0" />
    <ListView fx:id="resultsListView" prefWidth="760.0" style="-fx-border-color: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS" />
 </VBox>
