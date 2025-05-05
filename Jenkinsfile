@@ -9,34 +9,21 @@ pipeline {
       jdk 'JDK17'
     }
     stages {
-
       stage('checking'){
         steps {
-          git branch: 'armas-branch', url: 'https://github.com/santten/StudyShelf.git'
-        }
-      }
-      stage('Prepare Environment') {
-        steps {
-          bat 'if not exist "src" mkdir src'
-          bat 'if not exist "src\\main" mkdir src\\main'
-          bat 'if not exist "src\\main\\resources" mkdir src\\main\\resources'
-          bat 'if not exist "src\\main\\resources\\credentials" mkdir src\\main\\resources\\credentials"'
-          bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\main\\resources\\credentials\\translate-api.properties'
-          bat 'echo DB_HOST=mem > .env.jenkins'
-          bat 'echo DB_USER=sa >> .env.jenkins'
-          bat 'echo DB_PASSWORD= >> .env.jenkins'
+          git branch: 'main', url: 'https://github.com/santten/StudyShelf.git'
         }
       }
 
       stage('build'){
         steps {
-          bat 'mvn clean compile -DskipTests'
+          bat 'mvn clean install -DskipTests'
         }
       }
 
       stage('tests') {
                    steps {
-                       bat "mvn test jacoco:report -Djakarta.persistence.jdbc.url=jdbc:h2:mem:testdb -Djakarta.persistence.jdbc.driver=org.h2.Driver -Djakarta.persistence.jdbc.user=sa -Djakarta.persistence.jdbc.password= -Dmaven.clean.skip=true"
+                      bat "mvn test jacoco:report"
                   }
                    post {
                           always {
@@ -44,7 +31,7 @@ pipeline {
                             jacoco execPattern: '**/target/jacoco.exec',
                                    classPattern: '**/target/classes',
                                    sourcePattern: '**/src/main/java',
-                                   exclusionPattern: '**/test/**, **/infrastructure/repository/**, **/infrastructure/config/**, **/presentation/**'
+                                   exclusionPattern: '**/test/**'
                           }
                         }
               }
@@ -52,7 +39,9 @@ pipeline {
       stage('Build Docker Image') {
             steps {
               script {
-               bat "docker build -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} --build-arg SKIP_CREDENTIALS=true ."
+                bat "IF NOT EXIST temp\\credentials mkdir temp\\credentials"
+                bat "copy src\\main\\resources\\credentials\\*.* temp\\credentials\\"
+                bat "docker build -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} --build-arg CREDENTIALS_PATH=temp/credentials ."
               }
             }
           }
@@ -69,11 +58,7 @@ pipeline {
 
           stage('Cleanup') {
             steps {
-              bat '''
-                if exist temp\\credentials (
-                  rmdir /S /Q temp\\credentials
-                )
-              '''
+              bat "rmdir /S /Q temp\\credentials"
             }
           }
     }

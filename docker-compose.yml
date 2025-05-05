@@ -2,23 +2,13 @@ version: '3.8'
 services:
   app:
     image: armasnevolainen/study_shelf:latest_v1
-    command: >
-      java -Djakarta.persistence.jdbc.url=jdbc:mariadb://db:3306/StudyShelf
-      -Djakarta.persistence.jdbc.user=appuser
-      -Djakarta.persistence.jdbc.password=${DB_PASSWORD}
-      --module-path /app/javafx-libs/javafx-controls/20.0.1:/app/javafx-libs/javafx-graphics/20.0.1:/app/javafx-libs/javafx-base/20.0.1:/app/javafx-libs/javafx-fxml/20.0.1
-      --add-modules javafx.controls,javafx.fxml
-      -jar studyshelf.jar
     environment:
       - DISPLAY=host.docker.internal:0
-      - DB_HOST=db
+      - DB_URL=jdbc:mariadb://db:3306/StudyShelf
       - DB_USER=appuser
-      - DB_PASSWORD=${DB_PASSWORD}
-    ports:
-      - "8888:8888"
+      - DB_PASSWORD=password
     volumes:
-      - ./src/main/resources/META-INF:/app/src/main/resources/META-INF
-      - ./src/main/resources/credentials:/app/src/main/resources/credentials
+      - ./src/main/resources/credentials:/app/credentials
       - ${DOWNLOADS_DIR:-~/Downloads}:/app/downloads
     depends_on:
       - db
@@ -31,10 +21,9 @@ services:
       - MARIADB_PASSWORD=${DB_PASSWORD}
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
-      - ./data/mysql:/var/lib/mysql
+      - mariadb-data:/var/lib/mysql
     ports:
       - "3306:3306"
-
 
 volumes:
   mariadb-data:
