@@ -1,24 +1,27 @@
 package domain.service;
 
 import domain.model.*;
+import infrastructure.config.DatabaseConnection;
 import infrastructure.repository.StudyMaterialRepository;
+import jakarta.persistence.EntityManagerFactory;
 import javafx.concurrent.Task;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import util.TestPersistenceUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -40,6 +43,49 @@ class StudyMaterialServiceTest {
     private User uploader;
     private User adminUser;
     private StudyMaterial testMaterial;
+
+    private static MockedStatic<DatabaseConnection> mockedDatabaseConnection;
+    private static MockedStatic<Session> mockedSession;
+    private static MockedStatic<TestPersistenceUtil> mockedTestPersistenceUtil;
+
+    @BeforeAll
+    public static void setupClass() {
+        // Force any database connections to use H2 instead of MariaDB
+        System.setProperty("jakarta.persistence.jdbc.url", "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
+        System.setProperty("jakarta.persistence.jdbc.driver", "org.h2.Driver");
+        System.setProperty("jakarta.persistence.jdbc.user", "sa");
+        System.setProperty("jakarta.persistence.jdbc.password", "");
+        System.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        System.setProperty("test", "true");
+
+        // Mock the static DatabaseConnection.getEntityManagerFactory() method
+        mockedDatabaseConnection = Mockito.mockStatic(DatabaseConnection.class);
+        EntityManagerFactory mockEmf = Mockito.mock(EntityManagerFactory.class);
+        mockedDatabaseConnection.when(DatabaseConnection::getEntityManagerFactory).thenReturn(mockEmf);
+
+        // Mock the Session class
+        mockedSession = Mockito.mockStatic(Session.class);
+        Session sessionMock = Mockito.mock(Session.class);
+        mockedSession.when(Session::getInstance).thenReturn(sessionMock);
+
+        // Mock TestPersistenceUtil
+        mockedTestPersistenceUtil = Mockito.mockStatic(TestPersistenceUtil.class);
+        EntityManagerFactory testEmf = Mockito.mock(EntityManagerFactory.class);
+        mockedTestPersistenceUtil.when(TestPersistenceUtil::getEntityManagerFactory).thenReturn(testEmf);
+    }
+
+    @AfterAll
+    public static void tearDownStaticMocks() {
+        if (mockedDatabaseConnection != null) {
+            mockedDatabaseConnection.close();
+        }
+        if (mockedSession != null) {
+            mockedSession.close();
+        }
+        if (mockedTestPersistenceUtil != null) {
+            mockedTestPersistenceUtil.close();
+        }
+    }
 
     @BeforeEach
     void setUp() {

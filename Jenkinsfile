@@ -22,6 +22,9 @@ pipeline {
           bat 'if not exist "src\\main\\resources" mkdir src\\main\\resources'
           bat 'if not exist "src\\main\\resources\\credentials" mkdir src\\main\\resources\\credentials"'
           bat 'echo google.translate.api.key=DUMMY_KEY_FOR_TESTS > src\\main\\resources\\credentials\\translate-api.properties'
+          bat 'echo DB_HOST=mem > .env.jenkins'
+          bat 'echo DB_USER=sa >> .env.jenkins'
+          bat 'echo DB_PASSWORD= >> .env.jenkins'
         }
       }
 
@@ -33,7 +36,7 @@ pipeline {
 
       stage('tests') {
                    steps {
-                       bat "mvn test jacoco:report -Dmaven.clean.skip=true"
+                       bat "mvn test jacoco:report -Djakarta.persistence.jdbc.url=jdbc:h2:mem:testdb -Djakarta.persistence.jdbc.driver=org.h2.Driver -Djakarta.persistence.jdbc.user=sa -Djakarta.persistence.jdbc.password= -Dmaven.clean.skip=true"
                   }
                    post {
                           always {

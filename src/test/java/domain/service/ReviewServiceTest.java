@@ -1,30 +1,58 @@
 package domain.service;
 
 import domain.model.*;
+import infrastructure.config.DatabaseConnection;
 import infrastructure.repository.ReviewRepository;
 import infrastructure.repository.ReviewTranslationRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import jakarta.persistence.EntityManagerFactory;
 import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {
     private ReviewService reviewService;
     private ReviewRepository reviewRepository;
     private PermissionService permissionService;
     private TranslationService translationService;
     private ReviewTranslationRepository translationRepository;
-
+    private static MockedStatic<DatabaseConnection> mockedDatabaseConnection;
 
     private User testUser;
     private User adminUser;
     private StudyMaterial testMaterial;
     private Review testReview;
+
+    @BeforeAll
+    public static void setupClass() {
+        // Force any database connections to use H2 instead of MariaDB
+        System.setProperty("jakarta.persistence.jdbc.url", "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
+        System.setProperty("jakarta.persistence.jdbc.driver", "org.h2.Driver");
+        System.setProperty("jakarta.persistence.jdbc.user", "sa");
+        System.setProperty("jakarta.persistence.jdbc.password", "");
+        System.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        System.setProperty("test", "true");
+
+        // Mock the static DatabaseConnection.getEntityManagerFactory() method
+        mockedDatabaseConnection = Mockito.mockStatic(DatabaseConnection.class);
+        EntityManagerFactory mockEmf = Mockito.mock(EntityManagerFactory.class);
+        mockedDatabaseConnection.when(DatabaseConnection::getEntityManagerFactory).thenReturn(mockEmf);
+    }
+
+    @AfterAll
+    public static void tearDownStaticMocks() {
+        if (mockedDatabaseConnection != null) {
+            mockedDatabaseConnection.close();
+        }
+    }
 
     @BeforeEach
     void setUp() {
