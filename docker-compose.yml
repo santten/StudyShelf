@@ -10,6 +10,8 @@ services:
     volumes:
       - ./src/main/resources/credentials:/app/credentials
       - ${DOWNLOADS_DIR:-~/Downloads}:/app/downloads
+    ports:
+      - "8888:8888"
     depends_on:
       - db
 
