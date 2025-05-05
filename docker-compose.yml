@@ -20,6 +20,7 @@ services:
     volumes:
       - ./src/main/resources/credentials:/app/src/main/resources/credentials
       - ${DOWNLOADS_DIR:-~/Downloads}:/app/downloads
+      - ./.env:/app/.env
     depends_on:
       - db
 
