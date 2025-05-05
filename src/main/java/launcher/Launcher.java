@@ -6,7 +6,6 @@ import presentation.view.StudyShelfApplication;
 
 public class Launcher {
     public static void main(String[] args) {
-        Dotenv dotenv = Dotenv.load();
         DatabaseInitializer dbInit = new DatabaseInitializer();
         dbInit.initializeRolesAndPermissions();
         StudyShelfApplication.launch(StudyShelfApplication.class);
