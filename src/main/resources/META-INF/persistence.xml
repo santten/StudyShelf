@@ -43,11 +43,11 @@
             <property name="hibernate.connection.pool_size" value="100"/>
             <property name="hibernate.connection.release_mode" value="after_transaction"/>
             <property name="jakarta.persistence.lock.timeout" value="1000"/>
-            <property name="hibernate.c3p0.min_size" value="5"/>
+            <!--<property name="hibernate.c3p0.min_size" value="5"/>
             <property name="hibernate.c3p0.max_size" value="100"/>
             <property name="hibernate.c3p0.timeout" value="1000"/>
             <property name="hibernate.c3p0.max_statements" value="150"/>
-            <property name="hibernate.c3p0.idle_test_period" value="3000"/>
+            <property name="hibernate.c3p0.idle_test_period" value="3000"/>-->
             <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
             <property name="hibernate.show_sql" value="true"/>

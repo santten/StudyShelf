@@ -1,0 +1,16 @@
+version: '3.8' 
+services: 
+  app: 
+    command: /bin/sh -c "echo 'Waiting for database to initialize...' && sleep 15 && echo 'Starting application with DB_HOST=db' && java -Djakarta.persistence.jdbc.url=jdbc:mariadb://db:3306/StudyShelf -Djakarta.persistence.jdbc.user=appuser -Djakarta.persistence.jdbc.password=password --module-path /app/javafx-libs/javafx-controls/20.0.1:/app/javafx-libs/javafx-graphics/20.0.1:/app/javafx-libs/javafx-base/20.0.1:/app/javafx-libs/javafx-fxml/20.0.1 --add-modules javafx.controls,javafx.fxml -jar studyshelf.jar" 
+    volumes: 
+      - ./META-INF/persistence.xml:/app/src/main/resources/META-INF/persistence.xml 
+      - ./src/main/resources/credentials:/app/src/main/resources/credentials 
+      - C:\Users\armas/Downloads:/app/downloads 
+  db: 
+    volumes: 
+      - ./data/mysql:/var/lib/mysql 
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
+    networks: 
+      default: 
+        aliases: 
+          - localhost 

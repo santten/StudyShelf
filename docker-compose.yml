@@ -14,13 +14,12 @@ services:
       - DB_HOST=db
       - DB_USER=appuser
       - DB_PASSWORD=${DB_PASSWORD}
-      - java.util.logging.manager=org.apache.logging.log4j.jul.LogManager
     ports:
       - "8888:8888"
     volumes:
+      - ./src/main/resources/META-INF:/app/src/main/resources/META-INF
       - ./src/main/resources/credentials:/app/src/main/resources/credentials
       - ${DOWNLOADS_DIR:-~/Downloads}:/app/downloads
-      - ./.env:/app/.env
     depends_on:
       - db
 
@@ -32,9 +31,10 @@ services:
       - MARIADB_PASSWORD=${DB_PASSWORD}
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     volumes:
-      - mariadb-data:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
     ports:
       - "3306:3306"
+
 
 volumes:
   mariadb-data:
