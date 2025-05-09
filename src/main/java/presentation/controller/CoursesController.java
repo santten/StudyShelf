@@ -49,34 +49,38 @@ public class CoursesController implements PageController {
         List<Category> categories = categoryRepo.findAll();
         GUILogger.info("Loading categories: " + categories.size());
 
-        for (Category c : categories) {
-            VBox courseContainer = new VBox();
-            courseContainer.setSpacing(10);
+        if (categories.isEmpty()){
+            mainVBoxCourses.getChildren().add(new Label(rb.getString("error.noCourses")));
+        } else {
+            for (Category c : categories) {
+                VBox courseContainer = new VBox();
+                courseContainer.setSpacing(10);
 
-            Label title = new Label();
+                Label title = new Label();
 
-            title.setText(c.getCategoryName());
-            title.getStyleClass().addAll(StyleClasses.LABEL3, StyleClasses.SECONDARY);
+                title.setText(c.getCategoryName());
+                title.getStyleClass().addAll(StyleClasses.LABEL3, StyleClasses.SECONDARY);
 
-            Button button = new Button(rb.getString("seeCoursePage"));
-            button.getStyleClass().add(StyleClasses.BTN_XS);
+                Button button = new Button(rb.getString("seeCoursePage"));
+                button.getStyleClass().add(StyleClasses.BTN_XS);
 
-            HBox hbox = new HBox(button, new Text(String.format(rb.getString("courseBy"), c.getCreator().getFullName())));
-            hbox.setSpacing(8);
+                HBox hbox = new HBox(button, new Text(String.format(rb.getString("courseBy"), c.getCreator().getFullName())));
+                hbox.setSpacing(8);
 
-            button.setOnAction(e -> SceneManager.getInstance().setScreen(c));
+                button.setOnAction(e -> SceneManager.getInstance().setScreen(c));
 
-            courseContainer.getChildren().addAll(title, hbox);
+                courseContainer.getChildren().addAll(title, hbox);
 
-            List<StudyMaterial> materials  = categoryRepo.findMaterialsByCategory(c);
-            GUILogger.info("Loading materials " + materials.size() + " for category " + c.getCategoryName());
-            if (materials.isEmpty()){
-                courseContainer.getChildren().add(new Text (rb.getString("noMaterials")));
-            } else {
-                courseContainer.getChildren().add(MaterialCard.materialCardScrollHBox(materials));
+                List<StudyMaterial> materials = categoryRepo.findApprovedMaterialsByCategory(c);
+                GUILogger.info("Loading materials " + materials.size() + " for category " + c.getCategoryName());
+                if (materials.isEmpty()) {
+                    courseContainer.getChildren().add(new Text(rb.getString("noMaterials")));
+                } else {
+                    courseContainer.getChildren().add(MaterialCard.materialCardScrollHBox(materials));
+                }
+
+                mainVBoxCourses.getChildren().add(courseContainer);
             }
-
-            mainVBoxCourses.getChildren().add(courseContainer);
         }
     }
 }

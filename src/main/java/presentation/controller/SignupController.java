@@ -6,11 +6,13 @@ import domain.model.User;
 import domain.service.PasswordService;
 import infrastructure.repository.RoleRepository;
 import infrastructure.repository.UserRepository;
+import jakarta.persistence.PersistenceException;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import presentation.components.PasswordFieldToggle;
@@ -19,10 +21,14 @@ import presentation.utility.StyleClasses;
 import presentation.view.LanguageManager;
 import presentation.view.SceneManager;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import static domain.model.RoleType.STUDENT;
+import static domain.model.RoleType.TEACHER;
 import static presentation.enums.ScreenType.SCREEN_LOGIN;
 import static presentation.utility.EmailValidator.isValidEmail;
 
@@ -36,8 +42,10 @@ public class SignupController {
     private TextField lastNameField;
     private PasswordField passwordField;
     private PasswordField reenterPasswordField;
-    private MenuButton roleMenuButton;
+    private ComboBox<String> roleMenuButton;
     private Label errorLabel;
+
+    private final Map<String, RoleType> roleMap = Map.of(rb.getString("student"), STUDENT, rb.getString("teacher"), TEACHER);
 
     public BorderPane initialize() {
         BorderPane bp = new BorderPane();
@@ -71,6 +79,21 @@ public class SignupController {
         VBox lastNameBox = new VBox(lastNameLabel, lastNameField);
         vbox.getChildren().add(lastNameBox);
 
+        /* role menu */
+        Label roleMenuLabel = new Label(rb.getString("role"));
+        roleMenuButton = new ComboBox<>();
+        roleMenuButton.setPromptText(rb.getString("rolePrompt"));
+
+        roleMenuButton.getItems().addAll(
+                rb.getString("student"),
+                rb.getString("teacher")
+        );
+
+        roleMenuButton.setMinWidth(240);
+
+        VBox roleMenuBox = new VBox(roleMenuLabel, roleMenuButton);
+        vbox.getChildren().add(roleMenuBox);
+
         /* password */
         Label pwLabel = new Label(rb.getString("password"));
         passwordField = new PasswordField();
@@ -82,20 +105,6 @@ public class SignupController {
 
         vbox.getChildren().addAll(passwordBox, reEnterBox);
 
-        /* role menu */
-        Label roleMenuLabel = new Label(rb.getString("role"));
-        roleMenuButton = new MenuButton(rb.getString("rolePrompt"));
-        roleMenuButton.getItems().addAll(
-                new MenuItem(rb.getString("student")),
-                new MenuItem(rb.getString("teacher"))
-        );
-        roleMenuButton.setMinWidth(240);
-        for (MenuItem item : roleMenuButton.getItems()) {
-            item.setOnAction(e -> roleMenuButton.setText(item.getText()));
-        }
-        VBox roleMenuBox = new VBox(roleMenuLabel, roleMenuButton);
-        vbox.getChildren().add(roleMenuBox);
-
         /* error label space */
         errorLabel = new Label();
         errorLabel.getStyleClass().add(StyleClasses.ERROR);
@@ -104,10 +113,10 @@ public class SignupController {
         /* sign up*/
         Button btnSignup = new Button(rb.getString("signup"));
         btnSignup.getStyleClass().add(StyleClasses.BTN_S);
+        btnSignup.setDefaultButton(true);
         btnSignup.setOnAction(e -> {
             if (validateForm()) {
                 handleSignup();
-                sm.setScreen(SCREEN_LOGIN);
             }
         });
         vbox.getChildren().add(btnSignup);
@@ -143,7 +152,7 @@ public class SignupController {
         boolean passwordMatch = passwordField.getText().equals(reenterPasswordField.getText());
         if (!passwordMatch){ errorLabel.setText(rb.getString("error.pwMatch")); }
 
-        boolean roleChosen = !roleMenuButton.getText().equals("Choose Your Role");
+        boolean roleChosen = roleMenuButton.getSelectionModel().getSelectedIndex() != -1;
         if (!roleChosen){ errorLabel.setText(rb.getString("error.noRole")); }
 
         return firstNameExists && lastNameExists &&
@@ -157,28 +166,19 @@ public class SignupController {
             String lastName = lastNameField.getText();
             String password = passwordField.getText();
 
-            String displayedRole = roleMenuButton.getText();
+            String displayableSelectedRole = roleMenuButton.getSelectionModel().getSelectedItem();
+            RoleType selectedRole = roleMap.get(displayableSelectedRole);
 
-            // Mapping of displayed role names to English role names
-            Map<String, String> roleMapping = Map.of(
-                    rb.getString("student"), "Student",
-                    rb.getString("teacher"), "Teacher"
-            );
-
-            String selectedRole = roleMapping.get(displayedRole);
             if (selectedRole == null) {
-                GUILogger.warn("Invalid role selected: " + displayedRole);
+                GUILogger.warn("Invalid role selected: " + roleMenuButton.getValue());
                 return;
             }
 
-            RoleType roleType;
-            roleType = RoleType.valueOf(selectedRole.toUpperCase());
-
             RoleRepository roleRepository = new RoleRepository();
-            Role userRole = roleRepository.findByName(roleType);
+            Role userRole = roleRepository.findByName(selectedRole);
 
             if (userRole == null) {
-                userRole = roleRepository.save(new Role(roleType));
+                userRole = roleRepository.save(new Role(selectedRole));
             }
 
             PasswordService passwordService = new PasswordService();
@@ -192,6 +192,8 @@ public class SignupController {
             logger.debug("User email: {}", email);
             sm.setScreen(SCREEN_LOGIN);
 
+        } catch (PersistenceException e) {
+            errorLabel.setText(rb.getString("error.emailAlreadyRegistered"));
         } catch (Exception e) {
             logger.error("Error in user creation: {}", e.getMessage(), e);
         }

@@ -174,4 +174,8 @@ public class SceneManager {
             GUILogger.warn("User is already logged out");
         }
     }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
 }

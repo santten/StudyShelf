@@ -40,6 +40,7 @@ public class SearchController implements PageController{
     @FXML private Button searchButton;
     
     @FXML private ListView<Button> resultsListView;
+    @FXML private Text resultsDisplayLabel;
 
     ResourceBundle rb = LanguageManager.getInstance().getBundle();
 
@@ -106,6 +107,13 @@ public class SearchController implements PageController{
                         resultsListView.getItems().add(ListItem.listItemGraphic(tag))
                 );
             }
+        }
+
+        if (resultsListView.getItems().isEmpty()){
+            resultsDisplayLabel.setText(String.format(rb.getString("noResults"), query));
+        } else {
+            int amount = resultsListView.getItems().size();
+            resultsDisplayLabel.setText(amount == 1 ? rb.getString("oneResult") : String.format(rb.getString("results"), amount));
         }
     }
 }
